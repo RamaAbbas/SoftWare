@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->text('description')->nullable();
-            $table->text('requirment')->nullable();
+            $table->text('requirments')->nullable();
             $table->decimal('coast')->nullable();
             $table->string('for_whom')->nullable();
             $table->timestamps();

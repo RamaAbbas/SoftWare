@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Services;
+use App\Models\Service;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -11,19 +11,19 @@ class ServicesController extends Controller
 {
     public function index()
     {
-        $services = Services::all();
+        $services = Service::all();
         try {
             if ($services) {
                 return response()->json([
                     'success' => 1,
                     'result' => $services,
-                    'message' => __('app.s')
+                    'message' => __('app.get_all_services')
                 ], 200);
             } else {
                 return response()->json([
                     'success' => 0,
                     'result' => null,
-                    'message' =>  "",
+                    'message' =>  __('app.fail_get_all_services'),
                 ], 200);
             }
         } catch (Exception $e) {
@@ -39,7 +39,7 @@ class ServicesController extends Controller
     {
         $validation = Validator::make($request->all(), [
             'name' => 'required|string',
-            'description' => 'required|string',
+            'description' => 'required',
             'requirment' => 'required|string',
             "coast" => 'required|integer',
             "for_whom" => 'required|string',
@@ -53,18 +53,18 @@ class ServicesController extends Controller
             ], 200);
         }
         try {
-            $service = Services::create([
-                'name' =>$request->name,
-                'description' =>$request->description,
+            $service = Service::create([
+                'name' => $request->name,
+                'description' => $request->description,
                 'requirment' => $request->requirment,
                 "coast" => $request->coast,
-                "for_whom" =>$request->for_whom ,
+                "for_whom" => $request->for_whom,
 
             ]);
             return response()->json([
                 'sucsess' => 1,
                 'result' => $service,
-                'message' =>"Service Stored Sucsessfully",
+                'message' => __('app.servive_stored_sucsessfully'),
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -77,18 +77,18 @@ class ServicesController extends Controller
 
     public function show($id)
     {
-        $service = Services::findOrFail($id);
+        $service = Service::findOrFail($id);
         if (!$service) {
             return response()->json([
                 'success' => 0,
                 'result' => null,
-                'message' => "Service Not found"
+                'message' => __('app.failed_to_restore_service')
             ], 200);
         } else {
             return response()->json([
                 'success' => 1,
                 'result' => $service,
-                'message' => ''
+                'message' => __('app.service_returned_sucsessfully')
             ], 200);
         }
     }
@@ -111,7 +111,7 @@ class ServicesController extends Controller
             ], 200);
         }
         try {
-            $service = Services::findOrFail($id);
+            $service = Service::findOrFail($id);
             if ($service) {
                 $service->name = $request->name;
                 $service->description = $request->description;
@@ -122,13 +122,13 @@ class ServicesController extends Controller
                 return response()->json([
                     'success' => 1,
                     'result' => $service,
-                    'message' => "Service Updated Sucsessfully",
+                    'message' => __('app.service_updated_sucsessfully'),
                 ], 200);
             } else {
                 return response()->json([
                     'success' => 0,
                     'result' => null,
-                    'message' => "",
+                    'message' =>  __('app.failed_to_update_service'),
                 ], 200);
             }
         } catch (Exception $e) {
@@ -141,20 +141,26 @@ class ServicesController extends Controller
     }
     public function destroy($id)
     {
-        $service = Services::findOrFail($id);
+        $service = Service::findOrFail($id);
         if ($service) {
             $service->delete();
             return response()->json([
                 'success' => 1,
                 'result' => null,
-                'message' => "Service Deleted Sucsessfully"
+                'message' => __('app.service_deleted_sucsessfully')
             ], 200);
         } else {
             return response()->json([
                 'success' => 0,
                 'result' => null,
-                'message' => "Service Not found"
+                'message' => __('app.faild_to_delete_service')
             ], 200);
         }
+    }
+    public function a(){
+        return view('layouts.app');
+    }
+    public function b(){
+        return view('admin.login');
     }
 }

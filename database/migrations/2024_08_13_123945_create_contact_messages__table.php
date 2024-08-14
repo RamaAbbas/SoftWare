@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('contact_id')->references('id')->on('contacts')->onUpdate('cascade')->onDelete('cascade');
             $table->Text('msg')->nullable();
-            $table->timestamp('msg_send_at')->nullable();
+            $table->dateTime('msg_send_at')->nullable();
             $table->timestamps();
         });
     }
