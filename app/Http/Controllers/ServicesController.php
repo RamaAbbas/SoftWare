@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -40,7 +41,7 @@ class ServicesController extends Controller
         $validation = Validator::make($request->all(), [
             'name' => 'required|string',
             'description' => 'required',
-            'requirment' => 'required|string',
+            'requirments' => 'required|string',
             "coast" => 'required|integer',
             "for_whom" => 'required|string',
         ]);
@@ -56,7 +57,7 @@ class ServicesController extends Controller
             $service = Service::create([
                 'name' => $request->name,
                 'description' => $request->description,
-                'requirment' => $request->requirment,
+                'requirment' => $request->requirments,
                 "coast" => $request->coast,
                 "for_whom" => $request->for_whom,
 
@@ -98,7 +99,7 @@ class ServicesController extends Controller
         $validation = Validator::make($request->all(), [
             'name' => 'required|string',
             'description' => 'required|string',
-            'requirment' => 'required|string',
+            'requirments' => 'required|string',
             "coast" => 'required|decimal:2',
             "for_whom" => 'required|string',
         ]);
@@ -115,7 +116,7 @@ class ServicesController extends Controller
             if ($service) {
                 $service->name = $request->name;
                 $service->description = $request->description;
-                $service->requirment = $request->requirment;
+                $service->requirments = $request->requirments;
                 $service->coast = $request->coast;
                 $service->for_whom = $request->for_whom;
                 $service->save();
@@ -157,10 +158,13 @@ class ServicesController extends Controller
             ], 200);
         }
     }
-    public function a(){
+    public function a()
+    {
         return view('layouts.app');
     }
-    public function b(){
+    public function b()
+    {
         return view('admin.login');
     }
+  
 }
