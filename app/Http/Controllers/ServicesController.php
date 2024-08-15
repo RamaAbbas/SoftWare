@@ -35,13 +35,18 @@ class ServicesController extends Controller
             ], 200);
         }
     }
+    public function show_all()
+    {
+        $services = Service::all();
+        return view('admin.Service.service', compact('services'));
+    }
 
     public function store(Request $request)
     {
         $validation = Validator::make($request->all(), [
             'name' => 'required|string',
             'description' => 'required',
-            'requirments' => 'required|string',
+            'requirments' => 'required',
             "coast" => 'required|integer',
             "for_whom" => 'required|string',
         ]);
@@ -57,7 +62,7 @@ class ServicesController extends Controller
             $service = Service::create([
                 'name' => $request->name,
                 'description' => $request->description,
-                'requirment' => $request->requirments,
+                'requirments' => $request->requirments,
                 "coast" => $request->coast,
                 "for_whom" => $request->for_whom,
 
@@ -93,13 +98,23 @@ class ServicesController extends Controller
             ], 200);
         }
     }
+    public function edit($id){
+      $service=Service::findOrFail($id);
+      if($service){
+        return view('admin.Service.edit',compact('service'));
+      }
+      else{
+        
+        return redirect()->back();
+      }
+    }
 
     public function update(Request $request, $id)
     {
         $validation = Validator::make($request->all(), [
             'name' => 'required|string',
-            'description' => 'required|string',
-            'requirments' => 'required|string',
+            'description' => 'required',
+            'requirments' => 'required',
             "coast" => 'required|decimal:2',
             "for_whom" => 'required|string',
         ]);
@@ -158,13 +173,4 @@ class ServicesController extends Controller
             ], 200);
         }
     }
-    public function a()
-    {
-        return view('layouts.app');
-    }
-    public function b()
-    {
-        return view('admin.login');
-    }
-  
 }

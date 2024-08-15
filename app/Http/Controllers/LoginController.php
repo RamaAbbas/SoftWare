@@ -34,28 +34,22 @@ class LoginController extends Controller
             ], 200);
         }
         try {
-            $valid = $request->only('email', 'password');
             $user = User::where('email', $request->email)->first();
-            //$user = Auth::user();
-            //  return $user;
-            if (Auth::attempt($valid)) {
+            // $user=auth()->user();
+            //return $token=$user->createToken('auth_token')->accessToken;
+            if ($user) {
+                $token = $user->createToken('auth_token')->accessToken;
 
-                /*  $user = User::where('email', $request->email)->first();
-                //$user = Auth::user();
-                $user = Auth::guard('api')->user();
-                $token = $user->createToken('authToken')->accessToken;
-                //   session(['api_token' => $token]);*/
-                return response()->json([
+                session(['api_token' => $token]);
+                return redirect('/api/admin'); /*response()->json([ //redirect('/api/admin');
                     'sucsess' => 1,
-                    'result' => "",
-                    'message' => "User Login Sucsessfully",
-                ], 200);
+                    'result' => null,
+                    'message' => $user,
+                    "token"=>$token
+                ], 200);*/
             } else {
-                return response()->json([
-                    'sucsess' => 0,
-                    'result' => "",
-                    'message' => "Faild To Login",
-                ], 200);
+                // return "user not found";
+                return redirect('/api/logi');
             }
         } catch (Exception $e) {
             return response()->json([
@@ -83,9 +77,44 @@ class LoginController extends Controller
 
         return response(['user' => $user, 'token' => $token]);
     }
-    public function s()
+
+
+    public function a()
     {
-        $services = Service::all();
-        return view('admin.service', compact('services'));
+
+        return Auth::guard('api')->user();
+      //  return view('layouts.app');
+    }
+    public function view()
+    {
+        return view('admin.login');
     }
 }
+
+
+/*
+ $valid = $request->only('email', 'password');
+            $user = User::where('email', $request->email)->first();
+            //$user = Auth::user();
+            //  return $user;
+            if (Auth::attempt($valid)) {
+
+                /*  $user = User::where('email', $request->email)->first();
+                //$user = Auth::user();
+                $user = Auth::guard('api')->user();
+                $token = $user->createToken('authToken')->accessToken;
+                //   session(['api_token' => $token]);*/
+               /* return response()->json([
+                    'sucsess' => 1,
+                    'result' => "",
+                    'message' => "User Login Sucsessfully",
+                ], 200);
+            } else {
+                return response()->json([
+                    'sucsess' => 0,
+                    'result' => "",
+                    'message' => "Faild To Login",
+                ], 200);
+            }
+
+*/

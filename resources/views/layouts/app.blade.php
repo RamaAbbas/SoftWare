@@ -11,12 +11,16 @@
 
     <title>SoftWare</title>
     <script>
+        let a=app()->getLocale();
+        console.log(a);
+        console.log("jfgdhukygiugui");
         document.addEventListener("DOMContentLoaded", function() {
-            let token = "{{ session('api_token') }}";
+            let token = "{{ session('auth_token') }}";
             if (token) {
                 console.log("Token:", token);
+                console.log("99999999");
 
-                localStorage.setItem('api_token', token);
+                localStorage.setItem('auth_token', token);
             }
         });
     </script>

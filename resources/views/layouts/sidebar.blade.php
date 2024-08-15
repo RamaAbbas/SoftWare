@@ -23,7 +23,7 @@
             <div class="menu_section">
                 <ul class="nav side-menu">
                     <li class="nav-item">
-                        <a class="nav-link" href="">
+                        <a class="nav-link" href="{{route('showall.service')}}">
                             <i class="fa fa-users"></i> Services
                         </a>
                     </li>
