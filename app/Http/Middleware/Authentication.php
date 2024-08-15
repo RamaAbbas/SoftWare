@@ -16,9 +16,14 @@ class Authentication
      */
     public function handle(Request $request, Closure $next): Response
     {
+
+        error_log('1111111');
+        error_log($request->all);
+
         if (Auth::check()) {
             return $next($request);
         }
+
 
         return redirect()->route('login');
     }

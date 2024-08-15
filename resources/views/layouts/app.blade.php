@@ -15,12 +15,12 @@
         console.log(a);
         console.log("jfgdhukygiugui");
         document.addEventListener("DOMContentLoaded", function() {
-            let token = "{{ session('auth_token') }}";
+            let token = "{{ session('api_token') }}";
             if (token) {
                 console.log("Token:", token);
                 console.log("99999999");
 
-                localStorage.setItem('auth_token', token);
+                localStorage.setItem('api_token', token);
             }
         });
     </script>

@@ -19,43 +19,51 @@ class LoginController extends Controller
 
 
 
-
     public function login(Request $request)
     {
+
         $validation = Validator::make($request->all(), [
-            "email" => 'required|email',
-            "password" => "string|required|min:6"
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
         ]);
+
+
         if ($validation->fails()) {
             return response()->json([
-                'sucsess' => 0,
+                'success' => 0,
                 'result' => null,
                 'message' => $validation->errors(),
             ], 200);
         }
+
         try {
+
             $user = User::where('email', $request->email)->first();
-            // $user=auth()->user();
-            //return $token=$user->createToken('auth_token')->accessToken;
-            if ($user) {
-                $token = $user->createToken('auth_token')->accessToken;
+
+
+            $credentials = $request->only('email', 'password');
+            if (Auth::attempt($credentials)) {
+
+                $user = Auth::user();
+
+                $token = $user->createToken('Personal Access Token')->accessToken;
+                error_log($token);
+
 
                 session(['api_token' => $token]);
-                return redirect('/api/admin'); /*response()->json([ //redirect('/api/admin');
-                    'sucsess' => 1,
-                    'result' => null,
-                    'message' => $user,
-                    "token"=>$token
-                ], 200);*/
+
+
+                return redirect('/api/admin-services');
             } else {
-                // return "user not found";
-                return redirect('/api/logi');
+
+                return redirect('/api/login');
             }
         } catch (Exception $e) {
+            // Handle any exceptions
             return response()->json([
-                'sucsess' => 0,
+                'success' => 0,
                 'result' => null,
-                'message' => $e,
+                'message' => $e->getMessage(),
             ], 200);
         }
     }
@@ -79,11 +87,11 @@ class LoginController extends Controller
     }
 
 
-    public function a()
+    public function home()
     {
 
-        return Auth::guard('api')->user();
-      //  return view('layouts.app');
+       // return Auth::guard('api')->user();
+          return view('layouts.app');
     }
     public function view()
     {
