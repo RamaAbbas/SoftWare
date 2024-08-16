@@ -12,6 +12,7 @@ class ServicesController extends Controller
 {
     public function index()
     {
+        session(['a'=>"ssss"]);
         $services = Service::all();
         try {
             if ($services) {
@@ -80,6 +81,10 @@ class ServicesController extends Controller
             ], 200);
         }
     }
+    public function addservice()
+    {
+        return view('admin.Service.add');
+    }
 
     public function show($id)
     {
@@ -98,15 +103,15 @@ class ServicesController extends Controller
             ], 200);
         }
     }
-    public function edit($id){
-      $service=Service::findOrFail($id);
-      if($service){
-        return view('admin.Service.edit',compact('service'));
-      }
-      else{
-        
-        return redirect()->back();
-      }
+    public function edit($id)
+    {
+        $service = Service::findOrFail($id);
+        if ($service) {
+            return view('admin.Service.edit', compact('service'));
+        } else {
+
+            return redirect()->back();
+        }
     }
 
     public function update(Request $request, $id)
@@ -171,6 +176,17 @@ class ServicesController extends Controller
                 'result' => null,
                 'message' => __('app.faild_to_delete_service')
             ], 200);
+        }
+    }
+
+    public function getcontent($id, $content)
+    {
+        $service = Service::findOrFail($id);
+        if ($service) {
+            if ($content == "description") {
+                $description = $content;
+                return view('admin.Service.service', compact('description'));
+            }
         }
     }
 }

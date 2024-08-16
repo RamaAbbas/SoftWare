@@ -12,5 +12,19 @@ return [
     "service_updated_sucsessfully" => "تم تحديث الخدمة بنجاح ",
     "failed_to_update_service" => "فشل في تحديث الخدمة ",
     "service_deleted_sucsessfully" => "تم حذف الخدمة بنجاح ",
-    "faild_to_delete_service" => "حدث خطأ اثناء حذف الخدمة"
+    "faild_to_delete_service" => "حدث خطأ اثناء حذف الخدمة",
+
+
+
+//////////////Admin
+    "admin_setting"=>"الاعدادات",
+    "language"=>"اللغة",
+    "arabic"=>"العربية",
+    "english"=>"الانكليزية",
+    "dutch"=>'الهولندية',
+    "help"=>"المساعدة",
+    "log_out"=>"تسجيل الخروج",
+    "profile"=>"الملف الشخصي",
+    "welcome_admin"=>"",
+    "service"=>"الخدمات",
 ];

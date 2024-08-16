@@ -11,7 +11,7 @@
                 <img src="" alt="..." class="img-circle profile_img">
             </div>
             <div class="profile_info">
-                <span>{{ __('admin.welcome') }}</span>
+                <span>{{ __('app.welcome_admin') }}</span>
                 <h2></h2>
             </div>
         </div>
@@ -24,7 +24,7 @@
                 <ul class="nav side-menu">
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('showall.service')}}">
-                            <i class="fa fa-users"></i> Services
+                            <i class="fa fa-users"></i> {{__('app.service')}}
                         </a>
                     </li>
                 </ul>

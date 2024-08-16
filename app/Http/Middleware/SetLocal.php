@@ -22,8 +22,11 @@ class SetLocal
             if (! in_array($locale, ['en', 'ar', 'nl'])) {
                 abort(400);
             } else {
-
                 App::setLocale($locale);
+                Session::put(['local',$locale]);
+                error_log("11111");
+                error_log(app()->getLocale());
+                error_log("11111");
             }
         } elseif (Session::has('locale')) {
             app()->setLocale(Session::get('locale'));

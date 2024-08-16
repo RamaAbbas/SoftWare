@@ -11,6 +11,21 @@ return [
     "service_updated_sucsessfully" => "  Service sucsessfully geüpdatet",
     "failed_to_update_service" => "Kan de service niet bijwerken ",
     "service_deleted_sucsessfully" => " service sucsessfully verwijderd ",
-    "faild_to_delete_service" => "Kan service niet verwijderen"
+    "faild_to_delete_service" => "Kan service niet verwijderen",
+
+
+
+
+//////////////Admin
+    "admin_setting" => "montuur",
+    "language" => "Taal",
+    "arabic" => "Arabisch",
+    "english" => "Engels",
+    "dutch" => 'Nederlands',
+    "help" => "Help",
+    "log_out" => "Logout ",
+    "profile" => "profiel ",
+    "welcome_admin" => "Welcome",
+    "service"=>"Dienst",
 
 ];

@@ -11,6 +11,18 @@ return [
     "service_updated_sucsessfully" => "service updated sucsessfully",
     "failed_to_update_service" => "failed to update service ",
     "service_deleted_sucsessfully" => " service deleted sucsessfully ",
-    "faild_to_delete_service" => "faild to delete service"
+    "faild_to_delete_service" => "faild to delete service",
 
+
+//////////////Admin
+    "admin_setting" => "Setting",
+    "language" => "Language",
+    "arabic" => "Arabic",
+    "english" => "English",
+    "dutch" => 'Dutch',
+    "help" => "Help",
+    "log_out" => "Logout ",
+    "profile" => "Profile ",
+    "welcome_admin" => "Welcome",
+    "service"=>"Services",
 ];
