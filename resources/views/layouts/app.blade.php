@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{str_replace('_', '-', app()->getLocale())}}">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
@@ -29,7 +29,6 @@
 
     <title>SoftWare</title>
     <script>
-        console.log("jfgdhukygiugui");
         document.addEventListener("DOMContentLoaded", function() {
             let token = "{{ session('api_token') }}";
             if (token) {
@@ -38,20 +37,21 @@
 
                 localStorage.setItem('api_token', token);
             }
-        });
+            /*   let local = "{{ session('local') }}";
+               if (local == 'en') {
+                   localStorage.setItem('local', 'en');
+               } else if (local == 'ar') {
+                   localStorage.setItem('local', 'ar');
+               } else {
+                   localStorage.setItem('local', 'nl');
+                   // localStorage.setItem('local', 'nl');
+               }
+               let a = localStorage.getItem('local');
+               console.log(a);
+               console.log("");
+               console.log("GGGGG");*/
 
-        let local = "{{session('a')}}";
-        if (local == 'en') {
-            localStorage.setItem('local', 'en');
-        } else if (local == 'ar') {
-            localStorage.setItem('local', 'ar');
-        } else {
-            localStorage.setItem('local', 'nl');
-        }
-        let a = localStorage.getItem('local');
-        console.log(a);
-        console.log(local);
-        console.log("GGGGG");
+        });
     </script>
     <!-- Bootstrap -->
     <link href="{{ asset('vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">

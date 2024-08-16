@@ -9,7 +9,7 @@
                 <li class="nav-item dropdown" style="margin-right: 15px;">
                     <a href="#" class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="images/img.jpg" alt="" style="width: 30px; height: 30px; border-radius: 50%;">
+                        <img src="" alt="" style="width: 30px; height: 30px; border-radius: 50%;">
 
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -33,7 +33,7 @@
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownLang" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{__('app.language')}}
+                        @lang(__('app.language')){{__('app.language')}}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownLang">
                         <a class="dropdown-item" href="{{url('api/setlocale/en')}}">{{__("app.english")}}</a>

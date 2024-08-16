@@ -1,7 +1,7 @@
 <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
-            <a href="" class="site_title"><i class="fa fa-home"></i> <span>SoftWare</span></a>
+            <a href="" class="site_title"><i class="fa fa-heart"></i> <span>SoftWare</span></a><!--fron-home -->
         </div>
         <div class="clearfix"></div>
 
@@ -24,7 +24,7 @@
                 <ul class="nav side-menu">
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('showall.service')}}">
-                            <i class="fa fa-users"></i> {{__('app.service')}}
+                            <i class="fa fa-list"></i> {{__('app.service')}}
                         </a>
                     </li>
                 </ul>

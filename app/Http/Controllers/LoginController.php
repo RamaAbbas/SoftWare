@@ -6,11 +6,13 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Exception;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
+
 
 class LoginController extends Controller
 {
@@ -89,7 +91,7 @@ class LoginController extends Controller
 
     public function home()
     {
-
+      // session(["local"=>"en"]);
        // return Auth::guard('api')->user();
           return view('layouts.app');
     }

@@ -10,7 +10,7 @@
                     <div class="card-body">
 
 
-                        <form method="POST" action="{{route('service.store')}}">
+                        <form method="POST" action="{{ route('service.store') }}">
                             @csrf
 
                             <div class="form-group">
@@ -48,4 +48,11 @@
             </div>
         </div>
     </div>
+    <script>
+        let loca = "{{ Session::get('local') }}";
+        let aa = localStorage.getItem('local');
+        console.log(loca);
+        console.log("FFFFFF");
+        console.log(aa);
+    </script>
 @endsection

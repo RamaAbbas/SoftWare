@@ -23,13 +23,13 @@ class SetLocal
                 abort(400);
             } else {
                 App::setLocale($locale);
-                Session::put(['local',$locale]);
+              //  Session::put(['local',$locale]);
                 error_log("11111");
                 error_log(app()->getLocale());
                 error_log("11111");
             }
-        } elseif (Session::has('locale')) {
-            app()->setLocale(Session::get('locale'));
+        } elseif (Session::has('local')) {
+            app()->setLocale(Session::get('local'));
         }
         return $next($request);
     }
