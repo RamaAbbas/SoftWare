@@ -7,12 +7,13 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class ServicesController extends Controller
 {
     public function index()
     {
-        session(['a'=>"ssss"]);
+        session(['a' => "ssss"]);
         $services = Service::all();
         try {
             if ($services) {
@@ -38,6 +39,8 @@ class ServicesController extends Controller
     }
     public function show_all()
     {
+        $user = Auth::user()->id;
+        error_log($user);
         $services = Service::all();
         return view('admin.Service.service', compact('services'));
     }

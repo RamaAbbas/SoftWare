@@ -19,9 +19,6 @@ class LoginController extends Controller
 {
 
 
-
-
-
     public function login(Request $request)
     {
 
@@ -43,28 +40,23 @@ class LoginController extends Controller
 
             $user = User::where('email', $request->email)->first();
 
-
             $credentials = $request->only('email', 'password');
             if (Auth::attempt($credentials)) {
 
-                $user = Auth::guard('web')->user();
-               // error_log($user);
-
-
+                $user = Auth::user();
                 $token = $user->createToken('Personal Access Token')->accessToken;
                 error_log($token);
-
 
                 session(['api_token' => $token]);
 
 
-                return redirect('/api/admin-services'); //Session::get('api_token'); //
+                return redirect()->route('showall.service');
             } else {
 
-                return redirect('/api/login');
+                return redirect()->back();
             }
         } catch (Exception $e) {
-            // Handle any exceptions
+
             return response()->json([
                 'success' => 0,
                 'result' => null,
@@ -98,11 +90,4 @@ class LoginController extends Controller
         // return Auth::guard('api')->user();
         return view('layouts.app');
     }
-    public function view()
-    {
-        return view('admin.login');
-    }
 }
-
-
-

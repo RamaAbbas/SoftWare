@@ -31,7 +31,7 @@
         <div class="login_wrapper">
             <div class="animate form login_form">
                 <section class="login_content">
-                    <form action="{{ route('login') }} " method="post">
+                    <form action="{{ route('admin.login') }} " method="post">
                         @csrf
                         <h1>Login Form</h1>
                         <div>
@@ -43,7 +43,7 @@
                                 required="" />
                         </div>
                         <div>
-                         <!--   <a class="btn btn-default submit" type="submit">Log in</a>-->
+                            <!--   <a class="btn btn-default submit" type="submit">Log in</a>-->
                             <button class="btn btn-default submit" type="submit">Log in</button>
                         </div>
 
