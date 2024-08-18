@@ -6,9 +6,10 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Exception;
-use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session as FacadesSession;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\RefreshTokenRepository;
@@ -46,7 +47,8 @@ class LoginController extends Controller
             $credentials = $request->only('email', 'password');
             if (Auth::attempt($credentials)) {
 
-                $user = Auth::user();
+                $user = Auth::guard('api')->user();
+               // error_log($user);
 
                 $token = $user->createToken('Personal Access Token')->accessToken;
                 error_log($token);
@@ -55,7 +57,7 @@ class LoginController extends Controller
                 session(['api_token' => $token]);
 
 
-                return redirect('/api/admin-services');
+                return redirect('/api/admin-services'); //Session::get('api_token'); //
             } else {
 
                 return redirect('/api/login');
@@ -91,9 +93,9 @@ class LoginController extends Controller
 
     public function home()
     {
-      // session(["local"=>"en"]);
-       // return Auth::guard('api')->user();
-          return view('layouts.app');
+        // session(["local"=>"en"]);
+        // return Auth::guard('api')->user();
+        return view('layouts.app');
     }
     public function view()
     {

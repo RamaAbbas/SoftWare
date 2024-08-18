@@ -19,12 +19,21 @@ class Authentication
 
         error_log('1111111');
         error_log($request->all);
+        error_log(Auth::check()==null);
 
         if (Auth::check()) {
+            error_log('444444444');
             return $next($request);
         }
+        if(Auth::user() || auth()->user() || auth()->guard('api')->user()){
+            error_log('88888888888888');
+        }
+        /*  elseif (!Auth::guard('api')->check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }*/
 
+        //return $next($request);
 
-        return redirect()->route('login');
+        return response()->json(['error' => 'Unauthorized'], 401); //redirect()->route('login');
     }
 }

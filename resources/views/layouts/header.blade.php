@@ -13,15 +13,15 @@
 
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="javascript:;">{{__('app.profile')}}</a>
+                        <a class="dropdown-item" href="javascript:;">{{ __('app.profile') }}</a>
                         <a class="dropdown-item" href="javascript:;">
                             <span class="badge bg-red pull-right">50%</span>
-                            <span>{{__('app.admin_setting')}}</span>
+                            <span>{{ __('app.admin_setting') }}</span>
                         </a>
-                        <a class="dropdown-item" href="javascript:;">{{__('app.help')}}</a>
+                        <a class="dropdown-item" href="javascript:;">{{ __('app.help') }}</a>
                         <a class="dropdown-item" href=""
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="fa fa-sign-out pull-right"></i> {{__('app.log_out')}}
+                            <i class="fa fa-sign-out pull-right"></i> {{ __('app.log_out') }}
                         </a>
                         <form id="logout-form" action="" method="POST" class="d-none">
                             @csrf
@@ -33,12 +33,12 @@
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownLang" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        @lang(__('app.language')){{__('app.language')}}
+                        {{ __('app.language') }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownLang">
-                        <a class="dropdown-item" href="{{url('api/setlocale/en')}}">{{__("app.english")}}</a>
-                        <a class="dropdown-item" href="{{ url('api/setlocale/nl')}}">{{__('app.dutch')}}</a>
-                        <a class="dropdown-item" href="{{ url('api/setlocale/ar')}}">{{__('app.arabic')}}</a>
+                        <a class="dropdown-item" href="{{ url('setlocale/en') }}">{{ __('app.english') }}</a>
+                        <a class="dropdown-item" href="{{ url('setlocale/nl') }}">{{ __('app.dutch') }}</a>
+                        <a class="dropdown-item" href="{{ url('setlocale/ar') }}">{{ __('app.arabic') }}</a>
                     </div>
                 </li>
             </ul>
