@@ -13,6 +13,8 @@ return [
     "failed_to_update_service" => "فشل في تحديث الخدمة ",
     "service_deleted_sucsessfully" => "تم حذف الخدمة بنجاح ",
     "faild_to_delete_service" => "حدث خطأ اثناء حذف الخدمة",
+    "there_is_no_data"=>"لا يوجد بيانات",
+    "data_returnd_sucssesfully"=>"تم استعادة البيانات بنجاح",
 
 
 

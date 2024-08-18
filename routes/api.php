@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Middleware\SetLocal;
@@ -16,5 +16,10 @@ Route::middleware([SetLocal::class])->group(function () {
 
     Route::get('/services', [ServicesController::class, 'index']);
     Route::get('/service/show/{id}', [ServicesController::class, 'show'])->name('service.show');
-    Route::middleware([Authentication::class])->group(function () {});
+
+    ////about us
+    Route::get('/about-us', [AboutUsController::class, 'index']);
+    Route::get('/about-us/show/{id}', [AboutUsController::class, 'show'])->name('aboutus.show');
 });
+
+//Route::post('/store-aboutus', [AboutUsController::class, 'store']);

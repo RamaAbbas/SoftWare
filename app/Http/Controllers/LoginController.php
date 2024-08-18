@@ -60,11 +60,14 @@ class LoginController extends Controller
             return response()->json([
                 'success' => 0,
                 'result' => null,
-                'message' => $e->getMessage(),
+                'message' =>$e->getMessage(),
             ], 200);
         }
     }
 
+    public function view (){
+        return view('admin.login');
+    }
     public function register(Request $request)
     {
         /* $data = $request->validate([

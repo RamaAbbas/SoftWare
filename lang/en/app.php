@@ -12,6 +12,8 @@ return [
     "failed_to_update_service" => "failed to update service ",
     "service_deleted_sucsessfully" => " service deleted sucsessfully ",
     "faild_to_delete_service" => "faild to delete service",
+    "there_is_no_data"=>" There is no Data ",
+    "data_returnd_sucssesfully"=>"Data Returned Sucsessfully",
 
 
 //////////////Admin

@@ -12,11 +12,13 @@ return [
     "failed_to_update_service" => "Kan de service niet bijwerken ",
     "service_deleted_sucsessfully" => " service sucsessfully verwijderd ",
     "faild_to_delete_service" => "Kan service niet verwijderen",
+    "there_is_no_data" => "er zijn geen gegevens",
+    "data_returnd_sucssesfully" => "gegevens zijn succesvol geretourneerd",
 
 
 
 
-//////////////Admin
+    //////////////Admin
     "admin_setting" => "montuur",
     "language" => "Taal",
     "arabic" => "Arabisch",
@@ -26,6 +28,6 @@ return [
     "log_out" => "Logout ",
     "profile" => "profiel ",
     "welcome_admin" => "Welcome",
-    "service"=>"Dienst",
+    "service" => "Dienst",
 
 ];
