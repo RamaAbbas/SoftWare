@@ -26,14 +26,17 @@ Route::middleware([SetLocal::class])->group(function () {
     Route::delete('/delete-service/{id}', [ServicesController::class, 'destroy'])->name("service.delete");
 
 
-    Route::middleware([Authentication::class])->group(function () {
-        Route::get('/admin-services', [ServicesController::class, 'show_all'])->name('showall.service');
-        Route::get('/admin', [LoginController::class, 'home'])->name('home');
-    });
+
+    Route::get('/admin', [LoginController::class, 'home'])->name('home');
+    Route::get('/admin-services', [ServicesController::class, 'show_all'])->name('showall.service');
+    Route::get('/login', [LoginController::class, 'view'])->name('admin.login');
+
+
+    Route::middleware([Authentication::class])->group(function () {});
 });
 
 
-Route::get('/login', [LoginController::class, 'view'])->name('admin.login');
+
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 

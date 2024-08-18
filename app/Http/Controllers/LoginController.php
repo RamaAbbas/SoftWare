@@ -47,8 +47,9 @@ class LoginController extends Controller
             $credentials = $request->only('email', 'password');
             if (Auth::attempt($credentials)) {
 
-                $user = Auth::guard('api')->user();
+                $user = Auth::guard('web')->user();
                // error_log($user);
+
 
                 $token = $user->createToken('Personal Access Token')->accessToken;
                 error_log($token);
@@ -104,29 +105,4 @@ class LoginController extends Controller
 }
 
 
-/*
- $valid = $request->only('email', 'password');
-            $user = User::where('email', $request->email)->first();
-            //$user = Auth::user();
-            //  return $user;
-            if (Auth::attempt($valid)) {
 
-                /*  $user = User::where('email', $request->email)->first();
-                //$user = Auth::user();
-                $user = Auth::guard('api')->user();
-                $token = $user->createToken('authToken')->accessToken;
-                //   session(['api_token' => $token]);*/
-               /* return response()->json([
-                    'sucsess' => 1,
-                    'result' => "",
-                    'message' => "User Login Sucsessfully",
-                ], 200);
-            } else {
-                return response()->json([
-                    'sucsess' => 0,
-                    'result' => "",
-                    'message' => "Faild To Login",
-                ], 200);
-            }
-
-*/

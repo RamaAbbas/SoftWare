@@ -1,11 +1,10 @@
 @extends('layouts.app')
 
-
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="container body">
-                <div class="main_container">
+    <div role="main">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="container body">
                     <div class="">
                         <div class="page-title">
                             <div class="title_left">
@@ -18,8 +17,6 @@
                                         <a href="{{ route('service.add') }}"><button class="btn-success">Add
                                                 Service</button></a>
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
@@ -31,7 +28,7 @@
                                     <div class="col-md-4 col-sm-6 ">
                                         <div class="x_panel">
                                             <div class="x_title">
-                                                <h2>{{ $service->name }} <small></small></h2>
+                                                <h2>{{ $service->name }}</h2>
                                                 <ul class="nav navbar-right panel_toolbox">
                                                     <li class="dropdown">
                                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"
@@ -81,46 +78,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
-
-    <style>
-
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var w = 0;
-            //  const all = document.querySelectorAll('.myTab');
-            const description = document.getElementById('description').textContent;
-            const description1 = document.getElementById('description-id');
-            const a = document.getElementsByClassName('a');
-            const b = document.getElementsByClassName('b');
-
-
-
-
-            document.getElementById('2').addEventListener('click', function(e) {
-                w = 1;
-                console.log("gdkgskjdhdkhdhjhsdjkdhd");
-                for (var i = 0; i < a.length; i++) {
-                    a[i].style.display = "none";
-                }
-                for (var i = 0; i < b.length; i++) {
-                    b[i].style.display = "block";
-                }
-            });
-            document.getElementById('1').addEventListener('click', function(e) {
-                w = 0;
-                console.log("gdkgskjdhdkhdhjhsdjkdhd");
-                for (var i = 0; i < a.length; i++) {
-                    a[i].style.display = "block";
-                }
-                for (var i = 0; i < a.length; i++) {
-                    b[i].style.display = "none";
-                }
-            });
-
-
-        });
-    </script>
 @endsection
