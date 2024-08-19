@@ -38,7 +38,6 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownLang">
                         <a class="dropdown-item" href="{{ url('setlocale/en') }}">{{ __('app.english') }}</a>
                         <a class="dropdown-item" href="{{ url('setlocale/nl') }}">{{ __('app.dutch') }}</a>
-                        <a class="dropdown-item" href="{{ url('setlocale/ar') }}">{{ __('app.arabic') }}</a>
                     </div>
                 </li>
             </ul>

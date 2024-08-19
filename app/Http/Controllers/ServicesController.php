@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BenefitsForWho;
+use App\Models\HowItWork;
+use App\Models\Requirment;
 use App\Models\Service;
 use App\Models\User;
 use Exception;
@@ -47,19 +50,6 @@ class ServicesController extends Controller
 
 
 
-                $service->requirment = $service->requirment->map(function ($requirment) use ($locale, $defaultLanguage) {
-                    if (is_string($requirment->name)) {
-                        $requirment = json_decode($requirment->name, true);
-                        $requirment->name = $requirment[$locale] ?? $requirment[$defaultLanguage] ?? __('app.lang_not_supported');
-                    }
-                    if (is_string($requirment->descripton)) {
-                        $requirment = json_decode($requirment->descripton, true);
-                        $requirment->descripton = $requirment[$locale] ?? $requirment[$defaultLanguage] ?? __('app.lang_not_supported');
-                    }
-
-                    return $requirment;
-                });
-
 
                 $service->service_benefits = $service->service_benefits->map(function ($related) use ($locale, $defaultLanguage) {
                     if (is_string($related->benefit_name)) {
@@ -85,6 +75,19 @@ class ServicesController extends Controller
                     }
                     return $related;
                 });
+                $service->requirment = $service->requirment->map(function ($related) use ($locale, $defaultLanguage) {
+                    if (is_string($related->name)) {
+                        $requirment = json_decode($related->name, true);
+                        $related->name = $requirment[$locale] ?? $requirment[$defaultLanguage] ?? __('app.lang_not_supported');
+                    }
+                    if (is_string($related->descripton)) {
+                        $requirment = json_decode($related->descripton, true);
+                        $related->descripton = $requirment[$locale] ?? $requirment[$defaultLanguage] ?? __('app.lang_not_supported');
+                    }
+
+                    return $related;
+                });
+
 
                 return $service;
             });
@@ -113,44 +116,6 @@ class ServicesController extends Controller
         return view('admin.Service.service', compact('services'));
     }
 
-    /*  public function store(Request $request)
-    {
-        $validation = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'description' => 'required',
-            "coat" => 'required|integer',
-            "for_whom" => 'required|string',
-        ]);
-        if ($validation->fails()) {
-
-            return response()->json([
-                'sucsess' => 0,
-                'result' => null,
-                'message' => $validation->errors(),
-            ], 200);
-        }
-        try {
-            $service = Service::create([
-                'name' => $request->name,
-                'description' => $request->description,
-                'requirments' => $request->requirments,
-                "coast" => $request->coast,
-                "for_whom" => $request->for_whom,
-
-            ]);
-            return response()->json([
-                'sucsess' => 1,
-                'result' => $service,
-                'message' => __('app.servive_stored_sucsessfully'),
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => 0,
-                'result' => null,
-                'message' => $e
-            ], 200);
-        }
-    }*/
     public function store(Request $request)
     {
         /*$validatedData = $request->validate([
@@ -177,15 +142,15 @@ class ServicesController extends Controller
             'client_testimonial' => 'required',
             'cost' => 'required',
             'requirment' => 'array',
-           // 'requirment.*.name' => 'required',
-           // 'requirment.*.description' => 'required',
+            //'requirment.*.name' => 'required',
+            //  'requirment.description' => 'required',
             'service_benefits' => 'array',
-           // 'service_benefits.*.benefit_name' => 'required',
-           // 'service_benefits.*.benefit_description' => 'required',
+            // 'service_benefits.benefit_name' => 'required',
+            // 'service_benefits.benefit_description' => 'required',
             'service_processs' => 'array',
-           // 'service_processs.*.name' => 'required',
-           // 'service_processs.*.description' => 'required',
-           // 'service_processs.*.step_no' => 'required',
+            // 'service_processs.name' => 'required',
+            // 'service_processs.description' => 'required',
+            // 'service_processs.step_no' => 'required',
         ]);
         if ($validatedDat->fails()) {
 
@@ -205,13 +170,14 @@ class ServicesController extends Controller
             $service = Service::create([
                 'name' => $validatedData['name'],
                 'description' => $validatedData['description'],
-                'call_to_action' => json_encode($validatedData['call_to_action']),
-                'client_testimonial' => json_encode($validatedData['client_testimonial']),
+                'call_to_action' => $validatedData['call_to_action'],
+                'client_testimonial' => $validatedData['client_testimonial'],
                 'cost' => $validatedData['cost'],
             ]);
 
             if (isset($validatedData['requirment'])) {
                 foreach ($validatedData['requirment'] as $relatedData) {
+
                     $service->requirment()->create($relatedData);
                 }
             }
@@ -224,6 +190,7 @@ class ServicesController extends Controller
 
             if (isset($validatedData['service_processs'])) {
                 foreach ($validatedData['service_processs'] as $relatedData) {
+                    //return $relatedData;
                     $service->service_processs()->create($relatedData);
                 }
             }
@@ -244,6 +211,11 @@ class ServicesController extends Controller
             ], 200);
         }
     }
+
+
+
+
+
     public function addservice()
     {
         return view('admin.Service.add');
