@@ -10,7 +10,7 @@ class HowItWork extends Model
 {
     use HasFactory;
 
-    protected $table = "how_it_works_services_";
+    protected $table = "service_processs";
 
     protected $casts = [
         'name_of_step' => 'array',

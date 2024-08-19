@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('how_it_works_services_', function (Blueprint $table) {
+        Schema::create('service_benefits', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
-            $table->integer('step_no')->nullable();
-            $table->json('name_of_step')->nullable();
-            $table->json('description_of_step')->nullable();
+            $table->json('benefit_name')->nullable();
+            $table->json('benefit_description')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('how_it_works_services_');
+        Schema::dropIfExists('benefits_for_whom');
     }
 };

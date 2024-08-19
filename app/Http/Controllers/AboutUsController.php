@@ -16,53 +16,51 @@ class AboutUsController extends Controller
 
         $language = $request->header('Lang');
         $defaultLanguage = 'en';
+        $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
 
-
-
-        if ($language) {
-            $locale = substr($language, 0, 2);
-        } else {
-            $locale = $defaultLanguage;
-        }
 
         $aboutus = AboutUs::all();
         //$aboutus = AboutUs::select() //
         //   ->get();
+        if ($aboutus->isEmpty()) {
+            return response()->json([
+                'success' => 0,
+                'result' => null,
+                'message' => __('app.there_is_no_data')
+            ], 200);
+        }
 
         try {
-            if ($aboutus->count() > 0) {
-                $processedServices = $aboutus->map(function ($aboutus) use ($locale, $defaultLanguage) {
+
+            $processedServices = $aboutus->map(function ($aboutus) use ($locale, $defaultLanguage) {
+                if (is_string($aboutus->for_who)) {
                     $jsonData = json_decode($aboutus->for_who, true);
+                }
+                if (is_string($aboutus->steps_process)) {
                     $jsonData2 = json_decode($aboutus->steps_process, true);
+                }
 
-                    if (isset($jsonData[$locale])) {
-                        if ($aboutus->for_who != null) {
-                            $aboutus->for_who = $jsonData[$locale];
-                        }
-                        if ($aboutus->steps_process != null) {
-                            $aboutus->steps_process = $jsonData2[$locale];
-                        }
-                        //return $aboutus->makeHidden('for_who');
-                    } else {
-                        $aboutus->for_who = $jsonData[$defaultLanguage] ?? 'Language not supported';
-                        $aboutus->steps_process = $jsonData2[$defaultLanguage] ?? 'Language not supported';
+                if (isset($jsonData[$locale])) {
+                    if ($aboutus->for_who != null) {
+                        $aboutus->for_who = $jsonData[$locale];
                     }
+                    if ($aboutus->steps_process != null) {
+                        $aboutus->steps_process = $jsonData2[$locale];
+                    }
+                    //return $aboutus->makeHidden('for_who');
+                } else {
+                    $aboutus->for_who = $jsonData[$defaultLanguage] ?? 'Language not supported';
+                    $aboutus->steps_process = $jsonData2[$defaultLanguage] ?? 'Language not supported';
+                }
 
-                    return $aboutus;
-                });
+                return $aboutus;
+            });
 
-                return response()->json([
-                    'success' => 1,
-                    'result' => $processedServices,
-                    'message' => __('app.data_returnd_sucssesfully')
-                ], 200);
-            } else {
-                return response()->json([
-                    'success' => 0,
-                    'result' => null,
-                    'message' => __('app.there_is_no_data')
-                ], 200);
-            }
+            return response()->json([
+                'success' => 1,
+                'result' => $processedServices,
+                'message' => __('app.data_returnd_sucssesfully')
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'success' => 0,
@@ -78,14 +76,15 @@ class AboutUsController extends Controller
             'company_name' => 'required|string',
             'introduction' => 'required',
             'our_mission' => 'required',
-            /*'*.for_who.en' => 'required',
-            '*.for_who.nl' => 'required',*/
+          //  '*.for_who.en' => 'required',
+          //  '*.for_who.nl' => 'required',
             'for_who' => 'required',
-            /*  "*.steps_process.en" => 'required',
-            "*.steps_process.nl" => 'required',
+            "steps_process" => 'required',
+          //  "*.steps_process.en" => 'required',
+          //  "*.steps_process.nl" => 'required',
             "meet_our_team" => 'required|string',
-            "our_partners_&_associates" => 'required',
-            "client_testimonials" => 'required',*/
+            "our_partners&associates" => 'required',
+            "client_testimonials" => 'required',
         ]);
         if ($validation->fails()) {
 
@@ -100,7 +99,12 @@ class AboutUsController extends Controller
                 'company_name' => $request->company_name,
                 'introduction' => $request->introduction,
                 'our_mission' => $request->our_mission,
-                "for_who" => $request->for_who,
+                "for_who" => json_decode($request->for_who),
+                "steps_process" => json_decode($request->steps_process),
+                "meet_our_team" => $request->meet_our_team,
+                "our_partners&associates" => $request['our_partners&associates'],
+                "client_testimonials" => $request->client_testimonials,
+
 
             ]);
             return response()->json([

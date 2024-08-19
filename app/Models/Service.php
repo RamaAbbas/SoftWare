@@ -19,11 +19,11 @@ class Service extends Model
         return $this->hasMany(Requirment::class, 'service_id', 'id');
     }
 
-    public function for_who(): HasMany
+    public function service_benefits(): HasMany
     {
         return $this->hasMany(BenefitsForWho::class, 'service_id', 'id');
     }
-    public function how_it_work(): HasMany
+    public function service_processs(): HasMany
     {
         return $this->hasMany(HowItWork::class, 'service_id', 'id');
     }

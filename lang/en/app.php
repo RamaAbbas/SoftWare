@@ -14,6 +14,7 @@ return [
     "faild_to_delete_service" => "faild to delete service",
     "there_is_no_data"=>" There is no Data ",
     "data_returnd_sucssesfully"=>"Data Returned Sucsessfully",
+    "lang_not_supported"=>"Language not supported",
 
 
 //////////////Admin

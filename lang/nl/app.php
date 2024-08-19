@@ -14,6 +14,7 @@ return [
     "faild_to_delete_service" => "Kan service niet verwijderen",
     "there_is_no_data" => "er zijn geen gegevens",
     "data_returnd_sucssesfully" => "gegevens zijn succesvol geretourneerd",
+    "lang_not_supported"=>"Taal niet ondersteund",
 
 
 

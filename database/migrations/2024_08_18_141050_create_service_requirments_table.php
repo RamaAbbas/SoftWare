@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('benefits_for_whom', function (Blueprint $table) {
+        Schema::create('service_requirments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
-            $table->json('benefit_name')->nullable();
-            $table->json('benefit_description')->nullable();
+            $table->json('name')->nullable();
+            $table->json('descripton')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('benefits_for_whom');
+        Schema::dropIfExists('requirments');
     }
 };

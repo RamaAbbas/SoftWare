@@ -29,7 +29,7 @@ Route::middleware([SetLocal::class])->group(function () {
     });
     Route::middleware([\App\Http\Middleware\Authentication::class])->group(function () {
 
-        Route::post('/store-service', [ServicesController::class, 'store'])->name("service.store");
+
         Route::get('/add/services', [ServicesController::class, 'addservice'])->name('service.add');
         Route::post('/update-service/{id}', [ServicesController::class, 'update'])->name('service.update');
         Route::get('/edit/services/{id}', [ServicesController::class, 'edit'])->name('service.edit');
@@ -37,6 +37,7 @@ Route::middleware([SetLocal::class])->group(function () {
        // Route::get('/admin', [LoginController::class, 'home'])->name('home');
         Route::get('/admin-services', [ServicesController::class, 'show_all'])->name('showall.service');
     });
+
 
     Route::post('/login', [LoginController::class, 'login'])->name('admin.login');
 

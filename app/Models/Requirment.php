@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Requirment extends Model
 {
     use HasFactory;
-    protected $table = "requirments";
+    protected $table = "service_requirments";
 
     protected $guarded = ['id'];
 

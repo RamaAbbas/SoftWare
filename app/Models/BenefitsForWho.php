@@ -10,7 +10,7 @@ class BenefitsForWho extends Model
 {
     use HasFactory;
 
-    protected $table = "benefits_for_whom";
+    protected $table = "service_benefits";
     protected $guarded = ['id'];
 
     protected $casts = [
