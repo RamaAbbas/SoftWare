@@ -18,7 +18,7 @@ class ServicesController extends Controller
 
     public function index(Request $request)
     {
-        $language = $request->header('Lang');
+        $language = $request->header('Accept-Language');
         $defaultLanguage = 'en';
         $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
 
@@ -50,6 +50,10 @@ class ServicesController extends Controller
                 if (is_string($service->name)) {
                     $name = json_decode($service->name, true);
                     $service->name = $name[$locale] ?? $name[$defaultLanguage] ?? __('app.lang_not_supported');
+                }
+                if (is_string($service->title_of_requirements)) {
+                    $title_of_requirements = json_decode($service->title_of_requirements, true);
+                    $service->title_of_requirements = $title_of_requirements[$locale] ?? $title_of_requirements[$defaultLanguage] ?? __('app.lang_not_supported');
                 }
 
 
@@ -146,6 +150,7 @@ class ServicesController extends Controller
             'client_testimonial' => 'required',
             'cost' => 'required',
             'requirment' => 'array',
+            'title_of_requirements'=>'required',
             //'requirment.*.name' => 'required',
             //  'requirment.description' => 'required',
             'service_benefits' => 'array',
@@ -177,6 +182,8 @@ class ServicesController extends Controller
                 'call_to_action' => $validatedData['call_to_action'],
                 'client_testimonial' => $validatedData['client_testimonial'],
                 'cost' => $validatedData['cost'],
+                'title_of_requirements'=>$validatedData['title_of_requirements']
+
             ]);
 
             if (isset($validatedData['requirment'])) {
@@ -229,7 +236,7 @@ class ServicesController extends Controller
 
     public function show($id, Request $request)
     {
-        $language = $request->header('Lang');
+        $language = $request->header('Accept-Language');
         $defaultLanguage = 'en';
         $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
 
@@ -257,6 +264,16 @@ class ServicesController extends Controller
                 $description = json_decode($service->client_testimonial, true);
                 $service->client_testimonial = $description[$locale] ?? $description[$defaultLanguage] ?? __('app.lang_not_supported');
             }
+            if (is_string($service->name)) {
+                $name = json_decode($service->name, true);
+                $service->name = $name[$locale] ?? $name[$defaultLanguage] ?? __('app.lang_not_supported');
+            }
+            if (is_string($service->title_of_requirements)) {
+                $title_of_requirements = json_decode($service->title_of_requirements, true);
+                $service->title_of_requirements = $title_of_requirements[$locale] ?? $title_of_requirements[$defaultLanguage] ?? __('app.lang_not_supported');
+            }
+
+
 
 
             $service->requirment = $service->requirment->map(function ($related) use ($locale, $defaultLanguage) {
@@ -311,24 +328,7 @@ class ServicesController extends Controller
         }
     }
 
-    /* public function show($id)
-    {
-        //  $service = Service::findOrFail($id);
-        $service = Service::with(['requirment', 'for_who', 'how_it_work'])->findOrFail($id);
-        if (!$service) {
-            return response()->json([
-                'success' => 0,
-                'result' => null,
-                'message' => __('app.failed_to_restore_service')
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => 1,
-                'result' => $service,
-                'message' => __('app.service_returned_sucsessfully')
-            ], 200);
-        }
-    }*/
+
     public function edit($id)
     {
         $service = Service::findOrFail($id);
@@ -405,14 +405,5 @@ class ServicesController extends Controller
         }
     }
 
-    public function getcontent($id, $content)
-    {
-        $service = Service::findOrFail($id);
-        if ($service) {
-            if ($content == "description") {
-                $description = $content;
-                return view('admin.Service.service', compact('description'));
-            }
-        }
-    }
+   
 }

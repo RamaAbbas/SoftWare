@@ -12,73 +12,16 @@ class AboutUsController extends Controller
 {
 
 
-    /* public function index(Request $request)
-    {
-
-        $language = $request->header('Lang');
-        $defaultLanguage = 'en';
-        $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
-
-
-        $aboutus = AboutUs::all();
-        //$aboutus = AboutUs::select() //
-        //   ->get();
-        if ($aboutus->isEmpty()) {
-            return response()->json([
-                'success' => 0,
-                'result' => null,
-                'message' => __('app.there_is_no_data')
-            ], 200);
-        }
-
-        try {
-
-            $processedServices = $aboutus->map(function ($aboutus) use ($locale, $defaultLanguage) {
-                if (is_string($aboutus->for_who)) {
-                    $jsonData = json_decode($aboutus->for_who, true);
-                }
-                if (is_string($aboutus->steps_process)) {
-                    $jsonData2 = json_decode($aboutus->steps_process, true);
-                }
-
-                if (isset($jsonData[$locale])) {
-                    if ($aboutus->for_who != null) {
-                        $aboutus->for_who = $jsonData[$locale];
-                    }
-                    if ($aboutus->steps_process != null) {
-                        $aboutus->steps_process = $jsonData2[$locale];
-                    }
-                    //return $aboutus->makeHidden('for_who');
-                } else {
-                    $aboutus->for_who = $jsonData[$defaultLanguage] ?? 'Language not supported';
-                    $aboutus->steps_process = $jsonData2[$defaultLanguage] ?? 'Language not supported';
-                }
-
-                return $aboutus;
-            });
-
-            return response()->json([
-                'success' => 1,
-                'result' => $processedServices,
-                'message' => __('app.data_returnd_sucssesfully')
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => 0,
-                'result' => null,
-                'message' => $e
-            ], 200);
-        }
-    }*/
     public function index(Request $request)
     {
 
-        $language = $request->header('Lang');
+        $language = $request->header('Accept-Language');
         $defaultLanguage = 'en';
         $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
 
 
-        $aboutus = AboutUs::all();
+        $aboutus = AboutUs::with(['steps_process', 'client_testimonial'])->get();
+        //return $aboutus;
         //$aboutus = AboutUs::select() //
         //   ->get();
         if ($aboutus->isEmpty()) {
@@ -94,8 +37,18 @@ class AboutUsController extends Controller
             $processedServices = $aboutus->map(function ($about) use ($locale, $defaultLanguage) {
 
                 if (is_string($about->company_name)) {
-                    $company_name = json_decode($about->company_name, true);
-                    $about->company_name = $company_name[$locale] ?? $company_name[$defaultLanguage] ?? __('app.lang_not_supported');
+                    $comp = json_decode($about->company_name);
+                    $company = json_decode($comp);
+
+                    //  $about->company_name = $company;
+                    $a = array_map(function ($item) {
+                        $string = json_encode($item);
+                        $s = json_decode($string);
+                        //   return  $about->company_name = $s[$locale] ?? $s[$defaultLanguage] ?? __('app.lang_not_supported');
+                        //json_encode($s);
+                        return [$s];
+                    }, $company);
+                    $about->company_name = $a;
                 }
                 if (is_string($about->introduction)) {
                     $introduction = json_decode($about->introduction, true);
@@ -109,10 +62,7 @@ class AboutUsController extends Controller
                     $for_who = json_decode($about->for_who, true);
                     $about->for_who = $for_who[$locale] ?? $for_who[$defaultLanguage] ?? __('app.lang_not_supported');
                 }
-                if (is_string($about->steps_process)) {
-                    $steps_process = json_decode($about->steps_process, true);
-                    $about->steps_process = $steps_process[$locale] ?? $steps_process[$defaultLanguage] ?? __('app.lang_not_supported');
-                }
+
                 if (is_string($about->meet_our_team)) {
                     $meet_our_team = json_decode($about->meet_our_team, true);
                     $about->meet_our_team = $meet_our_team[$locale] ?? $meet_our_team[$defaultLanguage] ?? __('app.lang_not_supported');
@@ -121,10 +71,33 @@ class AboutUsController extends Controller
                     $our_partners_associates = json_decode($about->our_partners_associates, true);
                     $about->our_partners_associates = $our_partners_associates[$locale] ?? $our_partners_associates[$defaultLanguage] ?? __('app.lang_not_supported');
                 }
-                if (is_string($about->client_testimonials)) {
-                    $client_testimonials = json_decode($about->client_testimonials, true);
-                    $about->client_testimonials = $client_testimonials[$locale] ?? $client_testimonials[$defaultLanguage] ?? __('app.lang_not_supported');
+                if (is_string($about->title_for_who)) {
+                    $title_for_who = json_decode($about->title_for_who, true);
+                    $about->title_for_who = $title_for_who[$locale] ?? $title_for_who[$defaultLanguage] ?? __('app.lang_not_supported');
                 }
+
+                $about->steps_process = $about->steps_process->map(function ($related) use ($locale, $defaultLanguage) {
+                    if (is_string($related->name)) {
+                        $name = json_decode($related->name, true);
+                        $related->name = $name[$locale] ?? $name[$defaultLanguage] ?? __('app.lang_not_supported');
+                    }
+                    if (is_string($related->description)) {
+                        $description = json_decode($related->description, true);
+                        $related->description = $description[$locale] ?? $description[$defaultLanguage] ?? __('app.lang_not_supported');
+                    }
+                    return $related;
+                });
+                $about->client_testimonial = $about->client_testimonial->map(function ($related) use ($locale, $defaultLanguage) {
+                    if (is_string($related->client)) {
+                        $client = json_decode($related->client, true);
+                        $related->client = $client[$locale] ?? $client[$defaultLanguage] ?? __('app.lang_not_supported');
+                    }
+                    if (is_string($related->testimonial)) {
+                        $testimonial = json_decode($related->testimonial, true);
+                        $related->testimonial = $testimonial[$locale] ?? $testimonial[$defaultLanguage] ?? __('app.lang_not_supported');
+                    }
+                    return $related;
+                });
 
 
                 return $about;
@@ -172,7 +145,7 @@ class AboutUsController extends Controller
         DB::beginTransaction();
         try {
             $service = AboutUs::create([
-                'company_name' => $request->company_name,
+                'company_name' => json_encode($request->company_name),
                 'introduction' => $request->introduction,
                 'our_mission' => $request->our_mission,
                 "for_who" => $request->for_who,
@@ -202,7 +175,7 @@ class AboutUsController extends Controller
 
     public function show($id, Request $request)
     {
-        $language = $request->header('Lang');
+        $language = $request->header('Accept-Language');
         $defaultLanguage = 'en';
 
         $locale = $language ? substr($language, 0, 2) : $defaultLanguage;

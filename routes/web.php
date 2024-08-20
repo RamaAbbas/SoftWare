@@ -18,7 +18,7 @@ Route::get('/', function () {
 Route::middleware([SetLocal::class])->group(function () {
     Route::get('setlocale/{local}', function ($local) {
 
-        if (! in_array($local, ['en', 'ar', 'nl'])) {
+        if (! in_array($local, ['en','nl'])) {
 
             return redirect()->back();
         } else {
