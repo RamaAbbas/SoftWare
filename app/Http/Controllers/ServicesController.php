@@ -47,6 +47,10 @@ class ServicesController extends Controller
                     $client_testimonial = json_decode($service->client_testimonial, true);
                     $service->client_testimonial = $client_testimonial[$locale] ?? $client_testimonial[$defaultLanguage] ?? __('app.lang_not_supported');
                 }
+                if (is_string($service->name)) {
+                    $name = json_decode($service->name, true);
+                    $service->name = $name[$locale] ?? $name[$defaultLanguage] ?? __('app.lang_not_supported');
+                }
 
 
 
@@ -136,7 +140,7 @@ class ServicesController extends Controller
             'service_processs.*.step_no' => 'required',
         ]);*/
         $validatedDat = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'required',
             'description' => 'required|json',
             'call_to_action' => 'required',
             'client_testimonial' => 'required',
@@ -147,7 +151,7 @@ class ServicesController extends Controller
             'service_benefits' => 'array',
             // 'service_benefits.benefit_name' => 'required',
             // 'service_benefits.benefit_description' => 'required',
-            'service_processs' => 'array',
+            //  'service_processs' => 'array',
             // 'service_processs.name' => 'required',
             // 'service_processs.description' => 'required',
             // 'service_processs.step_no' => 'required',
@@ -161,7 +165,7 @@ class ServicesController extends Controller
             ], 200);
         }
 
-        //   DB::beginTransaction();
+        DB::beginTransaction();
 
         try {
             $validatedData = $request->all();
@@ -195,7 +199,7 @@ class ServicesController extends Controller
                 }
             }
 
-            //    DB::commit();
+            DB::commit();
 
             return response()->json([
                 'sucsess' => 1,
@@ -203,7 +207,7 @@ class ServicesController extends Controller
                 'message' => __('app.servive_stored_sucsessfully'),
             ], 200);
         } catch (Exception $e) {
-            //  DB::rollBack();
+            DB::rollBack();
             return response()->json([
                 'success' => 0,
                 'result' => null,

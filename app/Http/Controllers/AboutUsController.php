@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AboutUs;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AboutUsController extends Controller
@@ -168,6 +169,7 @@ class AboutUsController extends Controller
                 'message' => $validation->errors(),
             ], 200);
         }
+        DB::beginTransaction();
         try {
             $service = AboutUs::create([
                 'company_name' => $request->company_name,
@@ -181,12 +183,14 @@ class AboutUsController extends Controller
 
 
             ]);
+            DB::commit();
             return response()->json([
                 'sucsess' => 1,
                 'result' => $service,
                 'message' => "",
             ], 200);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => 0,
                 'result' => null,

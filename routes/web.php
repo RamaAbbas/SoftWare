@@ -31,6 +31,7 @@ Route::middleware([SetLocal::class])->group(function () {
 
 
         Route::get('/add/services', [ServicesController::class, 'addservice'])->name('service.add');
+      //  Route::post('/store-service', [ServicesController::class, 'store'])->name("service.store");
         Route::post('/update-service/{id}', [ServicesController::class, 'update'])->name('service.update');
         Route::get('/edit/services/{id}', [ServicesController::class, 'edit'])->name('service.edit');
         Route::delete('/delete-service/{id}', [ServicesController::class, 'destroy'])->name("service.delete");
