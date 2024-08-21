@@ -13,13 +13,10 @@ class BenefitsForWho extends Model
     protected $table = "service_benefits";
     protected $guarded = ['id'];
 
-    protected $casts = [
-        'benefit_name' => 'array',
-        'benefit_description' => 'array',
-    ];
+
 
     public function service(): BelongsTo
     {
-        return $this->belongsTo(Service::class,'service_id','id');
+        return $this->belongsTo(Service::class, 'service_id', 'id');
     }
 }

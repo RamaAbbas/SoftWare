@@ -6,17 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ClientTestimonial extends Model
+class ProcessProcedures extends Model
 {
     use HasFactory;
 
-    protected $table = "client_testimonials"; //client_testimonials
+    protected $table = "process_procedures";
     protected $guarded = ['id'];
 
-   
 
-    public function about_us(): BelongsTo
+    public function service_process(): BelongsTo
     {
-        return $this->belongsTo(AboutUs::class, 'about_us_id', 'id');
+        return $this->belongsTo(HowItWork::class, 'service_processs_id', 'id');
     }
 }

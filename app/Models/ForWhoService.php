@@ -6,14 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ClientTestimonial extends Model
+class ForWhoService extends Model
 {
     use HasFactory;
-
-    protected $table = "client_testimonials"; //client_testimonials
+    protected $table = "for_who_services"; //client_testimonials
     protected $guarded = ['id'];
 
-   
 
     public function about_us(): BelongsTo
     {

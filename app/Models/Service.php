@@ -27,4 +27,8 @@ class Service extends Model
     {
         return $this->hasMany(HowItWork::class, 'service_id', 'id');
     }
+    public function client_testimonial(): HasMany
+    {
+        return $this->hasMany(ClientTestimonialService::class, 'service_id', 'id');
+    }
 }

@@ -23,4 +23,8 @@ class AboutUs extends Model
     {
         return $this->hasMany(ClientTestimonial::class, 'about_us_id', 'id');
     }
+    public function for_who_services(): HasMany
+    {
+        return $this->hasMany(ForWhoService::class, 'about_us_id', 'id');
+    }
 }

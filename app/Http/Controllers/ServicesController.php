@@ -161,40 +161,30 @@ class ServicesController extends Controller
 
     public function store(Request $request)
     {
-        /*$validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|json',
-            'call_to_action' => 'required|json',
-            'client_testimonial' => 'required|json',
-            'cost' => 'required',
-            'requirment' => 'array',
-            'requirment.*.name' => 'required',
-            'requirment.*.description' => 'required',
-            'service_benefits' => 'array',
-            'service_benefits.*.benefit_name' => 'required',
-            'service_benefits.*.benefit_description' => 'required',
-            'service_processs' => 'array',
-            'service_processs.*.name' => 'required',
-            'service_processs.*.description' => 'required',
-            'service_processs.*.step_no' => 'required',
-        ]);*/
+
         $validatedDat = Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required|json',
-            'call_to_action' => 'required',
-            'client_testimonial' => 'required',
-            'cost' => 'required',
+            'en_name' => 'required',
+            'nl_name' => 'required',
+            'en_description' => 'required',
+            'nl_description' => 'required',
+            'en_title_of_requirments' => 'required',
+            'nl_title_of_requirments' => 'required',
+            'en_title_of_how_it_works' => 'required',
+            'nl_title_of_how_it_works' => 'required',
+            'en_title_of_service_benefit' => 'required',
+            'nl_title_of_service_benefit' => 'required',
+            'en_title_of_call_to_action' => 'required',
+            'nl_title_of_call_to_action' => 'required',
+            'en_sub_title_of_call_to_action' => 'required',
+            'nl_sub_title_of_call_to_action' => 'required',
             'requirment' => 'array',
-            'title_of_requirements' => 'required',
-            //'requirment.*.name' => 'required',
-            //  'requirment.description' => 'required',
+            'client_testimonial' => 'array',
             'service_benefits' => 'array',
-            // 'service_benefits.benefit_name' => 'required',
-            // 'service_benefits.benefit_description' => 'required',
-            //  'service_processs' => 'array',
-            // 'service_processs.name' => 'required',
-            // 'service_processs.description' => 'required',
-            // 'service_processs.step_no' => 'required',
+            'service_processs' => 'array'
+
+
+
+
         ]);
         if ($validatedDat->fails()) {
 
@@ -208,16 +198,23 @@ class ServicesController extends Controller
         DB::beginTransaction();
 
         try {
-            $validatedData = $request->all();
-            // return $validatedData ;
+            $validatedData = $request->all(); //$validatedData['']
 
             $service = Service::create([
-                'name' => $validatedData['name'],
-                'description' => $validatedData['description'],
-                'call_to_action' => $validatedData['call_to_action'],
-                'client_testimonial' => $validatedData['client_testimonial'],
-                'cost' => $validatedData['cost'],
-                'title_of_requirements' => $validatedData['title_of_requirements']
+                'en_name' => $validatedData['en_name'],
+                'nl_name' => $validatedData['nl_name'],
+                'en_description' => $validatedData['en_description'],
+                'nl_description' => $validatedData['nl_description'],
+                'en_title_of_requirments' => $validatedData['en_title_of_requirments'],
+                'nl_title_of_requirments' => $validatedData['nl_title_of_requirments'],
+                'en_title_of_how_it_works' => $validatedData['en_title_of_how_it_works'],
+                'nl_title_of_how_it_works' => $validatedData['nl_title_of_how_it_works'],
+                'en_title_of_service_benefit' => $validatedData['en_title_of_service_benefit'],
+                'nl_title_of_service_benefit' => $validatedData['nl_title_of_service_benefit'],
+                'en_title_of_call_to_action' => $validatedData['en_title_of_call_to_action'],
+                'nl_title_of_call_to_action' => $validatedData['nl_title_of_call_to_action'],
+                'en_sub_title_of_call_to_action' => $validatedData['en_sub_title_of_call_to_action'],
+                'nl_sub_title_of_call_to_action' => $validatedData['nl_sub_title_of_call_to_action'],
 
             ]);
 
@@ -233,13 +230,37 @@ class ServicesController extends Controller
                     $service->service_benefits()->create($relatedData);
                 }
             }
-
-            if (isset($validatedData['service_processs'])) {
-                foreach ($validatedData['service_processs'] as $relatedData) {
-                    //return $relatedData;
-                    $service->service_processs()->create($relatedData);
+            if (isset($validatedData['client_testimonial'])) {
+                foreach ($validatedData['client_testimonial'] as $relatedData) {
+                    $service->client_testimonial()->create($relatedData);
                 }
             }
+
+            if (!empty($validatedData['service_processs'])) {
+                foreach ($validatedData['service_processs'] as $service_processsdata) {
+                    // Create each category
+                    $service_processs = $service->service_processs()->create([
+                        'en_name' => $service_processsdata['en_name'],
+                        'nl_name' => $service_processsdata['nl_name'],
+                        'en_description' => $service_processsdata['en_description'],
+                        'nl_description' => $service_processsdata['nl_description'],
+                    ]);
+
+                    // Loop through the subcategories
+                    if (!empty($service_processsdata['process_procedures'])) {
+                        foreach ($service_processsdata['process_procedures'] as $process_procedures) {
+                            // Create each subcategory
+                            $service_processs->process_procedures()->create([
+                                'en_name' => $process_procedures['en_name'],
+                                'nl_name' => $process_procedures['nl_name'],
+                                'en_description' => $process_procedures['en_description'],
+                                'nl_description' => $process_procedures['nl_description'],
+                            ]);
+                        }
+                    }
+                }
+            }
+
 
             DB::commit();
 

@@ -13,9 +13,6 @@ class Requirment extends Model
 
     protected $guarded = ['id'];
 
-    protected $casts = [
-        'descripton_of_requirment' => 'array',
-    ];
 
     public function service(): BelongsTo
     {

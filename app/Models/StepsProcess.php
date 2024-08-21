@@ -13,10 +13,7 @@ class StepsProcess extends Model
     protected $table = "steps_processs";
     protected $guarded = ['id'];
 
-    protected $casts = [
-        'name' => 'array',
-        'description' => 'array',
-    ];
+
 
     public function about_us(): BelongsTo
     {
