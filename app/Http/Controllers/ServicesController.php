@@ -35,101 +35,119 @@ class ServicesController extends Controller
         try {
             $processedServices = $services->map(function ($service) use ($locale, $defaultLanguage) {
 
-                if (is_string($service->description)) {
-                    $description = json_decode($service->description, true);
-                    $service->description = $description[$locale] ?? $description[$defaultLanguage] ?? __('app.lang_not_supported');
+                if ($locale == 'en') {
+                    return [
+                        'name' => $service->en_name ?? __('app.lang_not_supported'),
+                        'description' => $service->en_description ?? __('app.lang_not_supported'),
+                        'title_of_requirments' => $service->en_title_of_requirments ?? __('app.lang_not_supported'),
+                        'title_of_how_it_works' => $service->en_title_of_how_it_works ?? __('app.lang_not_supported'),
+                        'title_of_service_benefit' => $service->en_title_of_service_benefit ?? __('app.lang_not_supported'),
+                        'title_call_to_action' => $service->en_title_call_to_action ?? __('app.lang_not_supported'),
+                        'sub_title_call_to_action' => $service->en_sub_title_call_to_action ?? __('app.lang_not_supported'),
+
+                        "Requirment" => "0",
+                        $service->requirment = $service->requirment->map(function ($related) use ($locale, $defaultLanguage) {
+                            $requirment = [
+                                'name' => $related->en_name ?? __('app.lang_not_supported'),
+                                'description' => $related->en_description ?? __('app.lang_not_supported'),
+
+                            ];
+                            return $requirment;
+                        }),
+                        "Benefits" => "1",
+                        $service->service_benefits = $service->service_benefits->map(function ($related) use ($locale, $defaultLanguage) {
+                            $service_benefits = [
+                                'name' => $related->en_name ?? __('app.lang_not_supported'),
+                                'description' => $related->en_description ?? __('app.lang_not_supported'),
+
+                            ];
+                            return $service_benefits;
+                        }),
+                        "Client Testimonial" => "2",
+                        $service->client_testimonial = $service->client_testimonial->map(function ($related) use ($locale, $defaultLanguage) {
+                            $client_testimonial = [
+                                'client_name' => $related->client_name ?? __('app.lang_not_supported'),
+                                'client_testimonial' => $related->en_client_testimonial ?? __('app.lang_not_supported'),
+
+                            ];
+                            return $client_testimonial;
+                        }),
+                        "Service Processs" => "3",
+                        $service->service_processs = $service->service_processs->map(function ($related) use ($locale, $defaultLanguage) {
+                            $service_processs = [
+                                "Process Procedures" => "0",
+                                'name' => $related->en_name ?? __('app.lang_not_supported'),
+                                $related->process_procedures = $related->process_procedures->map(function ($subrelated) use ($locale, $defaultLanguage) {
+                                    $process_procedures = [
+                                        'name' => $subrelated->en_name ?? __('app.lang_not_supported'),
+                                        'description' => $subrelated->en_description ?? __('app.lang_not_supported'),
+
+                                    ];
+                                    return $process_procedures;
+                                }),
+
+                            ];
+                            return $service_processs;
+                        }),
+                    ];
                 }
-                if (is_string($service->call_to_action)) {
-                    $call_to_action = json_decode($service->call_to_action, true);
-                    $service->call_to_action = $call_to_action[$locale] ?? $call_to_action[$defaultLanguage] ?? __('app.lang_not_supported');
+               else {
+                    return [
+                        'name' => $service->en_name ?? __('app.lang_not_supported'),
+                        'description' => $service->nl_description ?? __('app.lang_not_supported'),
+                        'title_of_requirments' => $service->nl_title_of_requirments ?? __('app.lang_not_supported'),
+                        'title_of_how_it_works' => $service->nl_title_of_how_it_works ?? __('app.lang_not_supported'),
+                        'title_of_service_benefit' => $service->nl_title_of_service_benefit ?? __('app.lang_not_supported'),
+                        'title_call_to_action' => $service->nl_title_call_to_action ?? __('app.lang_not_supported'),
+                        'sub_title_call_to_action' => $service->nl_sub_title_call_to_action ?? __('app.lang_not_supported'),
+
+                        "Requirment" => "0",
+                        $service->requirment = $service->requirment->map(function ($related) use ($locale, $defaultLanguage) {
+                            $requirment = [
+                                'name' => $related->nl_name ?? __('app.lang_not_supported'),
+                                'description' => $related->nl_description ?? __('app.lang_not_supported'),
+
+                            ];
+                            return $requirment;
+                        }),
+                        "Benefits" => "1",
+                        $service->service_benefits = $service->service_benefits->map(function ($related) use ($locale, $defaultLanguage) {
+                            $service_benefits = [
+                                'name' => $related->nl_name ?? __('app.lang_not_supported'),
+                                'description' => $related->nl_description ?? __('app.lang_not_supported'),
+
+                            ];
+                            return $service_benefits;
+                        }),
+                        "Client Testimonial" => "2",
+                        $service->client_testimonial = $service->client_testimonial->map(function ($related) use ($locale, $defaultLanguage) {
+                            $client_testimonial = [
+                                'client_name' => $related->client_name ?? __('app.lang_not_supported'),
+                                'client_testimonial' => $related->nl_client_testimonial ?? __('app.lang_not_supported'),
+
+                            ];
+                            return $client_testimonial;
+                        }),
+                        "Service Processs" => "3",
+                        $service->service_processs = $service->service_processs->map(function ($related) use ($locale, $defaultLanguage) {
+                            $service_processs = [
+                                "Process Procedures" => "0",
+                                'name' => $related->nl_name ?? __('app.lang_not_supported'),
+                                $related->process_procedures = $related->process_procedures->map(function ($subrelated) use ($locale, $defaultLanguage) {
+                                    $process_procedures = [
+                                        'name' => $subrelated->nl_name ?? __('app.lang_not_supported'),
+                                        'description' => $subrelated->nl_description ?? __('app.lang_not_supported'),
+
+                                    ];
+                                    return $subrelated;
+                                }),
+
+                            ];
+                            return $service_processs;
+                        }),
+                    ];
                 }
-                if (is_string($service->client_testimonial)) {
-                    $client_testimonial = json_decode($service->client_testimonial, true);
-                    $service->client_testimonial = $client_testimonial[$locale] ?? $client_testimonial[$defaultLanguage] ?? __('app.lang_not_supported');
-                }
-                if (is_string($service->name)) {
-                    $name = json_decode($service->name, true);
-                    $service->name = $name[$locale] ?? $name[$defaultLanguage] ?? __('app.lang_not_supported');
-                }
-                if (is_string($service->title_of_requirements)) {
-                    $title_of_requirements = json_decode($service->title_of_requirements, true);
-                    $service->title_of_requirements = $title_of_requirements[$locale] ?? $title_of_requirements[$defaultLanguage] ?? __('app.lang_not_supported');
-                }
-                if (is_string($service->title_of_how_it_works)) {
-                    $title_of_how_it_works = json_decode($service->title_of_how_it_works, true);
-                    $service->title_of_how_it_works = $title_of_how_it_works[$locale] ?? $title_of_how_it_works[$defaultLanguage] ?? __('app.lang_not_supported');
-                }
-                if (is_string($service->title_of_service_benefit)) {
-                    $title_of_service_benefit = json_decode($service->title_of_service_benefit, true);
-                    $service->title_of_service_benefit = $title_of_service_benefit[$locale] ?? $title_of_service_benefit[$defaultLanguage] ?? __('app.lang_not_supported');
-                }
-                if (is_string($service->for_who)) {
-                    $for_who = json_decode($service->for_who, true);
-                    $service->for_who = $for_who[$locale] ?? $for_who[$defaultLanguage] ?? __('app.lang_not_supported');
-                }
 
-
-
-
-                $service->service_benefits = $service->service_benefits->map(function ($related) use ($locale, $defaultLanguage) {
-                    if (is_string($related->benefit_name)) {
-                        $name = json_decode($related->benefit_name, true);
-                        $related->benefit_name = $name[$locale] ?? $name[$defaultLanguage] ?? __('app.lang_not_supported');
-                    }
-                    if (is_string($related->benefit_description)) {
-                        $description = json_decode($related->benefit_description, true);
-                        $related->benefit_description = $description[$locale] ?? $description[$defaultLanguage] ?? __('app.lang_not_supported');
-                    }
-                    return $related;
-                });
-
-
-                $service->service_processs = $service->service_processs->map(function ($related) use ($locale, $defaultLanguage) {
-
-                    if (is_string($related->name)) {
-                        $stepName = json_decode($related->name, true);
-                        $related->name = $stepName[$locale] ?? $stepName[$defaultLanguage] ?? __('app.lang_not_supported');
-                    }
-                    /* if (is_string($related->description)) {
-                        $stepDescription = json_decode($related->description, true);
-                        $related->description = $stepDescription[$locale] ?? $stepDescription[$defaultLanguage] ?? __('app.lang_not_supported');
-                    }*/
-                    if (is_string($related->description)) {
-                        $desc = json_decode($related->description);
-                        $description = json_decode($desc);
-                        $a = array_map(function ($item) use ($locale, $defaultLanguage) {
-                            $string = json_encode($item);
-                            $s = json_decode($string);
-
-                            if ($locale == 'nl') {
-                                return [
-                                    "name" => $s->name->nl ?? $s->name->$defaultLanguage ?? __('app.lang_not_supported'),
-                                    "description" => $s->description->nl ?? $s->description->$defaultLanguage ?? __('app.lang_not_supported')
-                                ];
-                            } else {
-                                return [
-                                    "name" => $s->name->en ?? $s->name->$defaultLanguage ?? __('app.lang_not_supported'),
-                                    "description" => $s->description->en  ?? $s->description->$defaultLanguage ?? __('app.lang_not_supported')
-                                ];
-                            }
-                        }, $description);
-                        $related->description = $a;
-                    }
-
-                    return $related;
-                });
-                $service->requirment = $service->requirment->map(function ($related) use ($locale, $defaultLanguage) {
-                    if (is_string($related->name)) {
-                        $requirment = json_decode($related->name, true);
-                        $related->name = $requirment[$locale] ?? $requirment[$defaultLanguage] ?? __('app.lang_not_supported');
-                    }
-                    if (is_string($related->descripton)) {
-                        $requirment = json_decode($related->descripton, true);
-                        $related->descripton = $requirment[$locale] ?? $requirment[$defaultLanguage] ?? __('app.lang_not_supported');
-                    }
-
-                    return $related;
-                });
 
 
                 return $service;
@@ -173,10 +191,11 @@ class ServicesController extends Controller
             'nl_title_of_how_it_works' => 'required',
             'en_title_of_service_benefit' => 'required',
             'nl_title_of_service_benefit' => 'required',
-            'en_title_of_call_to_action' => 'required',
-            'nl_title_of_call_to_action' => 'required',
-            'en_sub_title_of_call_to_action' => 'required',
-            'nl_sub_title_of_call_to_action' => 'required',
+            'en_title_call_to_action' => 'required',
+            'nl_title_call_to_action' => 'required',
+            'en_sub_title_call_to_action' => 'required',
+            'nl_sub_title_call_to_action' => 'required',
+            "cost" => 'required',
             'requirment' => 'array',
             'client_testimonial' => 'array',
             'service_benefits' => 'array',
@@ -211,10 +230,11 @@ class ServicesController extends Controller
                 'nl_title_of_how_it_works' => $validatedData['nl_title_of_how_it_works'],
                 'en_title_of_service_benefit' => $validatedData['en_title_of_service_benefit'],
                 'nl_title_of_service_benefit' => $validatedData['nl_title_of_service_benefit'],
-                'en_title_of_call_to_action' => $validatedData['en_title_of_call_to_action'],
-                'nl_title_of_call_to_action' => $validatedData['nl_title_of_call_to_action'],
-                'en_sub_title_of_call_to_action' => $validatedData['en_sub_title_of_call_to_action'],
-                'nl_sub_title_of_call_to_action' => $validatedData['nl_sub_title_of_call_to_action'],
+                'en_title_call_to_action' => $validatedData['en_title_call_to_action'],
+                'nl_title_call_to_action' => $validatedData['nl_title_call_to_action'],
+                'en_sub_title_call_to_action' => $validatedData['en_sub_title_call_to_action'],
+                'nl_sub_title_call_to_action' => $validatedData['nl_sub_title_call_to_action'],
+                'cost' => $validatedData['cost']
 
             ]);
 
@@ -238,7 +258,7 @@ class ServicesController extends Controller
 
             if (!empty($validatedData['service_processs'])) {
                 foreach ($validatedData['service_processs'] as $service_processsdata) {
-                    // Create each category
+
                     $service_processs = $service->service_processs()->create([
                         'en_name' => $service_processsdata['en_name'],
                         'nl_name' => $service_processsdata['nl_name'],
@@ -246,10 +266,9 @@ class ServicesController extends Controller
                         'nl_description' => $service_processsdata['nl_description'],
                     ]);
 
-                    // Loop through the subcategories
                     if (!empty($service_processsdata['process_procedures'])) {
                         foreach ($service_processsdata['process_procedures'] as $process_procedures) {
-                            // Create each subcategory
+
                             $service_processs->process_procedures()->create([
                                 'en_name' => $process_procedures['en_name'],
                                 'nl_name' => $process_procedures['nl_name'],

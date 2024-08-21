@@ -35,16 +35,17 @@ class SetLocal
     // }
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->hasHeader('Accept-Language')) {
+        $defaultLocale = 'en';
+        if ($request->hasHeader('Accept-Language' ||'Lang')) {
             $locale = $request->header('Accept-Language');
             if (! in_array($locale, ['en', 'nl'])) {
                 abort(400);
             } else {
                 App::setLocale($locale);
                 Session::put('locale', $locale);
-            } else {
+            }/* else {
                 App::setLocale($defaultLocale);
-            }
+            }*/
         } elseif (Session::has('locale')) {
             App::setLocale(Session::get('locale'));
         } else {
