@@ -35,21 +35,38 @@ class AboutUsController extends Controller
         try {
 
             $processedServices = $aboutus->map(function ($about) use ($locale, $defaultLanguage) {
-
                 if (is_string($about->company_name)) {
+                    $company_name = json_decode($about->company_name, true);
+                    $about->company_name = $company_name[$locale] ?? $company_name[$defaultLanguage] ?? __('app.lang_not_supported');
+                }
+
+                /*  if (is_string($about->company_name)) {
                     $comp = json_decode($about->company_name);
                     $company = json_decode($comp);
 
                     //  $about->company_name = $company;
-                    $a = array_map(function ($item) {
+                    $a = array_map(function ($item) use ($locale, $defaultLanguage) {
                         $string = json_encode($item);
                         $s = json_decode($string);
+
+                        // $a=json_encode($s->a);
+
                         //   return  $about->company_name = $s[$locale] ?? $s[$defaultLanguage] ?? __('app.lang_not_supported');
                         //json_encode($s);
-                        return [$s];
+                        if ($locale == 'nl') {
+                            return [
+                                "a" => $s->a->nl,
+                                "b" => $s->b->nl
+                            ];
+                        } else {
+                            return [
+                                "a" => $s->a->en,
+                                "b" => $s->b->en
+                            ];
+                        }
                     }, $company);
                     $about->company_name = $a;
-                }
+                }*/
                 if (is_string($about->introduction)) {
                     $introduction = json_decode($about->introduction, true);
                     $about->introduction = $introduction[$locale] ?? $introduction[$defaultLanguage] ?? __('app.lang_not_supported');
@@ -59,8 +76,25 @@ class AboutUsController extends Controller
                     $about->our_mission = $our_mission[$locale] ?? $our_mission[$defaultLanguage] ?? __('app.lang_not_supported');
                 }
                 if (is_string($about->for_who)) {
-                    $for_who = json_decode($about->for_who, true);
-                    $about->for_who = $for_who[$locale] ?? $for_who[$defaultLanguage] ?? __('app.lang_not_supported');
+                    $who = json_decode($about->for_who);
+                    $for_who = json_decode($who);
+                    $a = array_map(function ($item) use ($locale, $defaultLanguage) {
+                        $string = json_encode($item);
+                        $s = json_decode($string);
+
+                        if ($locale == 'nl') {
+                            return [
+                                "name" => $s->name->nl ?? $s->name->$defaultLanguage ?? __('app.lang_not_supported'),
+                                "description" => $s->description->nl ?? $s->description->$defaultLanguage ?? __('app.lang_not_supported')
+                            ];
+                        } else {
+                            return [
+                                "name" => $s->name->en ?? $s->name->$defaultLanguage ?? __('app.lang_not_supported'),
+                                "description" => $s->description->en  ?? $s->description->$defaultLanguage ?? __('app.lang_not_supported')
+                            ];
+                        }
+                    }, $for_who);
+                    $about->for_who = $a;
                 }
 
                 if (is_string($about->meet_our_team)) {
