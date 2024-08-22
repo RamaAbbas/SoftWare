@@ -15,41 +15,23 @@ class SetLocal
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    // public function handle(Request $request, Closure $next): Response
-    // {
-    //     if ($request->hasHeader('local')) {
-    //         $locale = $request->header('Accept-Language');
-    //         if (! in_array($locale, ['en', 'nl'])) {
-    //             abort(400);
-    //         } else {
-    //             App::setLocale($locale);
-    //           //  Session::put(['local',$locale]);
-    //             error_log("11111");
-    //             error_log(app()->getLocale());
-    //             error_log("11111");
-    //         }
-    //     } elseif (Session::has('local')) {
-    //         app()->setLocale(Session::get('local'));
-    //     }
-    //     return $next($request);
-    // }
+
     public function handle(Request $request, Closure $next): Response
     {
         $defaultLocale = 'en';
-        if ($request->hasHeader('Accept-Language' ||'Lang')) {
+        $local = $request->header('Accept-Language'); //?? $defaultLocale;
+        if ($request->hasHeader('Accept-Language' || 'Lang')) {
             $locale = $request->header('Accept-Language');
             if (! in_array($locale, ['en', 'nl'])) {
                 abort(400);
             } else {
                 App::setLocale($locale);
                 Session::put('locale', $locale);
-            }/* else {
-                App::setLocale($defaultLocale);
-            }*/
+            }
         } elseif (Session::has('locale')) {
             App::setLocale(Session::get('locale'));
         } else {
-            App::setLocale($defaultLocale);
+            App::setLocale($local);
         }
 
         return $next($request);

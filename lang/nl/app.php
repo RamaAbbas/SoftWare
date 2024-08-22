@@ -15,6 +15,7 @@ return [
     "there_is_no_data" => "er zijn geen gegevens",
     "data_returnd_sucssesfully" => "gegevens zijn succesvol geretourneerd",
     "lang_not_supported"=>"Taal niet ondersteund",
+    "contact_stored_sucsessfully"=>"Contact succesvol opgeslagen",
 
 
 

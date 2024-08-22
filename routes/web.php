@@ -18,28 +18,27 @@ Route::get('/', function () {
 Route::middleware([SetLocal::class])->group(function () {
     Route::get('setlocale/{local}', function ($local) {
 
-        if (! in_array($local, ['en','nl'])) {
+        if (! in_array($local, ['en', 'nl'])) {
 
             return redirect()->back();
         } else {
             App::setLocale($local);
-            Session::put('local', $local);
-            return redirect()->back();
+            Session::put('locale', $local);
+            return  redirect()->back();
         }
     });
     Route::middleware([\App\Http\Middleware\Authentication::class])->group(function () {
 
 
         Route::get('/add/services', [ServicesController::class, 'addservice'])->name('service.add');
-      //  Route::post('/store-service', [ServicesController::class, 'store'])->name("service.store");
+        //  Route::post('/store-service', [ServicesController::class, 'store'])->name("service.store");
         Route::post('/update-service/{id}', [ServicesController::class, 'update'])->name('service.update');
         Route::get('/edit/services/{id}', [ServicesController::class, 'edit'])->name('service.edit');
         Route::delete('/delete-service/{id}', [ServicesController::class, 'destroy'])->name("service.delete");
-       // Route::get('/admin', [LoginController::class, 'home'])->name('home');
+        // Route::get('/admin', [LoginController::class, 'home'])->name('home');
         Route::get('/admin-services', [ServicesController::class, 'show_all'])->name('showall.service');
     });
 
 
     Route::post('/login', [LoginController::class, 'login'])->name('admin.login');
-
 });

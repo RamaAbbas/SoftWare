@@ -14,6 +14,6 @@ class Contact extends Model
 
     public function contacts_messeges(): HasMany
     {
-        return $this->hasMany(ContactMessages::class, 'contact_id', 'id');
+        return $this->hasMany(ContactMessage::class, 'contact_id', 'id');
     }
 }
