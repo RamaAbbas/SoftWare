@@ -85,10 +85,10 @@ class Service extends Model
                         }),
 
                     ];
-                    return $service_processs;
+                   // return $service_processs;
                 }),
             ];
-        } else {
+        } else if($locale='nl') {
             return [
                 'name' => $service->en_name ?? __('app.lang_not_supported'),
                 'description' => $service->nl_description ?? __('app.lang_not_supported'),
