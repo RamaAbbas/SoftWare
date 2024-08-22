@@ -243,7 +243,86 @@ class AboutUsController extends Controller
                 ], 200);
             }
 
-            $aboutus->shortcut($locale, $aboutus, $defaultLanguage);
+            // $aboutus->shortcut($locale, $aboutus, $defaultLanguage);
+            if ($locale == 'en') {
+                return [
+                    'company_name' => $aboutus->en_company_name ?? __('app.lang_not_supported'),
+                    'introduction' => $aboutus->en_introduction ?? __('app.lang_not_supported'),
+                    'our_mission' => $aboutus->en_our_mission ?? __('app.lang_not_supported'),
+                    'our_goals' => $aboutus->en_our_goals ?? __('app.lang_not_supported'),
+                    'title_for_who' => $aboutus->en_title_for_who ?? __('app.lang_not_supported'),
+                    'title_steps_process' => $aboutus->en_title_steps_process ?? __('app.lang_not_supported'),
+                    'meet_our_team' => $aboutus->en_meet_our_team ?? __('app.lang_not_supported'),
+                    'our_partners_associates' => $aboutus->en_our_partners_associates ?? __('app.lang_not_supported'),
+                    'end' => $aboutus->en_end ?? __('app.lang_not_supported'),
+                    "Steps Process" => "0",
+                    $aboutus->steps_process = $aboutus->steps_process->map(function ($related) use ($locale, $defaultLanguage, $aboutus) {
+                        $steps_process = [
+                           // 'step_no' => $related->step_no,
+                            'process_name' => $related->en_name ?? __('app.lang_not_supported'),
+                            'process_description' => $related->en_description ?? __('app.lang_not_supported'),
+
+                        ];
+                        return $steps_process;
+                    }),
+                    "Client Testemonial" => "1",
+                    $aboutus->client_testimonial = $aboutus->client_testimonial->map(function ($related) use ($locale, $defaultLanguage, $aboutus) {
+                        $client_testimonial = [
+                            "Title of Section" => "Here is Client Testemonial",
+                            'client_testimonial' => $related->en_client_testimonial ?? __('app.lang_not_supported'),
+                            'client_name' => $related->client_name ?? __('app.lang_not_supported'),
+
+                        ];
+                        return $client_testimonial;
+                    }),
+                    "Services For Who_" => "2",
+                    $aboutus->for_who_services = $aboutus->for_who_services->map(function ($related) use ($locale, $defaultLanguage, $aboutus) {
+                        $client_testimonial = [
+                            'name_of_service_for_who' => $related->en_name ?? __('app.lang_not_supported'),
+                            'description_of_service_for_who' => $related->en_description ?? __('app.lang_not_supported'),
+
+                        ];
+                        return $client_testimonial;
+                    })
+                ];
+            } else if($locale=='nl'){
+                return [
+                    'company_name' => $aboutus->nl_company_name ?? __('app.lang_not_supported'),
+                    'introduction' => $aboutus->nl_introduction ?? __('app.lang_not_supported'),
+                    'our_mission' => $aboutus->nl_our_mission ?? __('app.lang_not_supported'),
+                    'our_goals' => $aboutus->nl_our_goals ?? __('app.lang_not_supported'),
+                    'title_for_who' => $aboutus->nl_title_for_who ?? __('app.lang_not_supported'),
+                    'title_steps_process' => $aboutus->nl_title_steps_process ?? __('app.lang_not_supported'),
+                    'meet_our_team' => $aboutus->nl_meet_our_team ?? __('app.lang_not_supported'),
+                    'our_partners_associates' => $aboutus->nl_our_partners_associates ?? __('app.lang_not_supported'),
+                    'end' => $aboutus->nl_end ?? __('app.lang_not_supported'),
+                    $aboutus->steps_process = $aboutus->steps_process->map(function ($related) use ($locale, $defaultLanguage, $aboutus) {
+                        $steps_process = [
+                            'process_name' => $related->nl_name ?? __('app.lang_not_supported'),
+                            'process_description' => $related->nl_description ?? __('app.lang_not_supported'),
+
+                        ];
+                        return $steps_process;
+                    }),
+                    $aboutus->client_testimonial = $aboutus->client_testimonial->map(function ($related) use ($locale, $defaultLanguage, $aboutus) {
+                        $client_testimonial = [
+                            "Title of Section" => "Here is Client Testemonial",
+                            'client_testimonial' => $related->nl_client_testimonial ?? __('app.lang_not_supported'),
+                            'client_name' => $related->client_name ?? __('app.lang_not_supported'),
+
+                        ];
+                        return $client_testimonial;
+                    }),
+                    $aboutus->for_who_services = $aboutus->for_who_services->map(function ($related) use ($locale, $defaultLanguage, $aboutus) {
+                        $for_who_services = [
+                            'name_of_service_for_who' => $related->nl_name ?? __('app.lang_not_supported'),
+                            'description_of_service_for_who' => $related->nl_description ?? __('app.lang_not_supported'),
+
+                        ];
+                        return $for_who_services;
+                    })
+                ];
+            }
 
             return response()->json([
                 'success' => 1,
