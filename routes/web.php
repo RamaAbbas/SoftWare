@@ -40,9 +40,14 @@ Route::middleware([SetLocal::class])->group(function () {
         Route::get('/admin-services', [ServicesController::class, 'show_all'])->name('showall.service');
 
 
+        Route::post('/store-service', [ServicesController::class, 'store'])->name("service.store");
+
+
+
         //////////About Us
         Route::get('/add/about-us', [AboutUsController::class, 'addaboutus'])->name('about-us.add');
         Route::get('/admin-about-us', [AboutUsController::class, 'show_all'])->name('showall.about-us');
+        Route::post('/store-aboutus', [AboutUsController::class, 'store'])->name("about-us.store");
     });
 
 
