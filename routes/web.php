@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Middleware\SetLocal;
@@ -37,6 +38,11 @@ Route::middleware([SetLocal::class])->group(function () {
         Route::delete('/delete-service/{id}', [ServicesController::class, 'destroy'])->name("service.delete");
         // Route::get('/admin', [LoginController::class, 'home'])->name('home');
         Route::get('/admin-services', [ServicesController::class, 'show_all'])->name('showall.service');
+
+
+        //////////About Us
+        Route::get('/add/about-us', [AboutUsController::class, 'addaboutus'])->name('about-us.add');
+        Route::get('/admin-about-us', [AboutUsController::class, 'show_all'])->name('showall.about-us');
     });
 
 

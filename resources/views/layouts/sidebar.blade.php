@@ -23,15 +23,24 @@
             <div class="menu_section">
                 <ul class="nav side-menu">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('showall.service')}}">
-                            <i class="fa fa-list"></i> {{__('app.service')}}
+                        <a class="nav-link" href="{{ route('showall.service') }}">
+                            <i class="fa fa-list"></i> {{ __('app.service') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('showall.about-us')}}">
+                            <i class="fa fa-list"></i> About Us
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fa fa-list"></i> Contact Us
                         </a>
                     </li>
                 </ul>
-
-
             </div>
         </div>
+
         <!-- /sidebar menu -->
     </div>
 </div>

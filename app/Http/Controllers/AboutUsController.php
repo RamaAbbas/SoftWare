@@ -86,6 +86,11 @@ class AboutUsController extends Controller
         }
     }
 
+    public function show_all()
+    {
+        $aboutus = AboutUs::with(['steps_process', 'client_testimonial', 'for_who_services'])->get();
+        return view('admin.AboutUs.aboutus', compact('aboutus'));
+    }
 
     public function store(Request $request)
     {
@@ -152,8 +157,8 @@ class AboutUsController extends Controller
                     $about_us->steps_process()->create($relatedData);
                 }
             }
-            if (isset($validatedData['client_testimonials'])) {
-                foreach ($validatedData['client_testimonials'] as $relatedData) {
+            if (isset($validatedData['client_testimonial'])) {
+                foreach ($validatedData['client_testimonial'] as $relatedData) {
 
                     $about_us->client_testimonial()->create($relatedData);
                 }
@@ -165,11 +170,12 @@ class AboutUsController extends Controller
                 }
             }
             DB::commit();
-            return response()->json([
+           return redirect()->route('about-us.add');
+          /*  return response()->json([
                 'sucsess' => 1,
                 'result' => $about_us,
                 'message' => "",
-            ], 200);
+            ], 200);*/
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -179,6 +185,12 @@ class AboutUsController extends Controller
             ], 200);
         }
     }
+
+    public function addaboutus()
+    {
+        return view('admin.AboutUs.add');
+    }
+
 
 
     public function show($id, Request $request)

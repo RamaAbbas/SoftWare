@@ -18,7 +18,7 @@ Route::middleware([SetLocal::class])->group(function () {
     Route::get('/services', [ServicesController::class, 'index']);
     Route::get('/service/show/{id}', [ServicesController::class, 'show'])->name('service.show');
     Route::post('/store-service', [ServicesController::class, 'store'])->name("service.store");
-    Route::post('/store-aboutus', [AboutUsController::class, 'store']);
+    Route::post('/store-aboutus', [AboutUsController::class, 'store'])->name("about-us.store");
     ////about us
     Route::get('/about-us', [AboutUsController::class, 'index']);
     Route::get('/about-us/show/{id}', [AboutUsController::class, 'show'])->name('aboutus.show');

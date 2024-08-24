@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class ServicesController extends Controller
 {
@@ -109,9 +110,71 @@ class ServicesController extends Controller
     {
         $user = Auth::user()->id;
         error_log($user);
-        $services = Service::all();
+        $services = Service::with(['requirment', 'service_benefits', 'service_processs', 'client_testimonial'])->get();
         return view('admin.Service.service', compact('services'));
+        //   return Session::get('locale');
     }
+
+    /*  public function show_all(){
+        $language = Session::get('locale');
+        $defaultLanguage = 'en';
+        $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
+        $services = Service::with(['requirment', 'service_benefits', 'service_processs', 'client_testimonial'])->get();
+        $processedServices = $services->map(function ($service) use ($locale) {
+
+            $data = [
+                'id' => $service->id,
+                'name' => $locale == 'en' ? $service->en_name : $service->nl_name,
+                'description' => $locale == 'en' ? $service->en_description : $service->nl_description,
+                // 'title_of_requirments' => $locale == 'en' ? $service->en_title_of_requirments : $service->nl_title_of_requirments,
+                // 'title_of_how_it_works' => $locale == 'en' ? $service->en_title_of_how_it_works : $service->nl_title_of_how_it_works,
+                // 'title_of_service_benefit' => $locale == 'en' ? $service->en_title_of_service_benefit : $service->nl_title_of_service_benefit,
+                // 'title_call_to_action' => $locale == 'en' ? $service->en_title_call_to_action : $service->nl_title_call_to_action,
+                // 'sub_title_call_to_action' => $locale == 'en' ? $service->en_sub_title_call_to_action : $service->nl_sub_title_call_to_action,
+            ];
+
+            // Process Requirments
+            // $data['requirments'] = $service->requirment->map(function ($related) use ($locale) {
+            //     return [
+            //         'name' => $locale == 'en' ? $related->en_name : $related->nl_name,
+            //         'description' => $locale == 'en' ? $related->en_description : $related->nl_description,
+            //     ];
+            // });
+
+            // // Process Service Benefits
+            // $data['service_benefits'] = $service->service_benefits->map(function ($related) use ($locale) {
+            //     return [
+            //         'name' => $locale == 'en' ? $related->en_name : $related->nl_name,
+            //         'description' => $locale == 'en' ? $related->en_description : $related->nl_description,
+            //     ];
+            // });
+
+            // // Process Client Testimonials
+            // $data['client_testimonial'] = $service->client_testimonial->map(function ($related) use ($locale) {
+            //     return [
+            //         'client_name' => $related->client_name,
+            //         'client_testimonial' => $locale == 'en' ? $related->en_client_testimonial : $related->nl_client_testimonial,
+            //     ];
+            // });
+
+            // // Process Service Processes and Procedures
+            // $data['process_procedures'] = $service->service_processs->map(function ($related) use ($locale) {
+            //     return [
+            //         'name' => $locale == 'en' ? $related->en_name : $related->nl_name,
+            //         'step_no' => $related->step_no,
+            //         'service_processes' => $related->process_procedures->map(function ($subrelated) use ($locale) {
+            //             return [
+            //                 'name' => $locale == 'en' ? $subrelated->en_name : $subrelated->nl_name,
+            //                 'description' => $locale == 'en' ? $subrelated->en_description : $subrelated->nl_description,
+            //             ];
+            //         }),
+            //     ];
+            // });
+
+           // return $data;
+        });
+        return view('admin.Service.service', compact('data'));
+    }*/
 
     public function store(Request $request)
     {
@@ -198,6 +261,7 @@ class ServicesController extends Controller
                     $service_processs = $service->service_processs()->create([
                         'en_name' => $service_processsdata['en_name'],
                         'nl_name' => $service_processsdata['nl_name'],
+                        'step_no' => $service_processsdata['step_no'],
                     ]);
 
                     if (!empty($service_processsdata['process_procedures'])) {
@@ -216,12 +280,13 @@ class ServicesController extends Controller
 
 
             DB::commit();
+            return redirect()->route('service.add')->with('success', 'Service created successfully!');
 
-            return response()->json([
+           /* return response()->json([
                 'sucsess' => 1,
                 'result' => $service,
                 'message' => __('app.servive_stored_sucsessfully'),
-            ], 200);
+            ], 200);*/
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -243,7 +308,7 @@ class ServicesController extends Controller
 
 
 
-  
+
     public function show($id, Request $request)
     {
         $language = $request->header('Accept-Language');
