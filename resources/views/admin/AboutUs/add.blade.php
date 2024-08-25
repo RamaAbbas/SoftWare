@@ -364,7 +364,8 @@
 
                                         </div>
 
-                                        <button type="button" id="add-more-for_who_service">Add More For Who Service</button>
+                                        <button type="button" id="add-more-for_who_service">Add More For Who
+                                            Service</button>
 
                                     </form>
 
@@ -376,7 +377,7 @@
                                         <input type="hidden" name="client_testimonial[]">
                                         <div class="form-group row">
                                             <div id="client_testimonials">
-                                                <div class="client_testimonial">
+                                                <div class="client_testimoniall">
                                                     <label for="client_testimonial[0][client_name]">Client Name:</label>
                                                     <input type="text" id="client_testimonial[0][client_name]"
                                                         name="client_testimonial[0][client_name]"
@@ -396,6 +397,8 @@
                                                     </label>
                                                     <textarea id="client_testimonial[0][nl_client_testimonial]" name="client_testimonial[0][nl_client_testimonial]"
                                                         class="form-control  ">{{ old('client_testimonial.0.nl_client_testimonial') }}</textarea><br>
+                                                    <button type="button" class="delete-client_testimoniall">Delete
+                                                        Client Testimoniall </button>
 
                                                 </div>
                                                 <br>
@@ -476,7 +479,7 @@
 
                 <label for="steps_processs[${index}][nl_description]">Dutch Description:</label>
                 <textarea id="steps_processs[${index}][nl_description]" name="steps_processs[${index}][nl_description]"  class="form-control  "></textarea><br>
-                <button type="button" class="delete-steps_process">Delete Requirement</button>
+                <button type="button" class="delete-steps_process">Delete Steps Process</button>
             `;
 
             steps_processsDiv.appendChild(newsteps_process);
@@ -526,7 +529,7 @@
             var index = client_testimonialsDiv.children.length - 1;
 
             var newclient_testimonial = document.createElement('div');
-            newclient_testimonial.className = 'client_testimonial';
+            newclient_testimonial.className = 'client_testimoniall';
 
             newclient_testimonial.innerHTML = `
             <h6>Client Testimonial ${index+1} </h6>
@@ -538,9 +541,15 @@
 
                 <label for="client_testimonial[${index}][nl_client_testimonial]">Client Testemonial in Dutch</label>
                 <textarea id="client_testimonial[${index}][nl_client_testimonial]" name="client_testimonial[${index}][nl_client_testimonial]"></textarea><br>
+                <button type="button" class="delete-client_testimoniall">Delete Client Testimonial</button>
             `;
 
             client_testimonialsDiv.appendChild(newclient_testimonial);
+        });
+        document.addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('delete-client_testimoniall')) {
+                event.target.closest('.client_testimoniall').remove();
+            }
         });
     </script>
 @endsection

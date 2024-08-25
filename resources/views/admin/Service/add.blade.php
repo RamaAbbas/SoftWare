@@ -319,6 +319,8 @@
                                                     <label for="service_benefits[0][nl_description]">Dutch
                                                         Description:</label>
                                                     <textarea id="service_benefits[0][nl_description]" name="service_benefits[0][nl_description]"  class="form-control  ">{{ old('requirements.0.nl_description') }}</textarea><br>
+                                                    <button type="button" class="delete-service_benefit">Delete
+                                                        Benefit</button>
 
                                                 </div>
                                                 <br>
@@ -419,6 +421,9 @@
                                                         in Dutch
                                                     </label>
                                                     <textarea id="client_testimonial[0][nl_client_testimonial]" name="client_testimonial[0][nl_client_testimonial]"  class="form-control  ">{{ old('client_testimonial.0.nl_client_testimonial') }}</textarea><br>
+                                                    <button type="button" class="delete-client_testimonial">Delete
+                                                       Client Testimonial</button>
+
 
                                                 </div>
                                                 <br>
@@ -525,9 +530,15 @@
 
                 <label for="service_benefits[${index}][nl_description]">Dutch Description:</label>
                 <textarea id="service_benefits[${index}][nl_description]" name="service_benefits[${index}][nl_description]"  class="form-control  "></textarea><br>
+                <button type="button" class="delete-service_benefit">Delete Benefit</button>
             `;
 
             service_benefitsDiv.appendChild(newservice_benefit);
+        });
+        document.addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('delete-service_benefit')) {
+                event.target.closest('.service_benefit').remove();
+            }
         });
 
 
@@ -605,23 +616,24 @@
             newclient_testimonial.innerHTML = `
             <h6>Client Testimonial ${index+1} </h6>
                 <label for="client_testimonial[${index}][client_name]">Client Name:</label>
-                <input type="text" id="client_testimonial[${index}][client_name]" name="client_testimonial[${index}][client_name]"><br>
+                <input type="text" id="client_testimonial[${index}][client_name]" name="client_testimonial[${index}][client_name]" class="form-control  "><br>
 
                 <label for="client_testimonial[${index}][en_client_testimonial]"> Client Testemonial in English</label>
-                <textarea id="client_testimonial[${index}][en_client_testimonial]" name="client_testimonial[${index}][en_client_testimonial]"></textarea><br>
+                <textarea id="client_testimonial[${index}][en_client_testimonial]" name="client_testimonial[${index}][en_client_testimonial]" class="form-control  "></textarea><br>
 
                 <label for="client_testimonial[${index}][nl_client_testimonial]">Client Testemonial in Dutch</label>
-                <textarea id="client_testimonial[${index}][nl_client_testimonial]" name="client_testimonial[${index}][nl_client_testimonial]"></textarea><br>
+                <textarea id="client_testimonial[${index}][nl_client_testimonial]" name="client_testimonial[${index}][nl_client_testimonial]" class="form-control  "></textarea><br>
+                <button type="button" class="delete-client_testimonial">Delete Client Testimonial</button>
             `;
 
             client_testimonialsDiv.appendChild(newclient_testimonial);
         });
-        /* document.addEventListener('click', function(event) {
-             if (event.target && event.target.classList.contains('delete-requirement')) {
-                 var requirementDiv = event.target.parentNode;
-                 requirementDiv.remove();
-             }
-         });*/
+        document.addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('delete-client_testimonial')) {
+                event.target.closest('.client_testimonial').remove();
+            }
+        });
+
         document.addEventListener('click', function(event) {
             if (event.target && event.target.classList.contains('delete-requirement')) {
                 event.target.closest('.requirement').remove();
