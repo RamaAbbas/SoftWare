@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AboutUs;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -32,7 +33,7 @@ class AboutUsController extends Controller
         try {
             $processedAboutus = $aboutus->map(function ($about) use ($locale, $defaultLanguage) {
                 $data = [
-                    'id'=>$about->id,
+                    'id' => $about->id,
                     'company_name' => $locale == 'en' ? $about->en_company_name : $about->nl_company_name,
                     'introduction' => $locale == 'en' ? $about->en_introduction : $about->nl_introduction,
                     'our_mission' => $locale == 'en' ? $about->en_our_mission : $about->nl_our_mission,
@@ -85,12 +86,65 @@ class AboutUsController extends Controller
             ], 200);
         }
     }
-
+    ////////////////////////////////////////////////////////////////
     public function show_all()
     {
+        $language = App::getLocale();
+        $defaultLanguage = 'en';
+        $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
         $aboutus = AboutUs::with(['steps_process', 'client_testimonial', 'for_who_services'])->get();
-        return view('admin.AboutUs.aboutus', compact('aboutus'));
+        try {
+            $processedAboutus = $aboutus->map(function ($about) use ($locale, $defaultLanguage) {
+                $data = [
+                    'id' => $about->id,
+                    'company_name' => $locale == 'en' ? $about->en_company_name : $about->nl_company_name,
+                    'introduction' => $locale == 'en' ? $about->en_introduction : $about->nl_introduction,
+                    'our_mission' => $locale == 'en' ? $about->en_our_mission : $about->nl_our_mission,
+                    'our_goals' => $locale == 'en' ? $about->en_our_goals : $about->nl_our_goals,
+                    'title_for_who' => $locale == 'en' ? $about->en_title_for_who : $about->nl_title_for_who,
+                    'title_steps_process' => $locale == 'en' ? $about->en_title_steps_process : $about->nl_title_steps_process,
+                    'meet_our_team' => $locale == 'en' ? $about->en_meet_our_team : $about->nl_meet_our_team,
+                    'our_partners_associates' => $locale == 'en' ? $about->en_our_partners_associates : $about->nl_our_partners_associates,
+                    'end' => $locale == 'en' ? $about->en_end : $about->nl_end,
+                ];
+
+                // Process Steps
+                $data['steps_process'] = $about->steps_process->map(function ($step) use ($locale) {
+                    return [
+                        'process_name' => $locale == 'en' ? $step->en_name : $step->nl_name,
+                        'process_description' => $locale == 'en' ? $step->en_description : $step->nl_description,
+                    ];
+                });
+
+                // Process Client Testimonials
+                $data['client_testimonial'] = $about->client_testimonial->map(function ($testimonial) use ($locale) {
+                    return [
+                        'client_name' => $testimonial->client_name,
+                        'client_testimonial' => $locale == 'en' ? $testimonial->en_client_testimonial : $testimonial->nl_client_testimonial,
+                    ];
+                });
+
+                // Process For Who Services
+                $data['for_who_services'] = $about->for_who_services->map(function ($service) use ($locale) {
+                    return [
+                        'name_of_service_for_who' => $locale == 'en' ? $service->en_name : $service->nl_name,
+                        'description_of_service_for_who' => $locale == 'en' ? $service->en_description : $service->nl_description,
+                    ];
+                });
+
+                return $data;
+            });
+            return view('admin.AboutUs.aboutus', compact('processedAboutus'));
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'result' => null,
+                'message' => $e->getMessage()
+            ], 200);
+        }
     }
+
+    ////////////////////////////////////////////////////////////////
 
     public function store(Request $request)
     {
@@ -170,8 +224,8 @@ class AboutUsController extends Controller
                 }
             }
             DB::commit();
-           return redirect()->route('about-us.add');
-          /*  return response()->json([
+            return redirect()->route('about-us.add');
+            /*  return response()->json([
                 'sucsess' => 1,
                 'result' => $about_us,
                 'message' => "",
@@ -186,10 +240,14 @@ class AboutUsController extends Controller
         }
     }
 
+    ////////////////////////////////////////////////////////////////
+
     public function addaboutus()
     {
         return view('admin.AboutUs.add');
     }
+
+    ////////////////////////////////////////////////////////////////
 
 
 
@@ -262,4 +320,5 @@ class AboutUsController extends Controller
             ], 200);
         }
     }
+    ////////////////////////////////////////////////////////////////
 }

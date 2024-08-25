@@ -29,4 +29,8 @@ return [
     "profile" => "Profile ",
     "welcome_admin" => "Welcome",
     "service"=>"Services",
+    "about_us"=>"About Us",
+    "contact_us"=>"Contact Us",
+    "add_service"=>"Add service",
+    "show_more_details"=>"Show More Details",
 ];

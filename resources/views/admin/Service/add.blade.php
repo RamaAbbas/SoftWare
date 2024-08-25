@@ -1,8 +1,5 @@
 @extends('layouts.app')
-@if (session('success'))
-    <div class=" alert">{{ session('success') }}</div>
-    <h1> AAAAAAA</h1>
-@endif
+
 
 @section('content')
     <div class="right_col" role="main">

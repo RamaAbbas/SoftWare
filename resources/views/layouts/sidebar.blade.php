@@ -29,12 +29,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('showall.about-us')}}">
-                            <i class="fa fa-list"></i> About Us
+                            <i class="fa fa-list"></i> {{ __('app.about_us') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="">
-                            <i class="fa fa-list"></i> Contact Us
+                            <i class="fa fa-list"></i>{{ __('app.contact_us') }}
                         </a>
                     </li>
                 </ul>

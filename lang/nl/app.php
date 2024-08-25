@@ -31,5 +31,9 @@ return [
     "profile" => "profiel ",
     "welcome_admin" => "Welcome",
     "service" => "Dienst",
+    "about_us"=>"Informatie",
+    "contact_us"=>"Neem contact met ons op",
+    "add_service"=>"Service toevoegen",
+    "show_more_details"=>"Toon meer details",
 
 ];

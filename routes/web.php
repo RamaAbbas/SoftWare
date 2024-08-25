@@ -38,6 +38,7 @@ Route::middleware([SetLocal::class])->group(function () {
         Route::delete('/delete-service/{id}', [ServicesController::class, 'destroy'])->name("service.delete");
         // Route::get('/admin', [LoginController::class, 'home'])->name('home');
         Route::get('/admin-services', [ServicesController::class, 'show_all'])->name('showall.service');
+        Route::get('/service/view/{id}', [ServicesController::class, 'view'])->name('service.view');
 
 
         Route::post('/store-service', [ServicesController::class, 'store'])->name("service.store");

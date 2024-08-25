@@ -41,24 +41,10 @@
         document.addEventListener("DOMContentLoaded", function() {
             let token = "{{ session('api_token') }}";
             if (token) {
-                console.log("Token:", token);
-                console.log("99999999");
+                console.log("Token:", 1);
 
                 localStorage.setItem('api_token', token);
             }
-            /*   let local = "{{ session('local') }}";
-               if (local == 'en') {
-                   localStorage.setItem('local', 'en');
-               } else if (local == 'ar') {
-                   localStorage.setItem('local', 'ar');
-               } else {
-                   localStorage.setItem('local', 'nl');
-                   // localStorage.setItem('local', 'nl');
-               }
-               let a = localStorage.getItem('local');
-               console.log(a);
-               console.log("");
-               console.log("GGGGG");*/
 
         });
     </script>
@@ -82,6 +68,7 @@
 </head>
 
 <body class="nav-md">
+
     <div class="container body">
         <div class="main_container">
             @include('layouts.sidebar')
@@ -92,6 +79,9 @@
 
             <!-- page content -->
             <div class="right_col" role="main">
+                @if (session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
                 @yield('content')
             </div>
             <!-- /page content -->
