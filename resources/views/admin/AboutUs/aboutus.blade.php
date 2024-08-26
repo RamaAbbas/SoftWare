@@ -13,17 +13,19 @@
 
                             <div class="title_right">
                                 <div class="col-md-2 col-sm-2 form-group pull-right top_search">
-                                    <div id="a" style="display: none;">
-                                        <a href="{{ route('about-us.add') }}"><button class="btn-success">Add
-                                                AboutUs</button></a>
-                                    </div>
+                                    @if ($processedAboutus->count() == 0)
+                                        <div id="a" style="display: none;">
+                                            <a href="{{ route('about-us.add') }}"><button class="btn-success">Add
+                                                    AboutUs</button></a>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
 
                         <div class="clearfix"></div>
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body" id="c">
                                 <div class="row">
                                     @foreach ($processedAboutus as $aboutus)
                                         <div class="col-md-12">
@@ -132,16 +134,29 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            //  var TextInsideLi = document.getElementsByTagName('h2')[0].innerHTML;
-            var TextInsideLi = document.getElementById('b').textContent;
-            const a = document.getElementById('a');
-            if (TextInsideLi == "") {
-                a.style.display = "block";
+            var testElement = document.getElementById('c');
+         //   var TextInsideLi = document.getElementById('b').textContent ?? "a";
 
-            }
-            if (TextInsideLi != "") {
+            if (testElement.classList.contains('b')) {
                 a.style.display = "none";
+                console.log("AAAAAAAAAA");
+            } else {
+                a.style.display = "block";
+                console.log("BBBBBBBBBBBBB");
             }
+            /*  if(document.getElementById('b').textContent==null){
+              }
+              const a = document.getElementById('a');
+              if (TextInsideLi == ""|| TextInsideLi=="a") {
+                  a.style.display = "block";
+
+              }
+              if (TextInsideLi != "") {
+                  a.style.display = "none";
+              }
+              if($processedAboutus==0){
+                  a.style.display = "block";
+              }*/
 
         });
     </script>

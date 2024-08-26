@@ -17,10 +17,12 @@ Route::middleware([SetLocal::class])->group(function () {
 
     Route::get('/services', [ServicesController::class, 'index']);
     Route::get('/service/show/{id}', [ServicesController::class, 'show'])->name('service.show');
- 
+
     ////about us
     Route::get('/about-us', [AboutUsController::class, 'index']);
     Route::get('/about-us/show/{id}', [AboutUsController::class, 'show'])->name('aboutus.show');
+    //  Route::post('/store-aboutus', [AboutUsController::class, 'store'])->name("about-us.store");
+    Route::post('/update-aboutus/{id}', [AboutUsController::class, 'update'])->name("about-us.update");
 
 
 

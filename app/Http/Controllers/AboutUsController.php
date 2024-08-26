@@ -224,7 +224,7 @@ class AboutUsController extends Controller
                 }
             }
             DB::commit();
-            return redirect()->route('about-us.add');
+            return redirect()->route('about-us.add')->with('success', 'About Us created successfully!');
             /*  return response()->json([
                 'sucsess' => 1,
                 'result' => $about_us,
@@ -239,6 +239,114 @@ class AboutUsController extends Controller
             ], 200);
         }
     }
+
+
+
+
+
+    public function update(Request $request, $id)
+    {
+        $validation = Validator::make($request->all(), [
+            'en_company_name' => 'required',
+            'nl_company_name' => 'required',
+            'en_introduction' => 'required',
+            'nl_introduction' => 'required',
+            'en_our_mission' => 'required',
+            'nl_our_mission' => 'required',
+            'en_our_goals' => 'required',
+            'nl_our_goals' => 'required',
+            'en_title_for_who' => 'required',
+            'nl_title_for_who' => 'required',
+            'en_title_steps_process' => 'required',
+            'nl_title_steps_process' => 'required',
+            'en_meet_our_team' => 'required',
+            'nl_meet_our_team' => 'required',
+            'en_our_partners_associates' => 'required',
+            'nl_our_partners_associates' => 'required',
+            'en_end' => 'required',
+            'nl_end' => 'required',
+
+            "client_testimonials" => 'array',
+            "steps_processs" => 'array',
+            "for_who_services" => 'array',
+        ]);
+        if ($validation->fails()) {
+
+            return response()->json([
+                'sucsess' => 0,
+                'result' => null,
+                'message' => $validation->errors(),
+            ], 200);
+        }
+        DB::beginTransaction();
+        try {
+            $validatedData = $request->all();
+            $aboutus = AboutUs::findOrFail($id);
+            if ($aboutus) {
+
+                $aboutus->en_company_name = $validatedData['en_company_name'];
+                $aboutus->nl_company_name = $validatedData['nl_company_name'];
+                $aboutus->en_introduction = $validatedData['en_introduction'];
+                $aboutus->nl_introduction = $validatedData['nl_introduction'];
+                $aboutus->en_our_mission = $validatedData['en_our_mission'];
+                $aboutus->nl_our_mission = $validatedData['nl_our_mission'];
+                $aboutus->en_our_goals = $validatedData['en_our_goals'];
+                $aboutus->nl_our_goals = $validatedData['nl_our_goals'];
+                $aboutus->en_title_for_who = $validatedData['en_title_for_who'];
+                $aboutus->nl_title_for_who = $validatedData['nl_title_for_who'];
+                $aboutus->en_title_steps_process = $validatedData['en_title_steps_process'];
+                $aboutus->nl_title_steps_process = $validatedData['nl_title_steps_process'];
+                $aboutus->en_meet_our_team = $validatedData['en_meet_our_team'];
+                $aboutus->nl_meet_our_team = $validatedData['nl_meet_our_team'];
+                $aboutus->en_our_partners_associates = $validatedData['en_our_partners_associates'];
+                $aboutus->nl_our_partners_associates = $validatedData['nl_our_partners_associates'];
+                $aboutus->en_end = $validatedData['en_end'];
+                $aboutus->nl_end = $validatedData['nl_end'];
+                $aboutus->save();
+            }
+           /* if (isset($validatedData['steps_processs'])) {
+                foreach ($validatedData['steps_processs'] as $stepId => $stepData) {
+                    $step = $aboutus->steps_process()->findOrFail($stepId);
+                  //  error_log($step);
+                    if ($step) {
+                        $step->en_name = $stepData['en_name'];
+                        $step->nl_name = $stepData['nl_name'];
+                        $step->en_description = $stepData['en_description'];
+                        $step->nl_description = $stepData['nl_description'];
+                        $step->save();
+                    }
+                }
+            }*/
+            /*  if (isset($validatedData['client_testimonial'])) {
+                foreach ($validatedData['client_testimonial'] as $relatedData) {
+
+                    $about_us->client_testimonial()->create($relatedData);
+                }
+            }
+            if (isset($validatedData['for_who_services'])) {
+                foreach ($validatedData['for_who_services'] as $relatedData) {
+
+                    $about_us->for_who_services()->create($relatedData);
+                }
+            }*/
+            DB::commit();
+
+
+            return response()->json([
+                'sucsess' => 1,
+                'result' => $aboutus,
+                'message' => "Abput us updated Sucsessfully",
+            ], 200);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => 0,
+                'result' => null,
+                'message' => $e
+            ], 200);
+        }
+    }
+
 
     ////////////////////////////////////////////////////////////////
 

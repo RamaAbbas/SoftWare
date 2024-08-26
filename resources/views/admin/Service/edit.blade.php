@@ -172,6 +172,6 @@
         </div>
     </div>
     <script>
-        var a=l;
+        
     </script>
 @endsection
