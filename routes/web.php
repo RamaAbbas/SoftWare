@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Middleware\SetLocal;
@@ -49,6 +50,11 @@ Route::middleware([SetLocal::class])->group(function () {
         Route::get('/add/about-us', [AboutUsController::class, 'addaboutus'])->name('about-us.add');
         Route::get('/admin-about-us', [AboutUsController::class, 'show_all'])->name('showall.about-us');
         Route::post('/store-aboutus', [AboutUsController::class, 'store'])->name("about-us.store");
+
+
+
+        ////////contact Us
+        Route::get('/admin-contact-us', [ContactController::class, 'show_all'])->name('showall.contact-us');
     });
 
 

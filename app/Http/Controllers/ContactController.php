@@ -37,6 +37,11 @@ class ContactController extends Controller
             ], 500);
         }
     }
+    public function show_all()
+    {
+        $contacts = Contact::with('contacts_messeges')->get();
+        return view('admin.ContactUs.test', compact('contacts'));
+    }
 
     public function store(Request $request)
     {
@@ -66,13 +71,13 @@ class ContactController extends Controller
                 'mobile_number' => $data['mobile_number'],
                 'the_service_id' => $data['the_service_id'],
             ]);
-           // if ($request->has('msg')) {
-                $contact->contacts_messeges()->create([
-                    "msg" => $request->msg,
-                    'msg_send_at' => now(),
+            // if ($request->has('msg')) {
+            $contact->contacts_messeges()->create([
+                "msg" => $request->msg,
+                'msg_send_at' => now(),
 
-                ]);
-         //   }
+            ]);
+            //   }
             return response()->json([
                 'success' => 1,
                 'result' => $contact,
@@ -111,4 +116,13 @@ class ContactController extends Controller
             ], 500);
         }
     }
+
+    /*
+         $table->text('en_title')->nullable();
+            $table->text('nl_title')->nullable();
+            $table->text('en_description')->nullable();
+            $table->text('nl_escription')->nullable();
+            $table->text('en_service_category')->nullable();
+            $table->text('nl_service_category')->nullable();
+     */
 }

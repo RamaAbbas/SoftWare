@@ -13,10 +13,7 @@
 
                             <div class="title_right">
                                 <div class="col-md-2 col-sm-2 form-group pull-right top_search">
-                                    <div>
-                                        <a href=""><button class="btn-success">Add
-                                                Service</button></a>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -24,11 +21,12 @@
                         <div class="clearfix"></div>
                         <div class="card">
                             <div class="card-body">
-                               <!-- @foreach ($services as $service)-->
+                                @foreach ($contacts as $contact)
                                     <div class="col-md-4 col-sm-6 ">
                                         <div class="x_panel">
                                             <div class="x_title">
-                                                <h2></h2>
+                                                <h2 style="color: rgb(11, 212, 188)">Person
+                                                    <strong>{{ $contact->id }}</strong></h2>
                                                 <ul class="nav navbar-right panel_toolbox">
                                                     <li class="dropdown">
                                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"
@@ -36,14 +34,12 @@
                                                                 class="fa fa-cogs"></i></a>
                                                         <div></div>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                            <a class="dropdown-item"
-                                                                href="">Edit</a>
+                                                            <a class="dropdown-item" href="">Edit</a>
                                                         </div>
                                                     </li>
                                                     <li>
                                                         <div class="">
-                                                            <form action=""
-                                                                method="POST" style="display:grid;"
+                                                            <form action="" method="POST" style="display:grid;"
                                                                 onsubmit="return confirm('Are you sure you want to delete this Service?');">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -59,12 +55,17 @@
 
                                                 <div class="bs-example" data-example-id="simple-jumbotron">
                                                     <div class="jumbotron">
-                                                        <h4>Description</h4>
-                                                        <p></p>
-                                                        <h4>Requirments</h4>
-                                                        <p></p>
-                                                        <h4>Coast</h4>
-                                                        <h6></h6>
+                                                        <h4 style="color: rgb(11, 212, 188)">Name</h4>
+                                                        <p style="color: black">
+                                                            {{ $contact->first_name }},{{ $contact->first_name }}</p>
+                                                        <h4 style="color: rgb(11, 212, 188)">Email</h4>
+                                                        <p style="color: black">{{ $contact->email }}</p>
+                                                        <h4 style="color: rgb(11, 212, 188)">Mobile Number</h4>
+                                                        <h6 style="color: black">{{ $contact->mobile_number }}</h6>
+                                                        @foreach ($contact->contacts_messeges as $msg)
+                                                            <h4 style="color: rgb(11, 212, 188)">Message</h4>
+                                                            <h6 style="color: black">{{ $msg->msg }}</h6>
+                                                        @endforeach
 
                                                     </div>
                                                 </div>
@@ -72,7 +73,7 @@
                                             </div>
                                         </div>
                                     </div>
-                              <!--  @endforeach-->
+                                @endforeach
                             </div>
                         </div>
                     </div>

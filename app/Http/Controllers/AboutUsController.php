@@ -157,10 +157,10 @@ class AboutUsController extends Controller
             'nl_our_mission' => 'required',
             'en_our_goals' => 'required',
             'nl_our_goals' => 'required',
-            'en_title_for_who' => 'required',
-            'nl_title_for_who' => 'required',
-            'en_title_steps_process' => 'required',
-            'nl_title_steps_process' => 'required',
+            // 'en_title_for_who' => 'required',
+            // 'nl_title_for_who' => 'required',
+            // 'en_title_steps_process' => 'required',
+            // 'nl_title_steps_process' => 'required',
             'en_meet_our_team' => 'required',
             'nl_meet_our_team' => 'required',
             'en_our_partners_associates' => 'required',
@@ -174,11 +174,12 @@ class AboutUsController extends Controller
         ]);
         if ($validation->fails()) {
 
-            return response()->json([
+            return redirect()->back()->with('error', $validation->errors());
+            /*response()->json([
                 'sucsess' => 0,
                 'result' => null,
                 'message' => $validation->errors(),
-            ], 200);
+            ], 200);*/
         }
         DB::beginTransaction();
         try {
@@ -304,7 +305,7 @@ class AboutUsController extends Controller
                 $aboutus->nl_end = $validatedData['nl_end'];
                 $aboutus->save();
             }
-           /* if (isset($validatedData['steps_processs'])) {
+            /* if (isset($validatedData['steps_processs'])) {
                 foreach ($validatedData['steps_processs'] as $stepId => $stepData) {
                     $step = $aboutus->steps_process()->findOrFail($stepId);
                   //  error_log($step);
