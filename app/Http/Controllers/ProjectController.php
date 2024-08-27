@@ -13,6 +13,90 @@ use Illuminate\Support\Facades\Validator;
 class ProjectController extends Controller
 {
 
+    public function index(Request $request)
+    {
+        $language = $request->header('Accept-Language');
+        $defaultLanguage = 'en';
+        $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
+
+        $projects = Project::with(['client', 'service_categories', 'project_images', 'project_live_links', 'project_technologies', 'achievements', 'challenges'])->get();
+
+        if ($projects->isEmpty()) {
+            return response()->json([
+                'success' => 0,
+                'result' => null,
+                'message' => __('app.there_is_no_data')
+            ], 200);
+        }
+
+        try {
+            $processedServices = $projects->map(function ($project) use ($locale) {
+
+                $data = [
+                    'id' => $project->id,
+                    'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
+                    'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
+                    'begin_date' => $project->begin_date,
+                    'end_date' => $project->end_date,
+                    'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
+                ];
+                //  $data['client'] = $project->withOnly('client:id,first_name');
+                $data['client'] = $project->client()->get(); //->only(['first_name','last_name','email']);//->client()->get(); //pluck(['first_name']);
+
+                $data['service_categories'] = $project->service_categories->map(function ($related) use ($locale) {
+                    return [
+                        'servive_name' => $locale == 'en' ? $related->en_service_name : $related->nl_service_name,
+                    ];
+                });
+
+                $data['achievements'] = $project->achievements->map(function ($related) use ($locale) {
+                    return [
+                        'achievement_name' => $locale == 'en' ? $related->en_achievement_name : $related->nl_achievement_name,
+                        // 'description' => $locale == 'en' ? $related->en_description : $related->nl_description,
+                    ];
+                });
+
+                $data['project_technologies'] = $project->project_technologies->map(function ($related) use ($locale) {
+                    return [
+                        'tools' => $related->tools,
+                    ];
+                });
+                $data['project_images'] = $project->project_images->map(function ($related) use ($locale) {
+                    return [
+                        'image_path' => $related->image_path,
+                    ];
+                });
+
+                $data['challenges'] = $project->challenges->map(function ($related) use ($locale) {
+                    return [
+                        'challenge_name' => $locale == 'en' ? $related->en_challenge_name : $related->nl_challenge_name,
+                        'challenge_description' => $locale == 'en' ? $related->en_challenge_description : $related->nl_challenge_description,
+                    ];
+                });
+                $data['project_live_links'] = $project->project_live_links->map(function ($related) use ($locale) {
+                    return [
+                        'link' => $related->link,
+                    ];
+                });
+
+
+                return $data;
+            });
+
+            return response()->json([
+                'success' => 1,
+                'result' => $processedServices,
+                'message' => __('app.data_returnd_sucssesfully')
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'result' => null,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         if ($request->has('client_id')) {
@@ -23,9 +107,10 @@ class ProjectController extends Controller
                 'nl_description' => 'required',
                 'en_result' => 'required',
                 'nl_result' => 'required',
-                'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-                //   'begin_date' => 'required',
-                //   'end_date' => 'required',
+
+                'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'begin_date' => 'required|date',
+                'end_date' => 'required|date',
 
 
             ]);
@@ -52,8 +137,8 @@ class ProjectController extends Controller
                     'en_description' => $validatedData['en_description'],
                     'nl_description' => $validatedData['nl_description'],
                     //  'begin_date' =>Carbon::createFromFormat('d-m-Y',$validatedData['begin_date']),
-                    //  'begin_date' => Carbon::parse($validatedData['begin_date'])->format('d-m-Y'),
-                    //  'end_date' => $validatedData['end_date'],
+                    'begin_date' => Carbon::parse($validatedData['begin_date']),
+                    'end_date' => Carbon::parse($validatedData['end_date']),
                     'en_result' => $validatedData['en_result'],
                     'nl_result' => $validatedData['nl_result'],
                 ]);
@@ -154,7 +239,9 @@ class ProjectController extends Controller
                 'email' => 'required|email|unique:clients,email',
                 'phone_number' => 'required',
                 'projects' => 'array',
-                'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+                'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'begin_date' => 'required|date',
+                'end_date' => 'required|date',
 
 
             ]);
@@ -188,8 +275,8 @@ class ProjectController extends Controller
                     'nl_title' => $validatedData['nl_title'],
                     'en_description' => $validatedData['en_description'],
                     'nl_description' => $validatedData['nl_description'],
-                    //   'begin_date' => $validatedData['begin_date'],
-                    //   'end_date' => $validatedData['end_date'],
+                    'begin_date' => Carbon::parse($validatedData['begin_date']),
+                    'end_date' => Carbon::parse($validatedData['end_date']),
                     'en_result' => $validatedData['en_result'],
                     'nl_result' => $validatedData['nl_result'],
                 ]);
@@ -286,15 +373,16 @@ class ProjectController extends Controller
         }
     }
 
-    public function index(Request $request)
+
+    public function show(Request $request, $id)
     {
         $language = $request->header('Accept-Language');
         $defaultLanguage = 'en';
         $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
 
-        $projects = Project::with(['client', 'service_categories', 'project_images', 'project_live_links', 'project_technologies', 'achievements', 'challenges'])->get();
+        $project = Project::with(['client', 'service_categories', 'project_images', 'project_live_links', 'project_technologies', 'achievements', 'challenges'])->findOrFail($id);
 
-        if ($projects->isEmpty()) {
+        if (!$project) {
             return response()->json([
                 'success' => 0,
                 'result' => null,
@@ -303,62 +391,60 @@ class ProjectController extends Controller
         }
 
         try {
-            $processedServices = $projects->map(function ($project) use ($locale) {
 
-                $data = [
-                    'id' => $project->id,
-                    'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
-                    'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
-                    'begin_date' => $project->begin_date,
-                    'end_date' => $project->end_date,
-                    'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
+
+            $data = [
+                'id' => $project->id,
+                'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
+                'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
+                'begin_date' => $project->begin_date,
+                'end_date' => $project->end_date,
+                'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
+            ];
+            //  $data['client'] = $project->withOnly('client:id,first_name');
+            $data['client'] = $project->client()->get(); //->only(['first_name','last_name','email']);//->client()->get(); //pluck(['first_name']);
+
+            $data['service_categories'] = $project->service_categories->map(function ($related) use ($locale) {
+                return [
+                    'servive_name' => $locale == 'en' ? $related->en_service_name : $related->nl_service_name,
                 ];
-                //  $data['client'] = $project->withOnly('client:id,first_name');
-                $data['client'] = $project->client()->get(); //->only(['first_name','last_name','email']);//->client()->get(); //pluck(['first_name']);
-
-                $data['service_categories'] = $project->service_categories->map(function ($related) use ($locale) {
-                    return [
-                        'servive_name' => $locale == 'en' ? $related->en_service_name : $related->nl_service_name,
-                    ];
-                });
-
-                $data['achievements'] = $project->achievements->map(function ($related) use ($locale) {
-                    return [
-                        'achievement_name' => $locale == 'en' ? $related->en_achievement_name : $related->nl_achievement_name,
-                        // 'description' => $locale == 'en' ? $related->en_description : $related->nl_description,
-                    ];
-                });
-
-                $data['project_technologies'] = $project->project_technologies->map(function ($related) use ($locale) {
-                    return [
-                        'tools' => $related->tools,
-                    ];
-                });
-                $data['project_images'] = $project->project_images->map(function ($related) use ($locale) {
-                    return [
-                        'image_path' => $related->image_path,
-                    ];
-                });
-
-                $data['challenges'] = $project->challenges->map(function ($related) use ($locale) {
-                    return [
-                        'challenge_name' => $locale == 'en' ? $related->en_challenge_name : $related->nl_challenge_name,
-                        'challenge_description' => $locale == 'en' ? $related->en_challenge_description : $related->nl_challenge_description,
-                    ];
-                });
-                $data['project_live_links'] = $project->project_live_links->map(function ($related) use ($locale) {
-                    return [
-                        'link' => $related->link,
-                    ];
-                });
-
-
-                return $data;
             });
+
+            $data['achievements'] = $project->achievements->map(function ($related) use ($locale) {
+                return [
+                    'achievement_name' => $locale == 'en' ? $related->en_achievement_name : $related->nl_achievement_name,
+                    // 'description' => $locale == 'en' ? $related->en_description : $related->nl_description,
+                ];
+            });
+
+            $data['project_technologies'] = $project->project_technologies->map(function ($related) use ($locale) {
+                return [
+                    'tools' => $related->tools,
+                ];
+            });
+            $data['project_images'] = $project->project_images->map(function ($related) use ($locale) {
+                return [
+                    'image_path' => $related->image_path,
+                ];
+            });
+
+            $data['challenges'] = $project->challenges->map(function ($related) use ($locale) {
+                return [
+                    'challenge_name' => $locale == 'en' ? $related->en_challenge_name : $related->nl_challenge_name,
+                    'challenge_description' => $locale == 'en' ? $related->en_challenge_description : $related->nl_challenge_description,
+                ];
+            });
+            $data['project_live_links'] = $project->project_live_links->map(function ($related) use ($locale) {
+                return [
+                    'link' => $related->link,
+                ];
+            });
+
+
 
             return response()->json([
                 'success' => 1,
-                'result' => $processedServices,
+                'result' => $data,
                 'message' => __('app.data_returnd_sucssesfully')
             ], 200);
         } catch (Exception $e) {

@@ -65,26 +65,28 @@
                                                             @endforeach
                                                             <br>
                                                             <br>
-                                                            <span class="name">
+                                                            <small class="name">
                                                                 <span
-                                                                    style="color: black;"><small>{{ $contact->first_name }},{{ $contact->last_name }}</small></span>
+                                                                    style="color: black;"><h6>{{ $contact->first_name }},{{ $contact->last_name }}</h6></span>
 
-                                                            </span>
-                                                            <br>
-                                                            <span class="emali">
-                                                                <span style="color: black;"><small>{{ $contact->email }}</small></span>
+                                                            </small>
 
-                                                            </span>
-                                                            <br>
-                                                            <span class="emali">
+                                                            <small class="emali">
                                                                 <span
-                                                                    style="color: black;"><small>{{ $contact->mobile_number }}</small></span>
+                                                                    style="color: black;"><h6>{{ $contact->email }}</h6></span>
 
-                                                            </span>
-                                                            <br>
+                                                            </small>
+
+                                                            <small class="emali">
+                                                                <span
+                                                                    style="color: black;"><h6>{{ $contact->mobile_number }}</h6></span>
+
+                                                            </small>
+
 
                                                         </a>
                                                     </li>
+                                                    <br>
                                                 @endforeach
                                             </ul>
                                         </div>
