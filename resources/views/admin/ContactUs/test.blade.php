@@ -47,8 +47,19 @@
                                             <ul class="list-unstyled msg_list">
                                                 @foreach ($contacts as $contact)
                                                     <li>
+                                                        @foreach ($contact->contacts_messeges as $msg)
+                                                            <span>
+
+                                                                <span class="time">{{ $msg->msg_send_at }}</span>
+
+                                                            </span>
+
+                                                            <span class="message" style="color">
+                                                               <strong> {{ $msg->msg }}</strong>
+                                                            </span>
+                                                        @endforeach
                                                         <a>
-                                                            <span class="name">
+                                                            <span class="message">
                                                                 <span
                                                                     style="color: black;"><strong>{{ $contact->first_name }},{{ $contact->last_name }}</strong></span>
 
@@ -66,17 +77,7 @@
 
                                                             </span>
                                                             <br>
-                                                            @foreach ($contact->contacts_messeges as $msg)
-                                                                <span>
 
-                                                                    <span class="time">{{ $msg->msg_send_at }}</span>
-
-                                                                </span>
-
-                                                                <span class="message">
-                                                                    {{ $msg->msg }}
-                                                                </span>
-                                                            @endforeach
                                                         </a>
                                                     </li>
                                                 @endforeach

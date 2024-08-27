@@ -69,7 +69,7 @@ class ContactController extends Controller
                 'last_name' => $data['last_name'],
                 'email' => $data['email'],
                 'mobile_number' => $data['mobile_number'],
-                'the_service_id' => $data['the_service_id'],
+                'service_id' => $data['service_id'],
             ]);
             // if ($request->has('msg')) {
             $contact->contacts_messeges()->create([
