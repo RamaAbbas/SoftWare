@@ -93,6 +93,7 @@ class ProjectController extends Controller
                 'en_result' => 'required',
                 'nl_result' => 'required',
                 'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                // 'image_path.*' => 'any',
                 'begin_date' => 'required|date',
                 'end_date' => 'required|date',
 
@@ -190,6 +191,9 @@ class ProjectController extends Controller
                 }
                 if ($request->hasFile('image_path')) {
                     foreach ($request->file('image_path') as $file) {
+                        if (!$file->isValid()) {
+                            return "A";
+                        }
                         $filename = time() . '_' . $file->getClientOriginalName();
                         $filePath = $file->storeAs('project_images', $filename, 'public');
                         $project->project_images()->create([
@@ -358,8 +362,8 @@ class ProjectController extends Controller
     }
     public function addproject()
     {
-        $clients=Client::all();
-        return view('admin.Projects.add',compact('clients'));
+        $clients = Client::all();
+        return view('admin.Projects.add', compact('clients'));
     }
 
 

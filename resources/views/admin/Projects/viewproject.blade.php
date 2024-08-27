@@ -77,10 +77,13 @@
                                                     <h4 style="color: black"></h4>
                                                     <ul class="navbar-right" style="display: flex; align-items: center;">
                                                         @foreach ($data['project_images'] as $img)
-                                                            <li style="color: black" class="nav-item">
-                                                                <img src="{{ Storage::url($img['image_path']) }}"
-                                                                    alt="" style="height: 150px; width:150px;">
-                                                            </li>
+                                                        <li style="color: black" class="nav-item">
+                                                            <img src="{{ Storage::url($img['image_path']) }}"  data-bs-image="{{Storage::url($img['image_path']) }}"
+                                                               style="height: 150px; width:150px;"
+                                                                alt="Project Image" class="img-fluid project-image"
+                                                                data-bs-toggle="modal" data-bs-target="#imageModal"
+                                                                >
+                                                        </li>
                                                         @endforeach
                                                     </ul>
                                                     <br>
@@ -108,4 +111,46 @@
 
         </div>
     </div>
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="" alt="Focused Image" id="modalImage">
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .project-image {
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .project-image:hover {
+            transform: scale(1.05);
+        }
+
+        /* Optional: Adjust the size of the modal image */
+        .modal-dialog img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var imageModal = document.getElementById('imageModal');
+            var modalImage = document.getElementById('modalImage');
+
+            imageModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                var imageSrc = button.getAttribute(
+                'data-bs-image');
+                modalImage.src = imageSrc;
+            });
+        });
+    </script>
 @endsection

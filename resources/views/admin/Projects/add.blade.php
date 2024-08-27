@@ -94,7 +94,7 @@
                                 </ul>
                                 <div id="step-1" class="col-md-12 col-sm-3 ">
                                     <form class="form-horizontal form-label-left" id="form1"
-                                        enctype="multipart/form-data">
+                                        enctype="multipart/form-data" action="/upload">
                                         @csrf
                                         <div class="form-group row">
                                             <label for="client">Select Client</label>
@@ -179,10 +179,9 @@
                                                     class="form-control " name="nl_result">
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <label for="image">Project Image</label>
-                                            <input  type="file"  name="image_path[]" accept="image/*"
-                                                multiple required>
+                                            <input type="file" name="image_path[]" accept="image/*" multiple required>
                                         </div>
                                         <div class="form-group " id="date-of-birthday-id">
                                             <label for="birthday_date">Begin Date</label>
@@ -401,10 +400,6 @@
             </div>
         </div>
     </div>
-
-
-
-
 
     <script>
         document.getElementById('submitAllForms').addEventListener('click', function() {
