@@ -40,8 +40,7 @@ class ProjectController extends Controller
                     'end_date' => $project->end_date,
                     'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
                 ];
-                //  $data['client'] = $project->withOnly('client:id,first_name');
-                //    $data['client'] = $project->client()->get(); //->only(['first_name','last_name','email']);//->client()->get(); //pluck(['first_name']);
+
                 $client = $project->client()->get();
                 $data['client']['first_name'] = $client[0]['first_name'];
                 $data['client']['last_name'] = $client[0]['last_name'];
@@ -406,8 +405,7 @@ class ProjectController extends Controller
                 'end_date' => $project->end_date,
                 'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
             ];
-            //  $data['client'] = $project->withOnly('client:id,first_name');
-            //   $data['client'] = $project->client()->get(); //->only(['first_name','last_name','email']);//->client()->get(); //pluck(['first_name']);
+
             $client = $project->client()->get();
             $data['client']['first_name'] = $client[0]['first_name'];
             $data['client']['last_name'] = $client[0]['last_name'];
