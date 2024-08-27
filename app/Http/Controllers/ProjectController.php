@@ -41,7 +41,12 @@ class ProjectController extends Controller
                     'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
                 ];
                 //  $data['client'] = $project->withOnly('client:id,first_name');
-                $data['client'] = $project->client()->get(); //->only(['first_name','last_name','email']);//->client()->get(); //pluck(['first_name']);
+                //    $data['client'] = $project->client()->get(); //->only(['first_name','last_name','email']);//->client()->get(); //pluck(['first_name']);
+                $client = $project->client()->get();
+                $data['client']['first_name'] = $client[0]['first_name'];
+                $data['client']['last_name'] = $client[0]['last_name'];
+                $data['client']['email'] = $client[0]['email'];
+                $data['client']['phone_number'] = $client[0]['phone_number'];
 
                 $data['service_categories'] = $project->service_categories->map(function ($related) use ($locale) {
                     return [
@@ -402,8 +407,12 @@ class ProjectController extends Controller
                 'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
             ];
             //  $data['client'] = $project->withOnly('client:id,first_name');
-            $data['client'] = $project->client()->get(); //->only(['first_name','last_name','email']);//->client()->get(); //pluck(['first_name']);
-
+            //   $data['client'] = $project->client()->get(); //->only(['first_name','last_name','email']);//->client()->get(); //pluck(['first_name']);
+            $client = $project->client()->get();
+            $data['client']['first_name'] = $client[0]['first_name'];
+            $data['client']['last_name'] = $client[0]['last_name'];
+            $data['client']['email'] = $client[0]['email'];
+            $data['client']['phone_number'] = $client[0]['phone_number'];
             $data['service_categories'] = $project->service_categories->map(function ($related) use ($locale) {
                 return [
                     'servive_name' => $locale == 'en' ? $related->en_service_name : $related->nl_service_name,
