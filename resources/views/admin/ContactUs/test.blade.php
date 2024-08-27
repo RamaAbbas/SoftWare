@@ -55,7 +55,7 @@
                                                             </span>
 
                                                             <span class="message" style="color">
-                                                               <strong> {{ $msg->msg }}</strong>
+                                                               <strong> <h3>{{ $msg->msg }}<h3></strong>
                                                             </span>
                                                         @endforeach
                                                         <a>
