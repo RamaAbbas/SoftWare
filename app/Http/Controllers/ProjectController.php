@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,8 +20,9 @@ class ProjectController extends Controller
             'nl_description' => 'required',
             'en_result' => 'required',
             'nl_result' => 'required',
-         //   'begin_date' => 'required',
-         //   'end_date' => 'required',
+            'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            //   'begin_date' => 'required',
+            //   'end_date' => 'required',
 
 
         ]);
@@ -46,8 +48,9 @@ class ProjectController extends Controller
                 'nl_title' => $validatedData['nl_title'],
                 'en_description' => $validatedData['en_description'],
                 'nl_description' => $validatedData['nl_description'],
-                //   'begin_date' => $validatedData['begin_date'],
-                //   'end_date' => $validatedData['end_date'],
+                //  'begin_date' =>Carbon::createFromFormat('d-m-Y',$validatedData['begin_date']),
+              //  'begin_date' => Carbon::parse($validatedData['begin_date'])->format('d-m-Y'),
+                //  'end_date' => $validatedData['end_date'],
                 'en_result' => $validatedData['en_result'],
                 'nl_result' => $validatedData['nl_result'],
             ]);
@@ -113,24 +116,16 @@ class ProjectController extends Controller
                     );
                 }
             }
+            if ($request->hasFile('image_path')) {
+                foreach ($request->file('image_path') as $file) {
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs('project_images', $filename, 'public');
+                    $project->project_images()->create([
+                        'image_path' => $filePath
+                    ]);
+                }
+            }
 
-            /*  if (!empty($projectData['project_images'])) {
-                    foreach ($projectData['project_images'] as $project_images) {
-                        foreach ($project_images as $a) {
-
-                            if ($a->hasFile('image_path')) {
-                                $filename = time() . '_' . $a->image_path->getClientOriginalName();
-                                $filePath = $a->image_path->storeAs('images', $filename, 'public');
-
-                                $project->project_images()->create(
-                                    [
-                                        'image_path' => $filePath,
-                                    ]
-                                );
-                            }
-                        }
-                    }
-                }*/
 
             DB::commit();
             return response()->json([
@@ -196,6 +191,11 @@ class ProjectController extends Controller
                 $data['project_technologies'] = $project->project_technologies->map(function ($related) use ($locale) {
                     return [
                         'tools' => $related->tools,
+                    ];
+                });
+                $data['project_images'] = $project->project_images->map(function ($related) use ($locale) {
+                    return [
+                        'image_path' => $related->image_path,
                     ];
                 });
 
