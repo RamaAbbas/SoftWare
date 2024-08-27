@@ -37,6 +37,11 @@
                             <i class="fa fa-list"></i> {{ __('app.contact_us') }}
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('showall.projects') }}">
+                            <i class="fa fa-list"></i> Projects
+                        </a>
+                    </li>
 
                 </ul>
             </div>

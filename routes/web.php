@@ -3,6 +3,7 @@
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Middleware\SetLocal;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,12 @@ Route::middleware([SetLocal::class])->group(function () {
 
         ////////contact Us
         Route::get('/admin-contact-us', [ContactController::class, 'show_all'])->name('showall.contact-us');
+
+        ////////Projects
+        Route::get('/admin-projects', [ProjectController::class, 'show_all'])->name('showall.projects');
+        Route::get('/project/view/{id}', [ProjectController::class, 'view'])->name('project.view');
+        Route::get('/add/project', [ProjectController::class, 'addproject'])->name('project.add');
+        Route::post('/store-project', [ProjectController::class, 'store'])->name("project.store");
     });
 
 
