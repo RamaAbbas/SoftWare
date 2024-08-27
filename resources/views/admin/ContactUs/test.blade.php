@@ -47,33 +47,38 @@
                                             <ul class="list-unstyled msg_list">
                                                 @foreach ($contacts as $contact)
                                                     <li>
-                                                        @foreach ($contact->contacts_messeges as $msg)
-                                                            <span>
 
-                                                                <span class="time">{{ $msg->msg_send_at }}</span>
-
-                                                            </span>
-
-                                                            <span class="message" style="color">
-                                                               <strong> <h3>{{ $msg->msg }}<h3></strong>
-                                                            </span>
-                                                        @endforeach
                                                         <a>
-                                                            <span class="message">
+
+                                                            @foreach ($contact->contacts_messeges as $msg)
+                                                                <span>
+
+                                                                    <span class="time">{{ $msg->msg_send_at }}</span>
+
+                                                                </span>
+
+                                                                <span class="message" style="color">
+                                                                    <strong>
+                                                                        <h3 style="color:black;">{{ $msg->msg }}<h3>
+                                                                    </strong>
+                                                                </span>
+                                                            @endforeach
+                                                            <br>
+                                                            <br>
+                                                            <span class="name">
                                                                 <span
-                                                                    style="color: black;"><strong>{{ $contact->first_name }},{{ $contact->last_name }}</strong></span>
+                                                                    style="color: black;"><small>{{ $contact->first_name }},{{ $contact->last_name }}</small></span>
+
+                                                            </span>
+                                                            <br>
+                                                            <span class="emali">
+                                                                <span style="color: black;"><small>{{ $contact->email }}</small></span>
 
                                                             </span>
                                                             <br>
                                                             <span class="emali">
                                                                 <span
-                                                                    style="color: black;"><strong>{{ $contact->email }}</strong></span>
-
-                                                            </span>
-                                                            <br>
-                                                            <span class="emali">
-                                                                <span
-                                                                    style="color: black;"><strong>{{ $contact->mobile_number }}</strong></span>
+                                                                    style="color: black;"><small>{{ $contact->mobile_number }}</small></span>
 
                                                             </span>
                                                             <br>

@@ -48,8 +48,8 @@ class ContactController extends Controller
         $validatedData = Validator::make($request->all(), [
             "first_name" => "required",
             "last_name" => "required",
-            "email" => "required|email|unique:contacts",
-            "mobile_number" => "required|unique:contacts",
+            "email" => "required|email",
+            "mobile_number" => "required",
             'msg' => "required"
 
         ]);
