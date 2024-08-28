@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('service_categories', function (Blueprint $table) {
-         //   $table->foreignId('service_id')->after('id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
+            $table->dropColumn('en_service_name');
+            $table->dropColumn('nl_service_name');
+            $table->foreignId('service_id')->after('id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -22,7 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('service_categories', function (Blueprint $table) {
-        //    $table->dropColumn('service_id');
+            $table->text('en_service_name');
+            $table->text('nl_service_name');
+            $table->dropColumn('service_id');
         });
     }
 };
