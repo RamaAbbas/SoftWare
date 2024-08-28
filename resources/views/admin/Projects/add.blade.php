@@ -60,7 +60,7 @@
                                             <span class="step_no">2</span>
                                             <span class="step_descr">
                                                 Step 2<br />
-                                                <small>Requirment</small>
+                                                <small>Achievements</small>
                                             </span>
                                         </a>
                                     </li>
@@ -69,7 +69,7 @@
                                             <span class="step_no">3</span>
                                             <span class="step_descr">
                                                 Step 3<br />
-                                                <small>Service Benefits</small>
+                                                <small>Challenges</small>
                                             </span>
                                         </a>
                                     </li>
@@ -78,7 +78,7 @@
                                             <span class="step_no">4</span>
                                             <span class="step_descr">
                                                 Step 4<br />
-                                                <small>Service Processs</small>
+                                                <small>Project Live Links</small>
                                             </span>
                                         </a>
                                     </li>
@@ -87,7 +87,16 @@
                                             <span class="step_no">5</span>
                                             <span class="step_descr">
                                                 Step 5<br />
-                                                <small>Client Testimonial</small>
+                                                <small>Project Technology</small>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#step-6">
+                                            <span class="step_no">6</span>
+                                            <span class="step_descr">
+                                                Step 6<br />
+                                                <small>Images</small>
                                             </span>
                                         </a>
                                     </li>
@@ -179,56 +188,59 @@
                                                     class="form-control " name="nl_result">
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label for="image">Project Image</label>
-                                            <input type="file" name="image_path[]" accept="image/*" multiple required>
-                                        </div>
+                                        <!--  <div class="form-group row">
+                                                                        <label for="image">Project Image</label>
+                                                                        <input type="file" name="image_path[]" accept="image/*" multiple required>
+                                                                    </div>-->
                                         <div class="form-group " id="date-of-birthday-id">
                                             <label for="birthday_date">Begin Date</label>
-                                            <input type="date" name="end_date" id="birthday_date"
+                                            <input type="date" name="begin_date" id="birthday_date"
                                                 class="form-control" value="">
                                         </div>
                                         <div class="form-group" id="date-of-birthday-id">
                                             <label for="birthday_date">End Date</label>
-                                            <input type="date" name="begin_date" id="birthday_date"
+                                            <input type="date" name="end_date" id="birthday_date"
                                                 class="form-control" value="">
                                         </div>
+                                        <br>
+                                        <h2>Select The Services </h2>
+                                        @foreach ($services as $service)
+                                            <div>
+                                                <label>
+                                                    <input type="checkbox" name="service_ids[]"
+                                                        value="{{ $service->id }}">
+                                                    {{ $service->en_name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
 
 
                                     </form>
 
                                 </div>
                                 <div id="step-2">
-                                    <h2 class="StepTitle">Requirment</h2>
+                                    <h2 class="StepTitle">Achievements</h2>
                                     <form class="form-horizontal form-label-left" id="form2">
                                         @csrf
-                                        <input type="hidden" name="requirment[]">
+                                        <input type="hidden" name="achievements[]">
 
                                         <div class="form-group row">
-                                            <div id="requirements">
-                                                <div class="requirement">
-                                                    <label for="requirment[0][en_name]">English Name:</label>
+                                            <div id="achievements">
+                                                <div class="achievement">
+                                                    <label for="achievements[0][en_achievement_name]">English Name:</label>
                                                     <input type="text" id="requirement[0][en_name]"
-                                                        name="requirment[0][en_name]"
-                                                        value="{{ old('requirements.0.en_name') }}"
+                                                        name="achievements[0][en_achievement_name]"
                                                         class="form-control  "><br>
 
-                                                    <label for="requirment[0][nl_name]">Dutch Name:</label>
-                                                    <input type="text" id="requirements[0][nl_name]"
-                                                        name="requirment[0][nl_name]"
-                                                        value="{{ old('requirements.0.nl_name') }}"
+                                                    <label for="achievements[0][nl_achievement_name]">Dutch Name:</label>
+                                                    <input type="text" id="achievements[0][nl_achievement_name]"
+                                                        name="achievements[0][nl_achievement_name]"
                                                         class="form-control  "><br>
 
                                                     <br>
-                                                    <label for="requirment[0][en_description]">English
-                                                        Description:</label>
-                                                    <textarea id="requirement[0][en_description]" name="requirment[0][en_description]" class="form-control  ">{{ old('requirements.0.en_description') }}</textarea><br>
 
-
-                                                    <label for="requirement[0][nl_description]">Dutch Description:</label>
-                                                    <textarea id="requirement[0][nl_description]" name="requirment[0][nl_description]" class="form-control  ">{{ old('requirements.0.nl_description') }}</textarea><br>
-                                                    <button type="button" class="delete-requirement">Delete
-                                                        Requirement</button>
+                                                    <button type="button" class="delete-achievement">Delete
+                                                        Achievement </button>
                                                 </div>
                                                 <br>
                                             </div>
@@ -236,161 +248,121 @@
 
                                         </div>
 
-                                        <button type="button" id="add-more">Add More Requirements</button>
+                                        <button type="button" id="add-more-achievements">Add More Achievements</button>
 
-                                    </form>
 
                                 </div>
 
                                 <div id="step-3">
-                                    <h2 class="StepTitle">Service Benefits</h2>
+                                    <h2 class="StepTitle">Challenges</h2>
                                     <form class="form-horizontal form-label-left" id="form3">
                                         @csrf
-                                        <input type="hidden" name="service_benefits[]">
+                                        <input type="hidden" name="challenges[]">
                                         <div class="form-group row">
-                                            <div id="service_benefits">
-                                                <div class="service_benefit">
-                                                    <label for="service_benefits[0][en_name]">English Name:</label>
-                                                    <input type="text" id="service_benefits[0][en_name]"
-                                                        name="service_benefits[0][en_name]"
-                                                        value="{{ old('service_benefits.0.en_name') }}"
+
+                                            <div id="challenges">
+                                                <div class="challenge">
+                                                    <label for="challenges[0][en_challenge_name]">English Name:</label>
+                                                    <input type="text" id="challenges[0][en_challenge_name]"
+                                                        name="challenges[0][en_challenge_name]"
                                                         class="form-control  "><br>
 
-                                                    <label for="service_benefits[0][nl_name]">Dutch Name:</label>
-                                                    <input type="text" id="service_benefits[0][nl_name]"
-                                                        name="service_benefits[0][nl_name]"
-                                                        value="{{ old('service_benefits.0.nl_name') }}"
+                                                    <label for="challenges[0][nl_challenge_name]">Dutch Name:</label>
+                                                    <input type="text" id="challenges[0][nl_challenge_name]"
+                                                        name="challenges[0][nl_challenge_name]"
                                                         class="form-control  "><br>
                                                     <br>
-                                                    <label for="service_benefits[0][en_description]">English
+                                                    <label for="challenges[0][en_challenge_description]">English
                                                         Description:</label>
-                                                    <textarea id="service_benefits[0][en_description]" name="service_benefits[0][en_description]" class="form-control  ">{{ old('requirements.0.en_description') }}</textarea><br>
+                                                    <textarea id="challenges[0][en_challenge_description]" name="challenges[0][en_challenge_description]"
+                                                        class="form-control  "></textarea><br>
 
-                                                    <label for="service_benefits[0][nl_description]">Dutch
+                                                    <label for="service_benefits[0][nl_challenge_description]">Dutch
                                                         Description:</label>
-                                                    <textarea id="service_benefits[0][nl_description]" name="service_benefits[0][nl_description]" class="form-control  ">{{ old('requirements.0.nl_description') }}</textarea><br>
-                                                    <button type="button" class="delete-service_benefit">Delete
-                                                        Benefit</button>
+                                                    <textarea id="challenges[0][nl_challenge_description]" name="challenges[0][nl_challenge_description]"
+                                                        class="form-control  "></textarea><br>
+                                                    <button type="button" class="delete-challenge">Delete
+                                                        Challenge</button>
 
                                                 </div>
                                                 <br>
                                             </div>
                                         </div>
-                                        <button type="button" id="add-more-benefit">Add More Benefits</button>
+                                        <button type="button" id="add-more-challenges">Add More challenges</button>
                                     </form>
                                 </div>
                                 <div id="step-4">
+                                    <h2 class="StepTitle">Project Live Links </h2>
                                     <form class="form-horizontal form-label-left" id="form4">
                                         @csrf
-                                        <input type="hidden" name="service_processs[]">
-                                        <div id="service_processes">
-                                            <h3>Service Processes</h3>
-                                            <div class="service_process">
-                                                <label for="service_processs[0][en_name]">English Name:</label>
-                                                <input type="text" id="service_processes[0][en_name]"
-                                                    name="service_processs[0][en_name]"
-                                                    value="{{ old('service_processes.0.en_name') }}"
-                                                    class="form-control  "><br>
-
-
-                                                <label for="service_processs[0][nl_name]">Dutch Name:</label>
-                                                <input type="text" id="service_processes[0][nl_name]"
-                                                    name="service_processs[0][nl_name]"
-                                                    value="{{ old('service_processes.0.nl_name') }}"
-                                                    class="form-control  "><br>
-
-
-                                                <label for="service_processs[0][step_no]">Step Number:</label>
-                                                <input type="number" id="service_processes[0][step_no]"
-                                                    name="service_processs[0][step_no]"
-                                                    value="{{ old('service_processes.0.step_no') }}"
-                                                    class="form-control  "><br>
-
-
-                                                <div class="process_procedure">
-                                                    <label
-                                                        for="service_processs[0][process_procedures][0][en_name]">Procedure
-                                                        English Name:</label>
-                                                    <input type="text"
-                                                        id="service_processes[0][process_procedures][0][en_name]"
-                                                        name="service_processs[0][process_procedures][0][en_name]"
-                                                        value="{{ old('service_processs.0.process_procedures.0.en_name') }}"
-                                                        class="form-control  "><br>
-
-                                                    <label
-                                                        for="service_processs[0][process_procedures][0][nl_name]">Procedure
-                                                        Dutch Name:</label>
-                                                    <input type="text"
-                                                        id="service_processes[0][process_procedures][0][nl_name]"
-                                                        name="service_processs[0][process_procedures][0][nl_name]"
-                                                        value="{{ old('service_processs.0.process_procedures.0.nl_name') }}"
-                                                        class="form-control  "><br>
-
-
-                                                    <label
-                                                        for="service_processs[0][process_procedures][0][en_description]">Procedure
-                                                        English Description:</label>
-                                                    <textarea id="service_processes[0][process_procedures][0][en_description]"
-                                                        name="service_processs[0][process_procedures][0][en_description]" class="form-control  ">{{ old('service_processes.0.process_procedures.0.en_description') }}</textarea><br>
-
-
-                                                    <label
-                                                        for="service_processs[0][process_procedures][0][nl_description]">Procedure
-                                                        Dutch Description:</label>
-                                                    <textarea id="service_processes[0][process_procedures][0][nl_description]"
-                                                        name="service_processs[0][process_procedures][0][nl_description]" class="form-control  ">{{ old('service_processes.0.process_procedures.0.nl_description') }}</textarea><br>
-
-                                                    <button type="button" class="add-more-procedure"
-                                                        data-service-process-index="0">Add More Procedure</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <button type="button" id="add-more-service-processes">Add More Service
-                                            Processes</button>
-
-                                    </form>
-                                </div>
-
-                                <div id="step-5">
-                                    <h2 class="StepTitle">Client Testemonial</h2>
-                                    <form class="form-horizontal form-label-left" id="form5">
-                                        @csrf
-                                        <input type="hidden" name="client_testimonial[]">
+                                        <input type="hidden" name="project_live_links[]">
                                         <div class="form-group row">
-                                            <div id="client_testimonials">
-                                                <div class="client_testimonial">
-                                                    <label for="client_testimonial[0][client_name]">Client Name:</label>
-                                                    <input type="text" id="client_testimonial[0][client_name]"
-                                                        name="client_testimonial[0][client_name]"
-                                                        value="{{ old('client_testimonial.0.client_name') }}"
-                                                        class="form-control  "><br>
 
-                                                    <br>
-                                                    <label for="client_testimonial[0][en_client_testimonial]">Client
-                                                        Testemonial
-                                                        in English</label>
-                                                    <textarea id="client_testimonial[0][en_client_testimonial]" name="client_testimonial[0][en_client_testimonial]"
-                                                        class="form-control  ">{{ old('client_testimonial.0.en_client_testimonial') }}</textarea><br>
-
-                                                    <label for="client_testimonial[0][nl_client_testimonial]">Client
-                                                        Testemonial
-                                                        in Dutch
+                                            <div id="project_live_links">
+                                                <div class="project_live_link">
+                                                    <label for="project_live_links[0][link]">Link
                                                     </label>
-                                                    <textarea id="client_testimonial[0][nl_client_testimonial]" name="client_testimonial[0][nl_client_testimonial]"
-                                                        class="form-control  ">{{ old('client_testimonial.0.nl_client_testimonial') }}</textarea><br>
-                                                    <button type="button" class="delete-client_testimonial">Delete
-                                                        Client Testimonial</button>
+                                                    <input type="text" id="project_live_links[0][link]"
+                                                        name="project_live_links[0][link]" class="form-control "><br>
 
+
+                                                    <button type="button" class="delete-link">Delete
+                                                        Link</button>
 
                                                 </div>
                                                 <br>
                                             </div>
                                         </div>
-                                        <button type="button" id="add-more-testimonial">Add More Testimonial</button>
+                                        <button type="button" id="add-more-links">Add More Links</button>
                                     </form>
+                                    <br>
 
                                 </div>
+
+                                <div id="step-5">
+                                    <h2 class="StepTitle">Project Technology</h2>
+                                    <form class="form-horizontal form-label-left" id="form5">
+                                        @csrf
+                                        <!--  <input type="hidden" name="project_technologies[]">-->
+                                        <div class="form-group row">
+
+                                            <div id="project_technologies">
+                                                <div class="project_technology">
+                                                    <label for="project_technologies[0][tools]">Link
+                                                    </label>
+                                                    <input type="text" id="project_technologies[0][tools]"
+                                                        name="project_technologies[0][tools]" class="form-control "><br>
+
+
+                                                    <button type="button" class="delete-tool">Delete
+                                                        Tool</button>
+
+                                                </div>
+                                                <br>
+                                            </div>
+                                        </div>
+                                        <button type="button" id="add-more-tools">Add More Tools</button>
+                                    </form>
+                                    <br>
+
+
+                                </div>
+                                <div id="step-6">
+                                    <h2 class="StepTitle">Project Live Links And Tools</h2>
+                                    <form class="form-horizontal form-label-left" enctype="multipart/form-data"
+                                        method="post" action="{{ route('img.store') }}" id="form6">
+                                        @csrf
+                                        <div class="form-group row">
+                                            <label for="image">Project Image</label>
+                                            <input type="file" name="image_path[]" accept="image/*" multiple required
+                                                id="vvv">
+                                        </div>
+                                        <button type="submit">Upload</button>
+                                    </form>
+                                    <br>
+
+                                </div>
+
 
                             </div>
                             <button id="submitAllForms" type="button" class="btn btn-primary">Submit </button>
@@ -400,6 +372,7 @@
             </div>
         </div>
     </div>
+
 
     <script>
         document.getElementById('submitAllForms').addEventListener('click', function() {
@@ -414,9 +387,36 @@
             csrfInput.name = '_token';
             csrfInput.value = csrfToken;
             combinedForm.appendChild(csrfInput);
+            //////
+            let form6 = document.getElementById('form6');
+            //   let form6Data = new FormData(form6);
+
+            // Append each file individually to combinedFormData
+            /*   form6Data.getAll('image_path[]').forEach((file, index) => {
+                   if (file instanceof File) {
+                       console.log("AAAAAAAAAA");
+                       combinedForm.appendChild('image_path[]', file);
+                   } else {
+                       console.log("BBBBBBBBBBBB");
+                   }
+               });
+               //////////************
+               let form5 = document.getElementById('form6');
+               let fileInput = document.getElementById('vvv');
+
+               if (fileInput.files.length > 0) {
+                   // Append each selected file to FormData
+                   for (let i = 0; i < fileInput.files.length; i++) {
+                       combinedForm.appendChild('image_path[]', fileInput.files[i]);
+                   }
+               }*/
+
+
+            ///////////***************
 
             let forms = [document.getElementById('form1'), document.getElementById('form2'), document
-                .getElementById('form3'), document.getElementById('form4'), document.getElementById('form5')
+                .getElementById('form3'), document.getElementById('form4'), document.getElementById('form5'),
+                //   document.getElementById('form6')
             ];
             forms.forEach(function(form) {
                 let elements = form.elements;
@@ -438,56 +438,51 @@
 
 
 
-        document.getElementById('add-more').addEventListener('click', function() {
-            var requirementsDiv = document.getElementById('requirements');
-            var index = requirementsDiv.children.length - 1;
+        document.getElementById('add-more-achievements').addEventListener('click', function() {
+            var achievementsDiv = document.getElementById('achievements');
+            var index = achievementsDiv.children.length - 1;
 
-            var newRequirement = document.createElement('div');
-            newRequirement.className = 'requirement';
+            var newachievement = document.createElement('div');
+            newachievement.className = 'achievement';
 
-            newRequirement.innerHTML = `
-            <h6>Requirment ${index+1} </h6>
-                <label for="requirement[${index}][en_name]">English Name:</label>
-                <input type="text" id="requirement[${index}][en_name]" name="requirment[${index}][en_name]"  class="form-control  "><br>
+            newachievement.innerHTML = `
+            <h6>Achievement ${index+1} </h6>
+                <label for="achievements[${index}][en_achievement_name]">English Name:</label>
+                <input type="text" id="achievements[${index}][en_achievement_name]" name="achievements[${index}][en_achievement_name]"  class="form-control  "><br>
 
-                <label for="requirement[${index}][nl_name]">Dutch Name:</label>
-                <input type="text" id="requirement[${index}][nl_name]" name="requirment[${index}][nl_name]"  class="form-control  "><br>
+                <label for="achievements[${index}][nl_achievement_name]">Dutch Name:</label>
+                <input type="text" id="achievements[${index}][nl_achievement_name]" name="achievements[${index}][nl_achievement_name]"  class="form-control  "><br>
 
-                <label for="requirement[${index}][en_description]">English Description:</label>
-                <textarea id="requirement[${index}][en_description]" name="requirment[${index}][en_description]"  class="form-control  "></textarea><br>
-
-                <label for="requirement[${index}][nl_description]">Dutch Description:</label>
-                <textarea id="requirement[${index}][nl_description]" name="requirment[${index}][nl_description]"  class="form-control  "></textarea><br>
-                <button type="button" class="delete-requirement">Delete Requirement</button>
+                <button type="button" class="delete-achievement">Delete achievement</button>
             `;
 
-            requirementsDiv.appendChild(newRequirement);
+            achievementsDiv.appendChild(newachievement);
         });
 
-        document.getElementById('add-more-benefit').addEventListener('click', function() {
-            var service_benefitsDiv = document.getElementById('service_benefits');
-            var index = service_benefitsDiv.children.length - 1;
+        document.getElementById('add-more-challenges').addEventListener('click', function() {
+            var challengesDiv = document.getElementById('challenges');
+            var index = challengesDiv.children.length - 1;
 
-            var newservice_benefit = document.createElement('div');
-            newservice_benefit.className = 'service_benefit';
+            var newchallenge = document.createElement('div');
+            newchallenge.className = 'challenge';
 
-            newservice_benefit.innerHTML = `
-            <h6>Service Benefit ${index+1} </h6>
-                <label for="service_benefits[${index}][en_name]">English Name:</label>
-                <input type="text" id="service_benefits[${index}][en_name]" name="service_benefits[${index}][en_name]"  class="form-control  "><br>
+            newchallenge.innerHTML = `
+            <h6>Challenges ${index+1} </h6>
+                <label for="challenges[${index}][en_challenge_name]">English Name:</label>
+                <input type="text" id="challenges[${index}][en_challenge_name]" name="challenges[${index}][en_challenge_name]"  class="form-control  "><br>
 
-                <label for="service_benefits[${index}][nl_name]">Dutch Name:</label>
-                <input type="text" id="service_benefits[${index}][nl_name]" name="service_benefits[${index}][nl_name]"  class="form-control  "><br>
+                <label for="challenges[${index}][nl_challenge_name]">Dutch Name:</label>
+                <input type="text" id="challenges[${index}][nl_challenge_name]" name="challenges[${index}][nl_challenge_name]"  class="form-control  "><br>
 
-                <label for="service_benefits[${index}][en_description]">English Description:</label>
-                <textarea id="service_benefits[${index}][en_description]" name="service_benefits[${index}][en_description]"  class="form-control  "></textarea><br>
+                <label for="challenges[${index}][en_challenge_description]">English Description:</label>
+                <textarea id="challenges[${index}][en_challenge_description]" name="challenges[${index}][en_challenge_description]"  class="form-control  "></textarea><br>
 
-                <label for="service_benefits[${index}][nl_description]">Dutch Description:</label>
-                <textarea id="service_benefits[${index}][nl_description]" name="service_benefits[${index}][nl_description]"  class="form-control  "></textarea><br>
-                <button type="button" class="delete-service_benefit">Delete Benefit</button>
+                <label for="challenges[${index}][nl_challenge_description]">Dutch Description:</label>
+                <textarea id="challenges[${index}][nl_challenge_description]" name="challenges[${index}][nl_challenge_description]"  class="form-control  "></textarea><br>
+                <button type="button" class="delete-challenge">Delete Challenges</button>
             `;
 
-            service_benefitsDiv.appendChild(newservice_benefit);
+            challengesDiv.appendChild(newchallenge);
         });
         document.addEventListener('click', function(event) {
             if (event.target && event.target.classList.contains('delete-service_benefit')) {
@@ -497,100 +492,60 @@
 
 
 
-        document.getElementById('add-more-service-processes').addEventListener('click', function() {
-            var serviceProcessesDiv = document.getElementById('service_processes');
-            var index = serviceProcessesDiv.children.length;
 
-            var newServiceProcess = document.createElement('div');
-            newServiceProcess.className = 'service_process';
+        document.getElementById('add-more-links').addEventListener('click', function() {
+            var project_live_linksDiv = document.getElementById('project_live_links');
+            var index = project_live_linksDiv.children.length - 1;
 
-            newServiceProcess.innerHTML = `
-            <h6>Service Process ${index+1} </h6>
-                <label for="service_processes[${index}][en_name]">English Name:</label>
-                <input type="text" id="service_processes[${index}][en_name]" name="service_processs[${index}][en_name]"  class="form-control  "><br>
+            var newproject_live_link = document.createElement('div');
+            newproject_live_link.className = 'project_live_link';
 
-                <label for="service_processs[${index}][nl_name]">Dutch Name:</label>
-                <input type="text" id="service_processes[${index}][nl_name]" name="service_processs[${index}][nl_name]"  class="form-control  "><br>
-
-                <label for="service_processes[${index}][step_no]">Step Number:</label>
-                <input type="number" id="service_processes[${index}][step_no]" name="service_processs[${index}][step_no]"  class="form-control  "><br>
-
-                <div class="process_procedure">
-                    <label for="service_processes[${index}][process_procedures][0][en_name]">Procedure English Name:</label>
-                    <input type="text" id="service_processes[${index}][process_procedures][0][en_name]" name="service_processs[${index}][process_procedures][0][en_name]"  class="form-control  "><br>
-
-                    <label for="service_processes[${index}][process_procedures][0][nl_name]">Procedure Dutch Name:</label>
-                    <input type="text" id="service_processes[${index}][process_procedures][0][nl_name]" name="service_processs[${index}][process_procedures][0][nl_name]"  class="form-control  "><br>
-
-                    <label for="service_processes[${index}][process_procedures][0][en_description]">Procedure English Description:</label>
-                    <textarea id="service_processes[${index}][process_procedures][0][en_description]" name="service_processs[${index}][process_procedures][0][en_description]"  class="form-control  "></textarea><br>
-
-                    <label for="service_processes[${index}][process_procedures][0][nl_description]">Procedure Dutch Description:</label>
-                    <textarea id="service_processes[${index}][process_procedures][0][nl_description]" name="service_processs[${index}][process_procedures][0][nl_description]"  class="form-control  "></textarea><br>
-
-                    <button type="button" class="add-more-procedure" data-service-process-index="${index}">Add More Procedure</button>
-                </div>
+            newproject_live_link.innerHTML = `
+            <h6>Project Live Links ${index+1} </h6>
+                <label for="project_live_links[${index}][link]">Link</label>
+                <input type="text" id="project_live_links[${index}][link]" name="project_live_links[${index}][link]" class="form-control  "><br>
+                <button type="button" class="delete-link">Delete Project Live Links</button>
             `;
 
-            serviceProcessesDiv.appendChild(newServiceProcess);
+            project_live_linksDiv.appendChild(newproject_live_link);
         });
-
         document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('add-more-procedure')) {
-                var serviceProcessIndex = event.target.getAttribute('data-service-process-index');
-                var procedureDiv = event.target.parentNode;
-                var procedureIndex = procedureDiv.querySelectorAll('textarea').length / 2;
-
-                var newProcedure = document.createElement('div');
-                newProcedure.innerHTML = `
-                    <label for="service_processes[${serviceProcessIndex}][process_procedures][${procedureIndex}][en_name]">Procedure English Name:</label>
-                    <input type="text" id="service_processes[${serviceProcessIndex}][process_procedures][${procedureIndex}][en_name]" name="service_processs[${serviceProcessIndex}][process_procedures][${procedureIndex}][en_name]"  class="form-control  "><br>
-
-                    <label for="service_processes[${serviceProcessIndex}][process_procedures][${procedureIndex}][nl_name]">Procedure Dutch Name:</label>
-                    <input type="text" id="service_processes[${serviceProcessIndex}][process_procedures][${procedureIndex}][nl_name]" name="service_processs[${serviceProcessIndex}][process_procedures][${procedureIndex}][nl_name]"  class="form-control  "><br>
-
-                    <label for="service_processes[${serviceProcessIndex}][process_procedures][${procedureIndex}][en_description]">Procedure English Description:</label>
-                    <textarea id="service_processes[${serviceProcessIndex}][process_procedures][${procedureIndex}][en_description]" name="service_processs[${serviceProcessIndex}][process_procedures][${procedureIndex}][en_description]"  class="form-control  "></textarea><br>
-
-                    <label for="service_processes[${serviceProcessIndex}][process_procedures][${procedureIndex}][nl_description]">Procedure Dutch Description:</label>
-                    <textarea id="service_processes[${serviceProcessIndex}][process_procedures][${procedureIndex}][nl_description]" name="service_processs[${serviceProcessIndex}][process_procedures][${procedureIndex}][nl_description]"  class="form-control  "></textarea><br>
-                `;
-
-                procedureDiv.appendChild(newProcedure);
+            if (event.target && event.target.classList.contains('delete-link')) {
+                event.target.closest('.project_live_link').remove();
             }
         });
+        /////////
+        document.getElementById('add-more-tools').addEventListener('click', function() {
+            var project_technologiesDiv = document.getElementById('project_technologies');
+            var index = project_technologiesDiv.children.length - 1;
 
-        document.getElementById('add-more-testimonial').addEventListener('click', function() {
-            var client_testimonialsDiv = document.getElementById('client_testimonials');
-            var index = client_testimonialsDiv.children.length - 1;
+            var newproject_technology = document.createElement('div');
+            newproject_technology.className = 'project_technology';
 
-            var newclient_testimonial = document.createElement('div');
-            newclient_testimonial.className = 'client_testimonial';
-
-            newclient_testimonial.innerHTML = `
-            <h6>Client Testimonial ${index+1} </h6>
-                <label for="client_testimonial[${index}][client_name]">Client Name:</label>
-                <input type="text" id="client_testimonial[${index}][client_name]" name="client_testimonial[${index}][client_name]" class="form-control  "><br>
-
-                <label for="client_testimonial[${index}][en_client_testimonial]"> Client Testemonial in English</label>
-                <textarea id="client_testimonial[${index}][en_client_testimonial]" name="client_testimonial[${index}][en_client_testimonial]" class="form-control  "></textarea><br>
-
-                <label for="client_testimonial[${index}][nl_client_testimonial]">Client Testemonial in Dutch</label>
-                <textarea id="client_testimonial[${index}][nl_client_testimonial]" name="client_testimonial[${index}][nl_client_testimonial]" class="form-control  "></textarea><br>
-                <button type="button" class="delete-client_testimonial">Delete Client Testimonial</button>
+            newproject_technology.innerHTML = `
+            <h6>Project Technologies ${index+1} </h6>
+                <label for="project_technologies[${index}][tools]">Tool</label>
+                <input type="text" id="project_technologies[${index}][tools]" name="project_technologies[${index}][tools]" class="form-control  "><br>
+                <button type="button" class="delete-tool">Delete Project Technology</button>
             `;
 
-            client_testimonialsDiv.appendChild(newclient_testimonial);
+            project_technologiesDiv.appendChild(newproject_technology);
         });
         document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('delete-client_testimonial')) {
-                event.target.closest('.client_testimonial').remove();
+            if (event.target && event.target.classList.contains('delete-tool')) {
+                event.target.closest('.project_technology').remove();
             }
         });
+        /////////////////////////
 
         document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('delete-requirement')) {
-                event.target.closest('.requirement').remove();
+            if (event.target && event.target.classList.contains('delete-achievement')) {
+                event.target.closest('.achievement').remove();
+            }
+        });
+        document.addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('delete-challenge')) {
+                event.target.closest('.challenge').remove();
             }
         });
 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Project;
+use App\Models\ProjectImage;
+use App\Models\Service;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -32,12 +34,15 @@ class ProjectController extends Controller
 
         try {
             $processedServices = $projects->map(function ($project) use ($locale) {
+                $begin = Carbon::parse($project->begin_date);
+                $end = Carbon::parse($project->end_date);
+                $diffInDays = $begin->diffInDays($end);
 
                 $data = [
                     'id' => $project->id,
                     'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
                     'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
-                    // 'begin_date' => $project->begin_date,
+                    // 'time' => $diffInDays,
                     // 'end_date' => $project->end_date,
                     // 'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
                 ];
@@ -84,7 +89,7 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->has('client_id')) {
+        if ($request->client_id) {
             $validatedDat = Validator::make($request->all(), [
                 'en_title' => 'required|string|max:255',
                 'nl_title' => 'required|string|max:255',
@@ -93,9 +98,10 @@ class ProjectController extends Controller
                 'en_result' => 'required',
                 'nl_result' => 'required',
                 'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                // 'image_path.*' => 'any',
+                'client_id' => 'required',
                 'begin_date' => 'required|date',
-                'end_date' => 'required|date',
+                'service_ids.*' => 'required',
+                'end_date' => 'required|date|after_or_equal:begin_date',
 
 
             ]);
@@ -128,13 +134,25 @@ class ProjectController extends Controller
                     'nl_result' => $validatedData['nl_result'],
                 ]);
 
-                if (!empty($validatedData['service_categories'])) {
+                /*  if (!empty($validatedData['service_categories'])) {
                     foreach ($validatedData['service_categories'] as $service_categories) {
 
                         $project->service_categories()->create(
                             [
-                                'en_service_name' => $service_categories['en_service_name'],
-                                'nl_service_name' => $service_categories['nl_service_name'],
+                                // 'en_service_name' => $service_categories['en_service_name'],
+                                // 'nl_service_name' => $service_categories['nl_service_name'],
+                                'service_id' => $service_categories['service_id']
+
+                            ]
+                        );
+                    }
+                }*/
+                if ($request->has('service_ids')) {
+                    foreach ($request->service_ids as $service_id) {
+                        $service = Service::findOrFail($service_id);
+                        $project->service_categories()->create(
+                            [
+                                'service_id' => $service->id
 
                             ]
                         );
@@ -203,6 +221,7 @@ class ProjectController extends Controller
                 }
 
 
+
                 DB::commit();
                 return response()->json([
                     'sucsess' => 1,
@@ -221,6 +240,8 @@ class ProjectController extends Controller
                 ], 200);
             }
         } else {
+            // return "B";
+            // if($request->input('client_id') === null) {
             $validatedDat = Validator::make($request->all(), [
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
@@ -229,7 +250,7 @@ class ProjectController extends Controller
                 'projects' => 'array',
                 'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'begin_date' => 'required|date',
-                'end_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:begin_date',
 
 
             ]);
@@ -274,8 +295,7 @@ class ProjectController extends Controller
 
                         $project->service_categories()->create(
                             [
-                                'en_service_name' => $service_categories['en_service_name'],
-                                'nl_service_name' => $service_categories['nl_service_name'],
+                                'service_id' => $service_categories['service_id']
 
                             ]
                         );
@@ -363,8 +383,11 @@ class ProjectController extends Controller
     public function addproject()
     {
         $clients = Client::all();
-        return view('admin.Projects.add', compact('clients'));
+        $services = Service::all();
+        return view('admin.Projects.test1', compact('clients', 'services'));
     }
+
+
 
 
     public function show(Request $request, $id)
@@ -384,14 +407,19 @@ class ProjectController extends Controller
         }
 
         try {
+            $begin = Carbon::parse($project->begin_date);
+            $end = Carbon::parse($project->end_date);
+            $diffInDays = $begin->diffInDays($end);
+            //  $diffInMonth = $begin->diffInMonths($end);
+            $diffForHumans = $begin->diffForHumans($end, ['syntax' => Carbon::DIFF_ABSOLUTE, 'parts' => 3]);
 
 
             $data = [
                 'id' => $project->id,
                 'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
                 'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
-                'begin_date' => $project->begin_date,
-                'end_date' => $project->end_date,
+                'time_in_days' => $diffInDays,
+                'time' => $diffForHumans,
                 'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
             ];
 
@@ -519,6 +547,33 @@ class ProjectController extends Controller
                 'result' => null,
                 'message' => $e->getMessage()
             ], 500);
+        }
+    }
+
+
+    public function store_image( Request $request,$project)
+    {
+        $latestProjectId = Project::latest()->first()->id;
+        $validatedDat = Validator::make($request->all(), [
+            'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        if ($validatedDat->fails()) {
+
+            return response()->json([
+                'sucsess' => 0,
+                'result' => null,
+                'message' => $validatedDat->errors(),
+            ], 200);
+        }
+        if ($request->hasFile('image_path')) {
+            foreach ($request->file('image_path') as $file) {
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('project_images', $filename, 'public');
+               $project->project_images()->create([
+                    'image_path' => $filePath,
+          //          'project_id'=> $latestProjectId+1
+                ]);
+            }
         }
     }
 }

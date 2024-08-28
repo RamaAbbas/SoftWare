@@ -62,6 +62,7 @@ Route::middleware([SetLocal::class])->group(function () {
         Route::get('/project/view/{id}', [ProjectController::class, 'view'])->name('project.view');
         Route::get('/add/project', [ProjectController::class, 'addproject'])->name('project.add');
         Route::post('/store-project', [ProjectController::class, 'store'])->name("project.store");
+        Route::post('/project/store-img', [ProjectController::class, 'store_image'])->name('img.store');
     });
 
 
