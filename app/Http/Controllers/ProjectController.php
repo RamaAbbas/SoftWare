@@ -38,14 +38,37 @@ class ProjectController extends Controller
                 $end = Carbon::parse($project->end_date);
                 $diffInDays = $begin->diffInDays($end);
 
+
+
+
+
                 $data = [
                     'id' => $project->id,
                     'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
                     'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
+                  //  'image'=>'asset('."'"."storage/".$img."'".')',
                     // 'time' => $diffInDays,
                     // 'end_date' => $project->end_date,
                     // 'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
                 ];
+                $image=$project->project_images()->first();
+                $img=$image['image_path'];
+            /*    if($image){
+                    $data['images']=[
+                        'image'=>'asset('."'"."storage/".$img."'".')',
+                    ];
+                }*/
+                if($image){
+                    $data['image']=
+                       asset('storage/'.$img);
+
+                }
+               /* $data['project_images'] = $project->project_images->map(function ($related) use ($locale) {
+                    return [
+                        'image_path' =>'asset('."'"."storage/".$related->image_path."'".')'
+
+                    ];
+                });*/
 
                 return $data;
             });
@@ -429,8 +452,9 @@ class ProjectController extends Controller
             $data['client']['email'] = $client[0]['email'];
             $data['client']['phone_number'] = $client[0]['phone_number'];
             $data['service_categories'] = $project->service_categories->map(function ($related) use ($locale) {
+                $service=Service::findOrFail($related->service_id);
                 return [
-                    'servive_name' => $locale == 'en' ? $related->en_service_name : $related->nl_service_name,
+                    'servive_name' => $locale == 'en' ? $service->en_name : $service->nl_name,
                 ];
             });
 
@@ -447,8 +471,16 @@ class ProjectController extends Controller
                 ];
             });
             $data['project_images'] = $project->project_images->map(function ($related) use ($locale) {
+             //   $image=$project->project_images()->first();
+              /*  $img=$image['image_path'];
+
+                if($image){
+                    $data['image']=
+                       asset('storage/'.$img);
+
+                }*/
                 return [
-                    'image_path' => $related->image_path,
+                    'image_path' => asset('storage/'.$related->image_path)
                 ];
             });
 

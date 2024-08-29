@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BenefitsForWho;
+use App\Models\ClientTestimonialService;
 use App\Models\HowItWork;
 use App\Models\Requirment;
 use App\Models\Service;
@@ -342,9 +343,9 @@ class ServicesController extends Controller
 
     public function edit($id)
     {
-        $service = Service::findOrFail($id);
+        $service = Service::with(['requirment', 'service_benefits', 'service_processs', 'client_testimonial'])->findOrFail($id);
         if ($service) {
-            return view('admin.Service.edit', compact('service'));
+            return view('admin.Service.edittest', compact('service'));
         } else {
 
             return redirect()->back();
@@ -376,13 +377,15 @@ class ServicesController extends Controller
         ]);
         if ($validation->fails()) {
 
-            return response()->json([
+            return   response()->json([
                 'sucsess' => 0,
                 'result' => null,
                 'message' => $validation->errors(),
             ], 200);
         }
+        DB::beginTransaction();
         try {
+            $validatedData = $request->all();
             $service = Service::findOrFail($id);
             if ($service) {
 
@@ -405,11 +408,60 @@ class ServicesController extends Controller
                 $service->save();
 
 
-                return response()->json([
+                Requirment::where('service_id', $service->id)->delete();
+                if (isset($validatedData['requirment'])) {
+                    foreach ($validatedData['requirment'] as $relatedData) {
+
+                        $service->requirment()->create($relatedData);
+                    }
+                }
+                BenefitsForWho::where('service_id', $service->id)->delete();
+                if (isset($validatedData['service_benefits'])) {
+                    foreach ($validatedData['service_benefits'] as $relatedData) {
+                        $service->service_benefits()->create($relatedData);
+                    }
+                }
+              ClientTestimonialService::where('service_id', $service->id)->delete();
+                if (isset($validatedData['client_testimonial'])) {
+                    foreach ($validatedData['client_testimonial'] as $relatedData) {
+                        $service->client_testimonial()->create($relatedData);
+                    }
+                }
+                ClientTestimonialService::where('service_id', $service->id)->delete();
+                if (!empty($validatedData['service_processs'])) {
+                    foreach ($validatedData['service_processs'] as $service_processsdata) {
+
+                        $service_processs = $service->service_processs()->create([
+                            'en_name' => $service_processsdata['en_name'],
+                            'nl_name' => $service_processsdata['nl_name'],
+                            'step_no' => $service_processsdata['step_no'],
+                        ]);
+
+                        if (!empty($service_processsdata['process_procedures'])) {
+                            foreach ($service_processsdata['process_procedures'] as $process_procedures) {
+
+                                $service_processs->process_procedures()->create([
+                                    'en_name' => $process_procedures['en_name'],
+                                    'nl_name' => $process_procedures['nl_name'],
+                                    'en_description' => $process_procedures['en_description'],
+                                    'nl_description' => $process_procedures['nl_description'],
+                                ]);
+                            }
+                        }
+                    }
+                }
+
+
+
+                DB::commit();
+
+
+                return redirect()->route('showall.service')->with('success', 'Service created successfully!');
+                /*  return response()->json([
                     'success' => 1,
                     'result' => $service,
                     'message' => __('app.service_updated_sucsessfully'),
-                ], 200);
+                ], 200);*/
             } else {
                 return response()->json([
                     'success' => 0,
@@ -418,6 +470,7 @@ class ServicesController extends Controller
                 ], 200);
             }
         } catch (Exception $e) {
+            DB::rollback();
             return response()->json([
                 'success' => 0,
                 'result' => null,
