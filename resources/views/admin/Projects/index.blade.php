@@ -42,8 +42,8 @@
                                                     </li>
                                                     <li>
                                                         <div class="">
-                                                            <form action="" method="POST" style="display:grid;"
-                                                                onsubmit="return confirm('Are you sure you want to delete this Service?');">
+                                                            <form action="{{route('project.delete',$project['id'])}}" method="POST" style="display:grid;"
+                                                                onsubmit="return confirm('Are you sure you want to delete this Project?');">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit"><i class="fa fa-times"></i></button>

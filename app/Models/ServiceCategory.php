@@ -17,4 +17,8 @@ class ServiceCategory extends Model
     {
         return $this->belongsTo(Project::class, 'project_id', 'id');
     }
+    public function services(): BelongsTo
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'id');
+    }
 }

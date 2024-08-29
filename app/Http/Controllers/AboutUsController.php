@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AboutUs;
+use App\Models\ForWhoService;
+use App\Models\StepsProcess;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -241,7 +243,16 @@ class AboutUsController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        $aboutus = AboutUs::with(['steps_process', 'client_testimonial', 'for_who_services'])->findOrFail($id);
+        if ($aboutus) {
+            return view('admin.AboutUs.edit', compact('aboutus'));
+        } else {
 
+            return redirect()->back();
+        }
+    }
 
 
 
@@ -304,40 +315,38 @@ class AboutUsController extends Controller
                 $aboutus->en_end = $validatedData['en_end'];
                 $aboutus->nl_end = $validatedData['nl_end'];
                 $aboutus->save();
-            }
-            /* if (isset($validatedData['steps_processs'])) {
-                foreach ($validatedData['steps_processs'] as $stepId => $stepData) {
-                    $step = $aboutus->steps_process()->findOrFail($stepId);
-                  //  error_log($step);
-                    if ($step) {
-                        $step->en_name = $stepData['en_name'];
-                        $step->nl_name = $stepData['nl_name'];
-                        $step->en_description = $stepData['en_description'];
-                        $step->nl_description = $stepData['nl_description'];
-                        $step->save();
+
+
+                StepsProcess::where('about_us_id', $aboutus->id)->delete();
+
+                if (isset($validatedData['steps_processs'])) {
+                    foreach ($validatedData['steps_processs'] as $relatedData) {
+
+                        $aboutus->steps_process()->create($relatedData);
                     }
                 }
-            }*/
-            /*  if (isset($validatedData['client_testimonial'])) {
-                foreach ($validatedData['client_testimonial'] as $relatedData) {
+                if (isset($validatedData['client_testimonial'])) {
+                    foreach ($validatedData['client_testimonial'] as $relatedData) {
 
-                    $about_us->client_testimonial()->create($relatedData);
+                        $aboutus->client_testimonial()->create($relatedData);
+                    }
+                }
+                ForWhoService::where('about_us_id', $aboutus->id)->delete();
+                if (isset($validatedData['for_who_services'])) {
+                    foreach ($validatedData['for_who_services'] as $relatedData) {
+
+                        $aboutus->for_who_services()->create($relatedData);
+                    }
                 }
             }
-            if (isset($validatedData['for_who_services'])) {
-                foreach ($validatedData['for_who_services'] as $relatedData) {
-
-                    $about_us->for_who_services()->create($relatedData);
-                }
-            }*/
             DB::commit();
 
-
-            return response()->json([
+            return redirect()->route('showall.about-us')->with('success', 'AboutUs Updated successfully!');
+            /* return response()->json([
                 'sucsess' => 1,
                 'result' => $aboutus,
                 'message' => "Abput us updated Sucsessfully",
-            ], 200);
+            ], 200);*/
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -426,6 +435,26 @@ class AboutUsController extends Controller
                 'success' => 0,
                 'result' => null,
                 'message' => $e
+            ], 200);
+        }
+    }
+
+    public function destroy($id)
+    {
+        $aboutus = AboutUs::findOrFail($id);
+        if ($aboutus) {
+            $aboutus->delete();
+            return redirect()->route('showall.about-us')->with('success', "Aboutus Deleted Sucsessfully");
+            /* return response()->json([
+                'success' => 1,
+                'result' => null,
+                'message' => __('app.service_deleted_sucsessfully')
+            ], 200);*/
+        } else {
+            return response()->json([
+                'success' => 0,
+                'result' => null,
+                'message' => __('app.faild_to_delete_service')
             ], 200);
         }
     }

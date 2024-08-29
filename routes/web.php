@@ -51,6 +51,9 @@ Route::middleware([SetLocal::class])->group(function () {
         Route::get('/add/about-us', [AboutUsController::class, 'addaboutus'])->name('about-us.add');
         Route::get('/admin-about-us', [AboutUsController::class, 'show_all'])->name('showall.about-us');
         Route::post('/store-aboutus', [AboutUsController::class, 'store'])->name("about-us.store");
+        Route::get('/edit/aboutus/{id}', [AboutUsController::class, 'edit'])->name('aboutus.edit');
+        Route::post('/update-aboutus/{id}', [AboutUsController::class, 'update'])->name('aboutus.update');
+        Route::delete('/delete-aboutus/{id}', [AboutUsController::class, 'destroy'])->name("aboutus.delete");
 
 
 
@@ -63,6 +66,7 @@ Route::middleware([SetLocal::class])->group(function () {
         Route::get('/add/project', [ProjectController::class, 'addproject'])->name('project.add');
         Route::post('/store-project', [ProjectController::class, 'store'])->name("project.store");
         Route::post('/project/store-img', [ProjectController::class, 'store_image'])->name('img.store');
+        Route::delete('/delete-project/{id}', [ProjectController::class, 'destroy'])->name("project.delete");
     });
 
 

@@ -31,6 +31,10 @@ class Service extends Model
     {
         return $this->hasMany(ClientTestimonialService::class, 'service_id', 'id');
     }
+    public function service_categories(): HasMany
+    {
+        return $this->hasMany(ServiceCategory::class, 'service_id', 'id');
+    }
     public function shortcut($locale, $service, $defaultLanguage)
     {
         if ($locale == 'en') {

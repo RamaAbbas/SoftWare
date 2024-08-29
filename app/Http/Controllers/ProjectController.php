@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\Project;
 use App\Models\ProjectImage;
 use App\Models\Service;
+use App\Models\ServiceCategory;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,76 +17,57 @@ use Illuminate\Support\Facades\Validator;
 class ProjectController extends Controller
 {
 
+
     public function index(Request $request)
     {
+        $projects = Project::all();
+        $groupedProjects = [];
+        $result = [];
         $language = $request->header('Accept-Language');
         $defaultLanguage = 'en';
         $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
 
-        $projects = Project::with(['client', 'service_categories', 'project_images', 'project_live_links', 'project_technologies', 'achievements', 'challenges'])->get();
 
-        if ($projects->isEmpty()) {
-            return response()->json([
-                'success' => 0,
-                'result' => null,
-                'message' => __('app.there_is_no_data')
-            ], 200);
-        }
-
-        try {
-            $processedServices = $projects->map(function ($project) use ($locale) {
-                $begin = Carbon::parse($project->begin_date);
-                $end = Carbon::parse($project->end_date);
-                $diffInDays = $begin->diffInDays($end);
-
-
-
-
-
-                $data = [
-                    'id' => $project->id,
-                    'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
-                    'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
-                  //  'image'=>'asset('."'"."storage/".$img."'".')',
-                    // 'time' => $diffInDays,
-                    // 'end_date' => $project->end_date,
-                    // 'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
-                ];
-                $image=$project->project_images()->first();
-                $img=$image['image_path'];
-            /*    if($image){
-                    $data['images']=[
-                        'image'=>'asset('."'"."storage/".$img."'".')',
-                    ];
-                }*/
-                if($image){
-                    $data['image']=
-                       asset('storage/'.$img);
-
+        foreach ($projects as $project) {
+            foreach ($project->service_categories as $category) {
+                $serviceName = $locale == 'en' ? $category->services->en_name :  $category->services->nl_name;
+                if (!isset($groupedProjects[$serviceName])) {
+                    $groupedProjects[$serviceName] = [];
                 }
-               /* $data['project_images'] = $project->project_images->map(function ($related) use ($locale) {
-                    return [
-                        'image_path' =>'asset('."'"."storage/".$related->image_path."'".')'
+                $image = $project->project_images()->first();
+
+                if ($image) {
+                    $img = $image['image_path'];
+                    $groupedProjects[$serviceName][] = [
+                        'id' => $project->id,
+                        'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
+                        'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
+                        'image' => asset('storage/' . $img)
 
                     ];
-                });*/
+                } else {
+                    $groupedProjects[$serviceName][] = [
+                        'id' => $project->id,
+                        'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
+                        'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
+                        'image' => ''
 
-                return $data;
-            });
-
-            return response()->json([
-                'success' => 1,
-                'result' => $processedServices,
-                'message' => __('app.data_returnd_sucssesfully')
-            ], 200);
-        } catch (Exception $e) {
-            return response()->json([
-                'success' => 0,
-                'result' => null,
-                'message' => $e->getMessage()
-            ], 500);
+                    ];
+                }
+            }
         }
+
+
+
+        return response()->json(
+            [
+                'success' => 1,
+                'result' => $groupedProjects,
+                'message' => __('app.data_returnd_sucssesfully')
+            ]
+        );
     }
+
     public function show_all()
     {
 
@@ -452,7 +434,7 @@ class ProjectController extends Controller
             $data['client']['email'] = $client[0]['email'];
             $data['client']['phone_number'] = $client[0]['phone_number'];
             $data['service_categories'] = $project->service_categories->map(function ($related) use ($locale) {
-                $service=Service::findOrFail($related->service_id);
+                $service = Service::findOrFail($related->service_id);
                 return [
                     'servive_name' => $locale == 'en' ? $service->en_name : $service->nl_name,
                 ];
@@ -471,8 +453,8 @@ class ProjectController extends Controller
                 ];
             });
             $data['project_images'] = $project->project_images->map(function ($related) use ($locale) {
-             //   $image=$project->project_images()->first();
-              /*  $img=$image['image_path'];
+                //   $image=$project->project_images()->first();
+                /*  $img=$image['image_path'];
 
                 if($image){
                     $data['image']=
@@ -480,7 +462,7 @@ class ProjectController extends Controller
 
                 }*/
                 return [
-                    'image_path' => asset('storage/'.$related->image_path)
+                    'image_path' => asset('storage/' . $related->image_path)
                 ];
             });
 
@@ -583,7 +565,7 @@ class ProjectController extends Controller
     }
 
 
-    public function store_image( Request $request,$project)
+    public function store_image(Request $request, $project)
     {
         $latestProjectId = Project::latest()->first()->id;
         $validatedDat = Validator::make($request->all(), [
@@ -601,11 +583,32 @@ class ProjectController extends Controller
             foreach ($request->file('image_path') as $file) {
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $filePath = $file->storeAs('project_images', $filename, 'public');
-               $project->project_images()->create([
+                $project->project_images()->create([
                     'image_path' => $filePath,
-          //          'project_id'=> $latestProjectId+1
+                    //          'project_id'=> $latestProjectId+1
                 ]);
             }
+        }
+    }
+
+
+    public function destroy($id)
+    {
+        $aboutus = Project::findOrFail($id);
+        if ($aboutus) {
+            $aboutus->delete();
+            return redirect()->route('showall.projects')->with('success', "Project Deleted Sucsessfully");
+            /* return response()->json([
+                'success' => 1,
+                'result' => null,
+                'message' => __('app.service_deleted_sucsessfully')
+            ], 200);*/
+        } else {
+            return response()->json([
+                'success' => 0,
+                'result' => null,
+                'message' => __('app.faild_to_delete_service')
+            ], 200);
         }
     }
 }

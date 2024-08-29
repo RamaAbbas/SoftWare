@@ -268,9 +268,10 @@
                                     <form class="form-horizontal form-label-left" id="form2">
                                         @csrf
                                         <input type="hidden" name="requirment[]">
-                                        @foreach ($service->requirment as $requirment)
-                                            <div class="form-group row">
-                                                <div id="requirements">
+
+                                        <div class="form-group row">
+                                            <div id="requirements">
+                                                @foreach ($service->requirment as $requirment)
                                                     <div class="requirement">
                                                         <label for="requirment[0][en_name]">English Name:</label>
                                                         <input type="text" id="requirement[0][en_name]"
@@ -297,171 +298,187 @@
                                                             Requirement</button>
                                                     </div>
                                                     <br>
-                                                </div>
-                                        @endforeach
+                                                @endforeach
+                                            </div>
+
+                                        </div>
+
+                                        <button type="button" id="add-more">Add More Requirements</button>
+
+                                    </form>
+
                                 </div>
 
-                                <button type="button" id="add-more">Add More Requirements</button>
+                                <div id="step-3">
+                                    <h2 class="StepTitle">Service Benefits</h2>
+                                    <form class="form-horizontal form-label-left" id="form3">
+                                        @csrf
+                                        <input type="hidden" name="service_benefits[]">
 
-                                </form>
-
-                            </div>
-
-                            <div id="step-3">
-                                <h2 class="StepTitle">Service Benefits</h2>
-                                <form class="form-horizontal form-label-left" id="form3">
-                                    @csrf
-                                    <input type="hidden" name="service_benefits[]">
-                                    @foreach ($service->service_benefits as $service_benefits)
                                         <div class="form-group row">
                                             <div id="service_benefits">
-                                                <div class="service_benefit">
-                                                    <label for="service_benefits[0][en_name]">English Name:</label>
-                                                    <input type="text" id="service_benefits[0][en_name]"
-                                                        name="service_benefits[0][en_name]"
-                                                        value="{{ $service_benefits->en_name }}"
-                                                        class="form-control  "><br>
+                                                @foreach ($service->service_benefits as $service_benefits)
+                                                    <div class="service_benefit">
+                                                        <label for="service_benefits[0][en_name]">English Name:</label>
+                                                        <input type="text" id="service_benefits[0][en_name]"
+                                                            name="service_benefits[0][en_name]"
+                                                            value="{{ $service_benefits->en_name }}"
+                                                            class="form-control  "><br>
 
-                                                    <label for="service_benefits[0][nl_name]">Dutch Name:</label>
-                                                    <input type="text" id="service_benefits[0][nl_name]"
-                                                        name="service_benefits[0][nl_name]"
-                                                        value="{{ $service_benefits->nl_name }}"
-                                                        class="form-control  "><br>
+                                                        <label for="service_benefits[0][nl_name]">Dutch Name:</label>
+                                                        <input type="text" id="service_benefits[0][nl_name]"
+                                                            name="service_benefits[0][nl_name]"
+                                                            value="{{ $service_benefits->nl_name }}"
+                                                            class="form-control  "><br>
+                                                        <br>
+                                                        <label for="service_benefits[0][en_description]">English
+                                                            Description:</label>
+                                                        <textarea id="service_benefits[0][en_description]" name="service_benefits[0][en_description]" class="form-control  ">{{ $service_benefits->en_description }}</textarea><br>
+
+                                                        <label for="service_benefits[0][nl_description]">Dutch
+                                                            Description:</label>
+                                                        <textarea id="service_benefits[0][nl_description]" name="service_benefits[0][nl_description]" class="form-control  ">{{ $service_benefits->nl_description }}</textarea><br>
+                                                        <button type="button" class="delete-service_benefit">Delete
+                                                            Benefit</button>
+
+                                                    </div>
                                                     <br>
-                                                    <label for="service_benefits[0][en_description]">English
-                                                        Description:</label>
-                                                    <textarea id="service_benefits[0][en_description]" name="service_benefits[0][en_description]" class="form-control  ">{{ $service_benefits->en_description }}</textarea><br>
-
-                                                    <label for="service_benefits[0][nl_description]">Dutch
-                                                        Description:</label>
-                                                    <textarea id="service_benefits[0][nl_description]" name="service_benefits[0][nl_description]" class="form-control  ">{{ $service_benefits->nl_description }}</textarea><br>
-                                                    <button type="button" class="delete-service_benefit">Delete
-                                                        Benefit</button>
-
-                                                </div>
-                                                <br>
+                                                @endforeach
                                             </div>
-                                    @endforeach
+
+                                        </div>
+                                        <button type="button" id="add-more-benefit">Add More Benefits</button>
+                                    </form>
+                                </div>
+                                <div id="step-4">
+                                    <form class="form-horizontal form-label-left" id="form4">
+                                        @csrf
+                                        <input type="hidden" name="service_processs[]">
+                                        <div id="service_processes">
+                                            <h3>Service Processes</h3>
+                                            <div class="service_process">
+                                                <label for="service_processs[0][en_name]">English Name:</label>
+                                                <input type="text" id="service_processes[0][en_name]"
+                                                    name="service_processs[0][en_name]"
+                                                    value="{{ old('service_processes.0.en_name') }}"
+                                                    class="form-control  "><br>
+
+
+                                                <label for="service_processs[0][nl_name]">Dutch Name:</label>
+                                                <input type="text" id="service_processes[0][nl_name]"
+                                                    name="service_processs[0][nl_name]"
+                                                    value="{{ old('service_processes.0.nl_name') }}"
+                                                    class="form-control  "><br>
+
+
+                                                <label for="service_processs[0][step_no]">Step Number:</label>
+                                                <input type="number" id="service_processes[0][step_no]"
+                                                    name="service_processs[0][step_no]"
+                                                    value="{{ old('service_processes.0.step_no') }}"
+                                                    class="form-control  "><br>
+
+
+                                                <div class="process_procedure">
+                                                    <label
+                                                        for="service_processs[0][process_procedures][0][en_name]">Procedure
+                                                        English Name:</label>
+                                                    <input type="text"
+                                                        id="service_processes[0][process_procedures][0][en_name]"
+                                                        name="service_processs[0][process_procedures][0][en_name]"
+                                                        value="{{ old('service_processs.0.process_procedures.0.en_name') }}"
+                                                        class="form-control  "><br>
+
+                                                    <label
+                                                        for="service_processs[0][process_procedures][0][nl_name]">Procedure
+                                                        Dutch Name:</label>
+                                                    <input type="text"
+                                                        id="service_processes[0][process_procedures][0][nl_name]"
+                                                        name="service_processs[0][process_procedures][0][nl_name]"
+                                                        value="{{ old('service_processs.0.process_procedures.0.nl_name') }}"
+                                                        class="form-control  "><br>
+
+
+                                                    <label
+                                                        for="service_processs[0][process_procedures][0][en_description]">Procedure
+                                                        English Description:</label>
+                                                    <textarea id="service_processes[0][process_procedures][0][en_description]"
+                                                        name="service_processs[0][process_procedures][0][en_description]" class="form-control  ">{{ old('service_processes.0.process_procedures.0.en_description') }}</textarea><br>
+
+
+                                                    <label
+                                                        for="service_processs[0][process_procedures][0][nl_description]">Procedure
+                                                        Dutch Description:</label>
+                                                    <textarea id="service_processes[0][process_procedures][0][nl_description]"
+                                                        name="service_processs[0][process_procedures][0][nl_description]" class="form-control  ">{{ old('service_processes.0.process_procedures.0.nl_description') }}</textarea><br>
+
+                                                    <button type="button" class="add-more-procedure"
+                                                        data-service-process-index="0">Add More Procedure</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <button type="button" id="add-more-service-processes">Add More Service
+                                            Processes</button>
+
+                                    </form>
+                                </div>
+
+                                <div id="step-5">
+                                    <h2 class="StepTitle">Client Testemonial</h2>
+                                    <form class="form-horizontal form-label-left" id="form5">
+                                        @csrf
+                                        <input type="hidden" name="client_testimonial[]">
+
+                                        <div class="form-group row">
+                                            <div id="client_testimonials">
+                                                @foreach ($service->client_testimonial as $client)
+                                                    <div class="client_testimonial">
+                                                        <label for="client_testimonial[0][client_name]">Client
+                                                            Name:</label>
+                                                        <input type="text" id="client_testimonial[0][client_name]"
+                                                            name="client_testimonial[0][client_name]"
+                                                            value="{{ $client->client_name }}"
+                                                            class="form-control  "><br>
+
+                                                        <br>
+                                                        <label for="client_testimonial[0][en_client_testimonial]">Client
+                                                            Testemonial
+                                                            in English</label>
+                                                        <textarea id="client_testimonial[0][en_client_testimonial]" name="client_testimonial[0][en_client_testimonial]"
+                                                            class="form-control  ">{{ $client->en_client_testimonial }}</textarea><br>
+
+                                                        <label for="client_testimonial[0][nl_client_testimonial]">Client
+                                                            Testemonial
+                                                            in Dutch
+                                                        </label>
+                                                        <textarea id="client_testimonial[0][nl_client_testimonial]" name="client_testimonial[0][nl_client_testimonial]"
+                                                            class="form-control  ">{{ $client->nl_client_testimonial }}</textarea><br>
+                                                        <button type="button" class="delete-client_testimonial">Delete
+                                                            Client Testimonial</button>
+
+
+                                                    </div>
+                                                    <br>
+                                                @endforeach
+
+                                            </div>
+
+                                        </div>
+                                        <button type="button" id="add-more-testimoniale">Add More Testimonial</button>
+                                    </form>
+
+
+                                </div>
+
                             </div>
-                            <button type="button" id="add-more-benefit">Add More Benefits</button>
-                            </form>
+                            <button id="submitAllForms" type="button" class="btn btn-primary">Submit </button>
                         </div>
-                        <div id="step-4">
-                            <form class="form-horizontal form-label-left" id="form4">
-                                @csrf
-                                <input type="hidden" name="service_processs[]">
-                                <div id="service_processes">
-                                    <h3>Service Processes</h3>
-                                    <div class="service_process">
-                                        <label for="service_processs[0][en_name]">English Name:</label>
-                                        <input type="text" id="service_processes[0][en_name]"
-                                            name="service_processs[0][en_name]"
-                                            value="{{ old('service_processes.0.en_name') }}" class="form-control  "><br>
-
-
-                                        <label for="service_processs[0][nl_name]">Dutch Name:</label>
-                                        <input type="text" id="service_processes[0][nl_name]"
-                                            name="service_processs[0][nl_name]"
-                                            value="{{ old('service_processes.0.nl_name') }}" class="form-control  "><br>
-
-
-                                        <label for="service_processs[0][step_no]">Step Number:</label>
-                                        <input type="number" id="service_processes[0][step_no]"
-                                            name="service_processs[0][step_no]"
-                                            value="{{ old('service_processes.0.step_no') }}" class="form-control  "><br>
-
-
-                                        <div class="process_procedure">
-                                            <label for="service_processs[0][process_procedures][0][en_name]">Procedure
-                                                English Name:</label>
-                                            <input type="text"
-                                                id="service_processes[0][process_procedures][0][en_name]"
-                                                name="service_processs[0][process_procedures][0][en_name]"
-                                                value="{{ old('service_processs.0.process_procedures.0.en_name') }}"
-                                                class="form-control  "><br>
-
-                                            <label for="service_processs[0][process_procedures][0][nl_name]">Procedure
-                                                Dutch Name:</label>
-                                            <input type="text"
-                                                id="service_processes[0][process_procedures][0][nl_name]"
-                                                name="service_processs[0][process_procedures][0][nl_name]"
-                                                value="{{ old('service_processs.0.process_procedures.0.nl_name') }}"
-                                                class="form-control  "><br>
-
-
-                                            <label
-                                                for="service_processs[0][process_procedures][0][en_description]">Procedure
-                                                English Description:</label>
-                                            <textarea id="service_processes[0][process_procedures][0][en_description]"
-                                                name="service_processs[0][process_procedures][0][en_description]" class="form-control  ">{{ old('service_processes.0.process_procedures.0.en_description') }}</textarea><br>
-
-
-                                            <label
-                                                for="service_processs[0][process_procedures][0][nl_description]">Procedure
-                                                Dutch Description:</label>
-                                            <textarea id="service_processes[0][process_procedures][0][nl_description]"
-                                                name="service_processs[0][process_procedures][0][nl_description]" class="form-control  ">{{ old('service_processes.0.process_procedures.0.nl_description') }}</textarea><br>
-
-                                            <button type="button" class="add-more-procedure"
-                                                data-service-process-index="0">Add More Procedure</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button type="button" id="add-more-service-processes">Add More Service
-                                    Processes</button>
-
-                            </form>
-                        </div>
-
-                        <div id="step-5">
-                            <h2 class="StepTitle">Client Testemonial</h2>
-                            <form class="form-horizontal form-label-left" id="form5">
-                                @csrf
-                                <input type="hidden" name="client_testimonial[]">
-                                <div class="form-group row">
-                                    <div id="client_testimonials">
-                                        <div class="client_testimonial">
-                                            <label for="client_testimonial[0][client_name]">Client Name:</label>
-                                            <input type="text" id="client_testimonial[0][client_name]"
-                                                name="client_testimonial[0][client_name]"
-                                                value="{{ old('client_testimonial.0.client_name') }}"
-                                                class="form-control  "><br>
-
-                                            <br>
-                                            <label for="client_testimonial[0][en_client_testimonial]">Client
-                                                Testemonial
-                                                in English</label>
-                                            <textarea id="client_testimonial[0][en_client_testimonial]" name="client_testimonial[0][en_client_testimonial]"
-                                                class="form-control  ">{{ old('client_testimonial.0.en_client_testimonial') }}</textarea><br>
-
-                                            <label for="client_testimonial[0][nl_client_testimonial]">Client
-                                                Testemonial
-                                                in Dutch
-                                            </label>
-                                            <textarea id="client_testimonial[0][nl_client_testimonial]" name="client_testimonial[0][nl_client_testimonial]"
-                                                class="form-control  ">{{ old('client_testimonial.0.nl_client_testimonial') }}</textarea><br>
-                                            <button type="button" class="delete-client_testimonial">Delete
-                                                Client Testimonial</button>
-
-
-                                        </div>
-                                        <br>
-                                    </div>
-                                </div>
-                                <button type="button" id="add-more-testimonial">Add More Testimonial</button>
-                            </form>
-
-                        </div>
-
                     </div>
-                    <button id="submitAllForms" type="button" class="btn btn-primary">Submit </button>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
+
 
 
 
@@ -626,9 +643,11 @@
             }
         });
 
-        document.getElementById('add-more-testimonial').addEventListener('click', function() {
+        document.getElementById('add-more-testimoniale').addEventListener('click', function() {
+            console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
             var client_testimonialsDiv = document.getElementById('client_testimonials');
-            var index = client_testimonialsDiv.children.length - 1;
+            var index = client_testimonialsDiv.children.length ;
+           console.log(index);
 
             var newclient_testimonial = document.createElement('div');
             newclient_testimonial.className = 'client_testimonial';

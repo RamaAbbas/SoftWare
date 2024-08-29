@@ -36,15 +36,29 @@
                                                         <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                                         </li>
                                                         <li class="dropdown">
-                                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                                                            <a href="" class="dropdown-toggle" data-toggle="dropdown"
                                                                 role="button" aria-expanded="false"><i
                                                                     class="fa fa-wrench"></i></a>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                <a class="dropdown-item"
+                                                                    href="{{ route('aboutus.edit', $aboutus['id']) }}">Edit</a>
+                                                            </div>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                 <a class="dropdown-item" href="#">Settings 1</a>
                                                                 <a class="dropdown-item" href="#">Settings 2</a>
                                                             </div>
                                                         </li>
-                                                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                                                        <li>
+                                                            <div class="">
+                                                                <form action="{{ route('aboutus.delete', $aboutus['id']) }}"
+                                                                    method="POST" style="display:grid;"
+                                                                    onsubmit="return confirm('Are you sure you want to About us?');">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit"><i
+                                                                            class="fa fa-times"></i></button>
+                                                                </form>
+                                                            </div>
                                                         </li>
                                                     </ul>
                                                     <div class="clearfix"></div>
@@ -135,7 +149,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var testElement = document.getElementById('c');
-         //   var TextInsideLi = document.getElementById('b').textContent ?? "a";
+            //   var TextInsideLi = document.getElementById('b').textContent ?? "a";
 
             if (testElement.classList.contains('b')) {
                 a.style.display = "none";
