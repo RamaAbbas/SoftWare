@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Achievement;
+use App\Models\Challenge;
 use App\Models\Client;
 use App\Models\Project;
 use App\Models\ProjectImage;
+use App\Models\ProjectLiveLinks;
+use App\Models\ProjectTechnology;
 use App\Models\Service;
 use App\Models\ServiceCategory;
 use Carbon\Carbon;
@@ -12,6 +16,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 use function PHPSTORM_META\map;
@@ -58,7 +63,6 @@ class ProjectController extends Controller
                 }
             }
         }*/
-        //   $projects = Project::all();
         $process = $projects->map(function ($project) use ($locale) {
             $image = $project->project_images()->first();
 
@@ -73,9 +77,13 @@ class ProjectController extends Controller
                 ];
 
                 $data['categories'] = $project->service_categories->map(function ($related) use ($locale) {
-                    $serviceName = $locale == 'en' ? $related->services->en_name :  $related->services->nl_name;
-                    return
-                        $serviceName;
+                    if ($related->services->en_name && $related->services->nl_name) {
+                        $serviceName = $locale == 'en' ? $related->services->en_name :  $related->services->nl_name;
+                        return
+                            $serviceName;
+                    } else {
+                        return [];
+                    }
                 });
             } else {
                 $data = [
@@ -87,9 +95,13 @@ class ProjectController extends Controller
                 ];
 
                 $data['categories'] = $project->service_categories->map(function ($related) use ($locale) {
-                    $serviceName = $locale == 'en' ? $related->services->en_name :  $related->services->nl_name;
-                    return
-                        $serviceName;
+                    if ($related->services->en_name && $related->services->nl_name) {
+                        $serviceName = $locale == 'en' ? $related->services->en_name :  $related->services->nl_name;
+                        return
+                            $serviceName;
+                    } else {
+                        return [];
+                    }
                 });
             }
             return $data;
@@ -148,11 +160,8 @@ class ProjectController extends Controller
             ]);
             if ($validatedDat->fails()) {
 
-                return response()->json([
-                    'sucsess' => 0,
-                    'result' => null,
-                    'message' => $validatedDat->errors(),
-                ], 200);
+
+                return redirect()->route('showall.projects')->with('error', $validatedDat->errors());
             }
 
 
@@ -175,19 +184,7 @@ class ProjectController extends Controller
                     'nl_result' => $validatedData['nl_result'],
                 ]);
 
-                /*  if (!empty($validatedData['service_categories'])) {
-                    foreach ($validatedData['service_categories'] as $service_categories) {
 
-                        $project->service_categories()->create(
-                            [
-                                // 'en_service_name' => $service_categories['en_service_name'],
-                                // 'nl_service_name' => $service_categories['nl_service_name'],
-                                'service_id' => $service_categories['service_id']
-
-                            ]
-                        );
-                    }
-                }*/
                 if ($request->has('service_ids')) {
                     foreach ($request->service_ids as $service_id) {
                         $service = Service::findOrFail($service_id);
@@ -207,8 +204,7 @@ class ProjectController extends Controller
                             [
                                 'en_achievement_name' => $achievements['en_achievement_name'],
                                 'nl_achievement_name' => $achievements['nl_achievement_name'],
-                                //   'en_how_we_achieved_it' => $achievements['en_how_we_achieved_it'],
-                                //   'nl_how_we_achieved_it' => $achievements['nl_how_we_achieved_it'],
+
 
                             ]
                         );
@@ -264,25 +260,17 @@ class ProjectController extends Controller
 
 
                 DB::commit();
-                return response()->json([
-                    'sucsess' => 1,
-                    'result' => $project,
-                    'message' => "Client With His project Stored Sucsessfully",
-                ], 200);
+
+                return redirect()->route('showall.projects')->with('sucsess', "Client With His project Stored Sucsessfully");
 
 
                 //  return redirect()->route('clients.index')->with('success', 'Client created successfully.');
             } catch (\Exception $e) {
                 DB::rollback();
-                return response()->json([
-                    'success' => 0,
-                    'result' => null,
-                    'message' => $e
-                ], 200);
+                return redirect()->route('showall.projects')->with('error', $e);
             }
         } else {
-            // return "B";
-            // if($request->input('client_id') === null) {
+
             $validatedDat = Validator::make($request->all(), [
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
@@ -297,11 +285,7 @@ class ProjectController extends Controller
             ]);
             if ($validatedDat->fails()) {
 
-                return response()->json([
-                    'sucsess' => 0,
-                    'result' => null,
-                    'message' => $validatedDat->errors(),
-                ], 200);
+                return redirect()->route('showall.projects')->with('error', $validatedDat->errors());
             }
 
 
@@ -318,7 +302,6 @@ class ProjectController extends Controller
                     'phone_number' => $validatedData['phone_number'],
                 ]);
 
-                //    foreach ($validatedData['projects'] as $projectData) {
                 $project = $client->projects()->create([
                     'client_id' => $client->id,
                     'en_title' => $validatedData['en_title'],
@@ -350,8 +333,6 @@ class ProjectController extends Controller
                             [
                                 'en_achievement_name' => $achievements['en_achievement_name'],
                                 'nl_achievement_name' => $achievements['nl_achievement_name'],
-                                //   'en_how_we_achieved_it' => $achievements['en_how_we_achieved_it'],
-                                //   'nl_how_we_achieved_it' => $achievements['nl_how_we_achieved_it'],
 
                             ]
                         );
@@ -403,21 +384,11 @@ class ProjectController extends Controller
 
 
                 DB::commit();
-                return response()->json([
-                    'sucsess' => 1,
-                    'result' => $client,
-                    'message' => "Client With His project Stored Sucsessfully",
 
-                ], 200);
-
-                //  return redirect()->route('clients.index')->with('success', 'Client created successfully.');
+                return redirect()->route('showall.projects')->with('sucsess', "Client With His project Stored Sucsessfully");
             } catch (\Exception $e) {
                 DB::rollback();
-                return response()->json([
-                    'success' => 0,
-                    'result' => null,
-                    'message' => $e
-                ], 200);
+                return redirect()->route('showall.projects')->with('error', $e);
             }
         }
     }
@@ -489,14 +460,7 @@ class ProjectController extends Controller
                 ];
             });
             $data['project_images'] = $project->project_images->map(function ($related) use ($locale) {
-                //   $image=$project->project_images()->first();
-                /*  $img=$image['image_path'];
 
-                if($image){
-                    $data['image']=
-                       asset('storage/'.$img);
-
-                }*/
                 return [
                     'image_path' => asset('storage/' . $related->image_path)
                 ];
@@ -641,7 +605,7 @@ class ProjectController extends Controller
             return redirect()->back();
         }
     }
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         if ($request->client_id) {
             $validatedDat = Validator::make($request->all(), [
@@ -659,13 +623,10 @@ class ProjectController extends Controller
 
 
             ]);
+            $pro = Project::findOrFail($id);
             if ($validatedDat->fails()) {
+                return redirect()->route('project.edit', $pro->id)->with('error', $validatedDat->errors());
 
-                return response()->json([
-                    'sucsess' => 0,
-                    'result' => null,
-                    'message' => $validatedDat->errors(),
-                ], 200);
             }
 
 
@@ -674,107 +635,117 @@ class ProjectController extends Controller
 
             try {
                 $validatedData = $request->all();
+                $project = Project::findOrFail($id);
+                if ($project) {
+                    $project->en_title = $validatedData['en_title'];
+                    $project->nl_title = $validatedData['nl_title'];
+                    $project->en_description = $validatedData['en_description'];
+                    $project->nl_description = $validatedData['nl_description'];
+                    $project->client_id = $validatedData['client_id'];
+                    $project->begin_date = Carbon::parse($validatedData['begin_date']);
+                    $project->end_date = Carbon::parse($validatedData['end_date']);
+                    $project->en_result = $validatedData['en_result'];
+                    $project->nl_result = $validatedData['nl_result'];
+                    $project->save();
 
-                $project = Project::create([
-                    'client_id' => $validatedData['client_id'],
-                    'en_title' => $validatedData['en_title'],
-                    'nl_title' => $validatedData['nl_title'],
-                    'en_description' => $validatedData['en_description'],
-                    'nl_description' => $validatedData['nl_description'],
-                    //  'begin_date' =>Carbon::createFromFormat('d-m-Y',$validatedData['begin_date']),
-                    'begin_date' => Carbon::parse($validatedData['begin_date']),
-                    'end_date' => Carbon::parse($validatedData['end_date']),
-                    'en_result' => $validatedData['en_result'],
-                    'nl_result' => $validatedData['nl_result'],
-                ]);
 
+                    ServiceCategory::where('project_id', $project->id)->delete();
+                    if ($request->has('service_ids')) {
+                        foreach ($request->service_ids as $service_id) {
+                            $service = Service::findOrFail($service_id);
+                            $project->service_categories()->create(
+                                [
+                                    'service_id' => $service->id
 
-                if ($request->has('service_ids')) {
-                    foreach ($request->service_ids as $service_id) {
-                        $service = Service::findOrFail($service_id);
-                        $project->service_categories()->create(
-                            [
-                                'service_id' => $service->id
-
-                            ]
-                        );
-                    }
-                }
-
-                if (!empty($validatedData['achievements'])) {
-                    foreach ($validatedData['achievements'] as $achievements) {
-
-                        $project->achievements()->create(
-                            [
-                                'en_achievement_name' => $achievements['en_achievement_name'],
-                                'nl_achievement_name' => $achievements['nl_achievement_name'],
-
-                            ]
-                        );
-                    }
-                }
-
-                if (!empty($validatedData['challenges'])) {
-                    foreach ($validatedData['challenges'] as $challenges) {
-
-                        $project->challenges()->create(
-                            [
-                                'en_challenge_name' => $challenges['en_challenge_name'],
-                                'nl_challenge_name' => $challenges['nl_challenge_name'],
-                                'en_challenge_description' => $challenges['en_challenge_description'],
-                                'nl_challenge_description' => $challenges['nl_challenge_description'],
-
-                            ]
-                        );
-                    }
-                }
-                if (!empty($validatedData['project_live_links'])) {
-                    foreach ($validatedData['project_live_links'] as $project_live_links) {
-                        $project->project_live_links()->create(
-                            [
-                                'link' => $project_live_links['link'],
-
-                            ]
-                        );
-                    }
-                }
-                if (!empty($validatedData['project_technologies'])) {
-                    foreach ($validatedData['project_technologies'] as $project_technologies) {
-                        $project->project_technologies()->create(
-                            [
-                                'tools' => $project_technologies['tools'],
-                            ]
-                        );
-                    }
-                }
-                if ($request->hasFile('image_path')) {
-                    foreach ($request->file('image_path') as $file) {
-                        if (!$file->isValid()) {
-                            return "A";
+                                ]
+                            );
                         }
-                        $filename = time() . '_' . $file->getClientOriginalName();
-                        $filePath = $file->storeAs('project_images', $filename, 'public');
-                        $project->project_images()->create([
-                            'image_path' => $filePath
-                        ]);
                     }
+                    Achievement::where('project_id', $project->id)->delete();
+
+                    if (!empty($validatedData['achievements'])) {
+                        foreach ($validatedData['achievements'] as $achievements) {
+
+                            $project->achievements()->create(
+                                [
+                                    'en_achievement_name' => $achievements['en_achievement_name'],
+                                    'nl_achievement_name' => $achievements['nl_achievement_name'],
+
+                                ]
+                            );
+                        }
+                    }
+                    Challenge::where('project_id', $project->id)->delete();
+                    if (!empty($validatedData['challenges'])) {
+                        foreach ($validatedData['challenges'] as $challenges) {
+
+                            $project->challenges()->create(
+                                [
+                                    'en_challenge_name' => $challenges['en_challenge_name'],
+                                    'nl_challenge_name' => $challenges['nl_challenge_name'],
+                                    'en_challenge_description' => $challenges['en_challenge_description'],
+                                    'nl_challenge_description' => $challenges['nl_challenge_description'],
+
+                                ]
+                            );
+                        }
+                    }
+                    ProjectLiveLinks::where('project_id', $project->id)->delete();
+                    if (!empty($validatedData['project_live_links'])) {
+                        foreach ($validatedData['project_live_links'] as $project_live_links) {
+                            $project->project_live_links()->create(
+                                [
+                                    'link' => $project_live_links['link'],
+
+                                ]
+                            );
+                        }
+                    }
+                    ProjectTechnology::where('project_id', $project->id)->delete();
+                    if (!empty($validatedData['project_technologies'])) {
+                        foreach ($validatedData['project_technologies'] as $project_technologies) {
+                            $project->project_technologies()->create(
+                                [
+                                    'tools' => $project_technologies['tools'],
+                                ]
+                            );
+                        }
+                    }
+
+                    //  ProjectImage::where('project_id', $project->id)->delete();
+                    if ($request->has('remove_images')) {
+                        $removeImages = $request->input('remove_images');
+                        foreach ($removeImages as $imageId) {
+                            $image = ProjectImage::findOrFail($imageId);
+
+                            Storage::delete('public/' . $image->path);
+
+                            $image->delete();
+                        }
+                    }
+                    if ($request->hasFile('image_path')) {
+                        foreach ($request->file('image_path') as $file) {
+                            if (!$file->isValid()) {
+                                return "A";
+                            }
+                            $filename = time() . '_' . $file->getClientOriginalName();
+                            $filePath = $file->storeAs('project_images', $filename, 'public');
+                            $project->project_images()->create([
+                                'image_path' => $filePath
+                            ]);
+                        }
+                    }
+
+
+
+                    DB::commit();
+                    return redirect()->route('showall.projects')->with('success', 'Project Updated successfully!');
+
                 }
-
-
-
-                DB::commit();
-                return response()->json([
-                    'sucsess' => 1,
-                    'result' => $project,
-                    'message' => "Client With His project Stored Sucsessfully",
-                ], 200);
             } catch (\Exception $e) {
                 DB::rollback();
-                return response()->json([
-                    'success' => 0,
-                    'result' => null,
-                    'message' => $e
-                ], 200);
+
+                return redirect()->route('showall.projects')->with('error', 'Project Updated faild!');
             }
         } else {
 
@@ -790,13 +761,10 @@ class ProjectController extends Controller
 
 
             ]);
+            $pro = Project::findOrFail($id);
             if ($validatedDat->fails()) {
 
-                return response()->json([
-                    'sucsess' => 0,
-                    'result' => null,
-                    'message' => $validatedDat->errors(),
-                ], 200);
+                return redirect()->route('project.edit', $pro->id)->with('error', $validatedDat->errors());
             }
 
 
@@ -845,8 +813,6 @@ class ProjectController extends Controller
                             [
                                 'en_achievement_name' => $achievements['en_achievement_name'],
                                 'nl_achievement_name' => $achievements['nl_achievement_name'],
-                                //   'en_how_we_achieved_it' => $achievements['en_how_we_achieved_it'],
-                                //   'nl_how_we_achieved_it' => $achievements['nl_how_we_achieved_it'],
 
                             ]
                         );
@@ -898,19 +864,10 @@ class ProjectController extends Controller
 
 
                 DB::commit();
-                return response()->json([
-                    'sucsess' => 1,
-                    'result' => $client,
-                    'message' => "Client With His project Stored Sucsessfully",
-
-                ], 200);
+                return redirect()->route('showall.projects')->with('success', 'Project Updated successfully!');
             } catch (\Exception $e) {
                 DB::rollback();
-                return response()->json([
-                    'success' => 0,
-                    'result' => null,
-                    'message' => $e
-                ], 200);
+                return redirect()->route('showall.projects')->with('error', 'Project Updated faild!');
             }
         }
     }

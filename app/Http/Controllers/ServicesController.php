@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BenefitsForWho;
 use App\Models\ClientTestimonialService;
 use App\Models\HowItWork;
+use App\Models\Project;
 use App\Models\Requirment;
 use App\Models\Service;
 use App\Models\User;
@@ -44,50 +45,8 @@ class ServicesController extends Controller
                     'id' => $service->id,
                     'name' => $locale == 'en' ? $service->en_name : $service->nl_name,
                     'description' => $locale == 'en' ? $service->en_description : $service->nl_description,
-                    // 'title_of_requirments' => $locale == 'en' ? $service->en_title_of_requirments : $service->nl_title_of_requirments,
-                    // 'title_of_how_it_works' => $locale == 'en' ? $service->en_title_of_how_it_works : $service->nl_title_of_how_it_works,
-                    // 'title_of_service_benefit' => $locale == 'en' ? $service->en_title_of_service_benefit : $service->nl_title_of_service_benefit,
-                    // 'title_call_to_action' => $locale == 'en' ? $service->en_title_call_to_action : $service->nl_title_call_to_action,
-                    // 'sub_title_call_to_action' => $locale == 'en' ? $service->en_sub_title_call_to_action : $service->nl_sub_title_call_to_action,
+
                 ];
-
-                // Process Requirments
-                // $data['requirments'] = $service->requirment->map(function ($related) use ($locale) {
-                //     return [
-                //         'name' => $locale == 'en' ? $related->en_name : $related->nl_name,
-                //         'description' => $locale == 'en' ? $related->en_description : $related->nl_description,
-                //     ];
-                // });
-
-                // // Process Service Benefits
-                // $data['service_benefits'] = $service->service_benefits->map(function ($related) use ($locale) {
-                //     return [
-                //         'name' => $locale == 'en' ? $related->en_name : $related->nl_name,
-                //         'description' => $locale == 'en' ? $related->en_description : $related->nl_description,
-                //     ];
-                // });
-
-                // // Process Client Testimonials
-                // $data['client_testimonial'] = $service->client_testimonial->map(function ($related) use ($locale) {
-                //     return [
-                //         'client_name' => $related->client_name,
-                //         'client_testimonial' => $locale == 'en' ? $related->en_client_testimonial : $related->nl_client_testimonial,
-                //     ];
-                // });
-
-                // // Process Service Processes and Procedures
-                // $data['process_procedures'] = $service->service_processs->map(function ($related) use ($locale) {
-                //     return [
-                //         'name' => $locale == 'en' ? $related->en_name : $related->nl_name,
-                //         'step_no' => $related->step_no,
-                //         'service_processes' => $related->process_procedures->map(function ($subrelated) use ($locale) {
-                //             return [
-                //                 'name' => $locale == 'en' ? $subrelated->en_name : $subrelated->nl_name,
-                //                 'description' => $locale == 'en' ? $subrelated->en_description : $subrelated->nl_description,
-                //             ];
-                //         }),
-                //     ];
-                // });
 
                 return $data;
             });
@@ -158,11 +117,12 @@ class ServicesController extends Controller
         ]);
         if ($validatedDat->fails()) {
 
-            return response()->json([
+            /* return response()->json([
                 'sucsess' => 0,
                 'result' => null,
                 'message' => $validatedDat->errors(),
-            ], 200);
+            ], 200);*/
+            return redirect()->route('service.add')->with('error', $validatedDat->errors());
         }
 
         DB::beginTransaction();
@@ -232,7 +192,7 @@ class ServicesController extends Controller
 
 
             DB::commit();
-            return redirect()->route('service.add')->with('success', 'Service created successfully!');
+            return redirect()->route('showall.service')->with('success', 'Service created successfully!');
 
             /* return response()->json([
                 'sucsess' => 1,
@@ -241,11 +201,12 @@ class ServicesController extends Controller
             ], 200);*/
         } catch (Exception $e) {
             DB::rollBack();
-            return response()->json([
+            /* return response()->json([
                 'success' => 0,
                 'result' => null,
                 'message' => $e
-            ], 200);
+            ], 200);*/
+            return redirect()->route('service.add')->with('error', $e);
         }
     }
 
@@ -376,12 +337,13 @@ class ServicesController extends Controller
             'service_processs' => 'array'
         ]);
         if ($validation->fails()) {
-
-            return   response()->json([
+            $ser = Service::findOrFail($id);
+            return redirect()->route('service.edit', $ser->id)->with('error', $validation->errors());
+            /*  return   response()->json([
                 'sucsess' => 0,
                 'result' => null,
                 'message' => $validation->errors(),
-            ], 200);
+            ], 200);*/
         }
         DB::beginTransaction();
         try {
@@ -421,13 +383,13 @@ class ServicesController extends Controller
                         $service->service_benefits()->create($relatedData);
                     }
                 }
-              ClientTestimonialService::where('service_id', $service->id)->delete();
+                ClientTestimonialService::where('service_id', $service->id)->delete();
                 if (isset($validatedData['client_testimonial'])) {
                     foreach ($validatedData['client_testimonial'] as $relatedData) {
                         $service->client_testimonial()->create($relatedData);
                     }
                 }
-                ClientTestimonialService::where('service_id', $service->id)->delete();
+                HowItWork::where('service_id', $service->id)->delete();
                 if (!empty($validatedData['service_processs'])) {
                     foreach ($validatedData['service_processs'] as $service_processsdata) {
 
@@ -436,7 +398,6 @@ class ServicesController extends Controller
                             'nl_name' => $service_processsdata['nl_name'],
                             'step_no' => $service_processsdata['step_no'],
                         ]);
-
                         if (!empty($service_processsdata['process_procedures'])) {
                             foreach ($service_processsdata['process_procedures'] as $process_procedures) {
 
@@ -456,26 +417,13 @@ class ServicesController extends Controller
                 DB::commit();
 
 
-                return redirect()->route('showall.service')->with('success', 'Service created successfully!');
-                /*  return response()->json([
-                    'success' => 1,
-                    'result' => $service,
-                    'message' => __('app.service_updated_sucsessfully'),
-                ], 200);*/
+                return redirect()->route('showall.service')->with('success', 'Service Updated successfully!');
             } else {
-                return response()->json([
-                    'success' => 0,
-                    'result' => null,
-                    'message' =>  __('app.failed_to_update_service'),
-                ], 200);
+                return redirect()->route('showall.service')->with('error', 'Service Updated Faild!');
             }
         } catch (Exception $e) {
             DB::rollback();
-            return response()->json([
-                'success' => 0,
-                'result' => null,
-                'message' => $e
-            ], 200);
+            return redirect()->route('showall.service')->with('error', $e);
         }
     }
     ////////////////////////////////////////////////////////////////
@@ -483,13 +431,10 @@ class ServicesController extends Controller
     {
         $service = Service::findOrFail($id);
         if ($service) {
+            $service->service_categories()->delete();
             $service->delete();
+
             return redirect()->route('showall.service')->with('success', "Service Deleted Sucsessfully");
-            /* return response()->json([
-                'success' => 1,
-                'result' => null,
-                'message' => __('app.service_deleted_sucsessfully')
-            ], 200);*/
         } else {
             return response()->json([
                 'success' => 0,

@@ -41,9 +41,13 @@
                         <div class="x_content">
                             <br />
                             <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left"
-                                action="{{ route('project.update',$project['id']) }}" enctype="multipart/form-data" method="post">
+                                action="{{ route('project.update', $project['id']) }}" enctype="multipart/form-data"
+                                method="post">
                                 @csrf
+
+
                                 <label for="">Client</label><br>
+                                <input type="hidden" value="{{ $client[0]['id'] }}" name="client_id">
                                 <div class="form-group row">
 
                                     <label for="new_client_name">First Name</label>
@@ -51,10 +55,10 @@
                                         value="{{ $client[0]['first_name'] }}" readonly>
                                     <label for="new_client_name2">Last Name</label>
                                     <input type="text" class="form-control" id="new_client_name2" name="last_name"
-                                        value="{{ $client[0]['last_name'] }}" readonly >
+                                        value="{{ $client[0]['last_name'] }}" readonly>
                                     <label for="new_client_name3">Email</label>
                                     <input type="text" class="form-control" id="new_client_name3" name="email"
-                                        value="{{ $client[0]['email'] }}" readonly >
+                                        value="{{ $client[0]['email'] }}" readonly>
                                     <label for="new_client_name4">Phone Number</label>
                                     <input type="text" class="form-control" id="new_client_name4" name="phone_number"
                                         value="{{ $client[0]['phone_number'] }}" readonly>
@@ -117,9 +121,21 @@
                                             name="nl_result" value="{{ $project['nl_result'] }}">
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label for="image">Project Image</label>
-                                    <input type="file" name="image_path[]" accept="image/*" multiple>
+                                <h4>Images</h4>
+                                <div class="existing-images">
+                                    @foreach ($project->project_images as $image)
+                                        <div class="image-container" id="image-{{ $image->id }}">
+                                            <img src="{{ Storage::url($image['image_path']) }}" alt="Project Image"
+                                                style="width: 100px; height: 100px;">
+                                            <button type="button" class="btn btn-danger remove-image"
+                                                data-id="{{ $image->id }}">Remove</button>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <h4>Add New Images</h4>
+                                <div class="new-images">
+                                    <input type="file" name="image_path[]" multiple>
                                 </div>
                                 <div class="form-group " id="date-of-birthday-id">
                                     <label for="birthday_date">Begin Date</label>
@@ -137,26 +153,27 @@
                                     <div>
                                         <label>
                                             <input type="checkbox" name="service_ids[]" value="{{ $service->id }}"
-                                            {{ $project->service_categories->contains($service->id) ? 'checked' : '' }}
-                                            @if(in_array($service->id, $project->service_categories->pluck('id')->toArray())) checked @endif
-                                            {{ in_array($service->id, $selectedServiceCategories) ? 'checked' : '' }}>
+                                                {{ $project->service_categories->contains($service->id) ? 'checked' : '' }}
+                                                {{ $project->service_categories->contains($service->id) ? 'checked' : '' }}
+                                                @if (in_array($service->id, $project->service_categories->pluck('service_id')->toArray())) checked @endif
+                                                {{ in_array($service->id, $selectedServiceCategories) ? 'checked' : '' }}>
                                             {{ $service->en_name }}
                                         </label>
                                     </div>
                                 @endforeach
                                 <br>
                                 <h2 class="StepTitle">Achievements</h2>
-                                <input type="hidden" name="achievements[]">
+
 
                                 <div class="form-group row">
                                     <div id="achievements">
                                         @foreach ($project->achievements as $achievements)
                                             <div class="achievement">
-                                                <label
-                                                    for="achievements[{{ $achievements->id }}][en_achievement_name]">English
+                                                <label for="achievements[0][en_achievement_name]">English
                                                     Name:</label>
                                                 <input type="text" id="requirement[0][en_name]"
-                                                    name="achievements[0][en_achievement_name]" class="form-control"
+                                                    name="achievements[{{ $achievements->id }}][en_achievement_name]"
+                                                    class="form-control"
                                                     value="{{ $achievements->en_achievement_name }}"><br>
 
                                                 <label for="achievements[0][nl_achievement_name]">Dutch Name:</label>
@@ -188,23 +205,27 @@
                                             <div class="challenge">
                                                 <label for="challenges[0][en_challenge_name]">English Name:</label>
                                                 <input type="text" id="challenges[0][en_challenge_name]"
-                                                    name="challenges[0][en_challenge_name]" class="form-control"
+                                                    name="challenges[{{ $challenges->id }}][en_challenge_name]"
+                                                    class="form-control"
                                                     value="{{ $challenges->en_challenge_name }}"><br>
 
                                                 <label for="challenges[0][nl_challenge_name]">Dutch Name:</label>
                                                 <input type="text" id="challenges[0][nl_challenge_name]"
-                                                    name="challenges[0][nl_challenge_name]" class="form-control  "
+                                                    name="challenges[{{ $challenges->id }}][nl_challenge_name]"
+                                                    class="form-control  "
                                                     value="{{ $challenges->nl_challenge_name }}"><br>
                                                 <br>
                                                 <label for="challenges[0][en_challenge_description]">English
                                                     Description:</label>
-                                                <textarea id="challenges[0][en_challenge_description]" name="challenges[0][en_challenge_description]"
-                                                    class="form-control  " value="{{ $challenges->en_challenge_description }}">{{ $challenges->en_challenge_description }}</textarea><br>
+                                                <textarea id="challenges[{{ $challenges->id }}][en_challenge_description]"
+                                                    name="challenges[{{ $challenges->id }}][en_challenge_description]" class="form-control  "
+                                                    value="{{ $challenges->en_challenge_description }}">{{ $challenges->en_challenge_description }}</textarea><br>
 
                                                 <label for="service_benefits[0][nl_challenge_description]">Dutch
                                                     Description:</label>
-                                                <textarea id="challenges[0][nl_challenge_description]" name="challenges[0][nl_challenge_description]"
-                                                    class="form-control  " value="{{ $challenges->nl_challenge_description }}">{{ $challenges->nl_challenge_description }}</textarea><br>
+                                                <textarea id="challenges[0][nl_challenge_description]"
+                                                    name="challenges[{{ $challenges->id }}][nl_challenge_description]" class="form-control  "
+                                                    value="{{ $challenges->nl_challenge_description }}">{{ $challenges->nl_challenge_description }}</textarea><br>
                                                 <button type="button" class="delete-challenge">Delete
                                                     Challenge</button>
 
@@ -225,8 +246,8 @@
                                                 <label for="project_live_links[0][link]">Link
                                                 </label>
                                                 <input type="text" id="project_live_links[0][link]"
-                                                    name="project_live_links[0][link]" class="form-control "
-                                                    value="{{ $project_live_links->link }}"><br>
+                                                    name="project_live_links[{{ $project_live_links->id }}][link]"
+                                                    class="form-control " value="{{ $project_live_links->link }}"><br>
 
 
                                                 <button type="button" class="delete-link">Delete
@@ -245,10 +266,11 @@
                                     <div id="project_technologies">
                                         @foreach ($project->project_technologies as $project_technologies)
                                             <div class="project_technology">
-                                                <label for="project_technologies[0][tools]">Link
+                                                <label for="project_technologies[0][tools]">Tool
                                                 </label>
                                                 <input type="text" id="project_technologies[0][tools]"
-                                                    name="project_technologies[0][tools]" class="form-control " value="{{$project_technologies->tools}}"><br>
+                                                    name="project_technologies[{{ $project_technologies->id }}][tools]"
+                                                    class="form-control " value="{{ $project_technologies->tools }}"><br>
 
 
                                                 <button type="button" class="delete-tool">Delete
@@ -423,6 +445,24 @@
                 } else {
                     clientSelect.disabled = false;
                 }
+            });
+        });
+        /////////************************************************
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.remove-image').forEach(button => {
+                button.addEventListener('click', function() {
+                    const imageId = this.getAttribute('data-id');
+                    const container = document.getElementById('image-' + imageId);
+
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'remove_images[]';
+                    input.value = imageId;
+
+                    container.appendChild(input);
+
+                    container.style.display = 'none';
+                });
             });
         });
     </script>

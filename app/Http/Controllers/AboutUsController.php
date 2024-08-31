@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AboutUs;
+use App\Models\ClientTestimonial;
 use App\Models\ForWhoService;
 use App\Models\StepsProcess;
 use Exception;
@@ -235,11 +236,12 @@ class AboutUsController extends Controller
             ], 200);*/
         } catch (Exception $e) {
             DB::rollBack();
-            return response()->json([
+           /* return response()->json([
                 'success' => 0,
                 'result' => null,
                 'message' => $e
-            ], 200);
+            ], 200);*/
+            return redirect()->route('about-us.add')->with('error', $e);
         }
     }
 
@@ -283,12 +285,13 @@ class AboutUsController extends Controller
             "for_who_services" => 'array',
         ]);
         if ($validation->fails()) {
-
-            return response()->json([
+            $about=AboutUs::findOrFail($id);
+            return redirect()->route('aboutus.edit',$about->id)->with('error', $validation->errors());
+           /* return response()->json([
                 'sucsess' => 0,
                 'result' => null,
                 'message' => $validation->errors(),
-            ], 200);
+            ], 200);*/
         }
         DB::beginTransaction();
         try {
@@ -325,6 +328,7 @@ class AboutUsController extends Controller
                         $aboutus->steps_process()->create($relatedData);
                     }
                 }
+                ClientTestimonial::where('about_us_id', $aboutus->id)->delete();
                 if (isset($validatedData['client_testimonial'])) {
                     foreach ($validatedData['client_testimonial'] as $relatedData) {
 
@@ -349,11 +353,8 @@ class AboutUsController extends Controller
             ], 200);*/
         } catch (Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'success' => 0,
-                'result' => null,
-                'message' => $e
-            ], 200);
+            return redirect()->route('showall.about-us')->with('error', 'AboutUs Updated Faild!');
+
         }
     }
 

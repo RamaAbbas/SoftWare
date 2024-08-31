@@ -239,24 +239,26 @@
                                             <div class="steps_process">
                                                 <label for="steps_processs[0][en_name]">English Name:</label>
                                                 <input type="text" id="steps_processs[0][en_name]"
-                                                    name="steps_processs[{{$steps_processs->id}}][en_name]"
+                                                    name="steps_processs[{{ $steps_processs->id }}][en_name]"
                                                     value="{{ $steps_processs->en_name }}" class="form-control  "><br>
 
 
                                                 <label for="steps_processs[0][nl_name]">Dutch Name:</label>
                                                 <input type="text" id="steps_processs[0][nl_name]"
-                                                    name="steps_processs[{{$steps_processs->id}}][nl_name]"
+                                                    name="steps_processs[{{ $steps_processs->id }}][nl_name]"
                                                     value="{{ $steps_processs->nl_name }}" class="form-control  "><br>
 
                                                 <br>
                                                 <label for="steps_processs[0][en_description]">English
                                                     Description:</label>
-                                                <textarea id="steps_processs[0][en_description]" name="steps_processs[{{$steps_processs->id}}][en_description]" class="form-control  ">{{ $steps_processs->en_description }}</textarea><br>
+                                                <textarea id="steps_processs[0][en_description]" name="steps_processs[{{ $steps_processs->id }}][en_description]"
+                                                    class="form-control  ">{{ $steps_processs->en_description }}</textarea><br>
 
 
                                                 <label for="steps_processs[0][nl_description]">Dutch
                                                     Description:</label>
-                                                <textarea id="steps_processs[0][nl_description]" name="steps_processs[{{$steps_processs->id}}][nl_description]" class="form-control  ">{{ $steps_processs->nl_description }}</textarea><br>
+                                                <textarea id="steps_processs[0][nl_description]" name="steps_processs[{{ $steps_processs->id }}][nl_description]"
+                                                    class="form-control  ">{{ $steps_processs->nl_description }}</textarea><br>
                                                 <button type="button" class="delete-steps_process">Delete
                                                     Steps Processs </button>
 
@@ -277,24 +279,26 @@
                                             <div class="for_who_service">
                                                 <label for="for_who_services[0][en_name]">English Name:</label>
                                                 <input type="text" id="for_who_services[0][en_name]"
-                                                    name="for_who_services[0][en_name]"
+                                                    name="for_who_services[{{ $for_who_services->id }}][en_name]"
                                                     value="{{ $for_who_services->en_name }}" class="form-control  "><br>
 
 
                                                 <label for="for_who_services[0][nl_name]">Dutch Name:</label>
                                                 <input type="text" id="for_who_services[0][nl_name]"
-                                                    name="for_who_services[0][nl_name]"
+                                                    name="for_who_services[{{ $for_who_services->id }}][nl_name]"
                                                     value="{{ $for_who_services->nl_name }}" class="form-control  "><br>
 
                                                 <br>
                                                 <label for="for_who_services[0][en_description]">English
                                                     Description:</label>
-                                                <textarea id="for_who_services[0][en_description]" name="for_who_services[0][en_description]" class="form-control  ">{{ $for_who_services->en_description }}</textarea><br>
+                                                <textarea id="for_who_services[0][en_description]"
+                                                    name="for_who_services[{{ $for_who_services->id }}][en_description]" class="form-control  ">{{ $for_who_services->en_description }}</textarea><br>
 
 
                                                 <label for="for_who_services[0][nl_description]">Dutch
                                                     Description:</label>
-                                                <textarea id="for_who_services[0][nl_description]" name="for_who_services[0][nl_description]" class="form-control  ">{{ $for_who_services->nl_description }}</textarea><br>
+                                                <textarea id="for_who_services[0][nl_description]"
+                                                    name="for_who_services[{{ $for_who_services->id }}][nl_description]" class="form-control  ">{{ $for_who_services->nl_description }}</textarea><br>
                                                 <button type="button" class="delete-for_who_service">Delete
                                                     For Who Service </button>
 
@@ -317,7 +321,7 @@
                                             <div class="client_testimoniall">
                                                 <label for="client_testimonial[0][client_name]">Client Name:</label>
                                                 <input type="text" id="client_testimonial[0][client_name]"
-                                                    name="client_testimonial[0][client_name]"
+                                                    name="client_testimonial[{{ $client_testimonial->id }}][client_name]"
                                                     value="{{ $client_testimonial->client_name }}"
                                                     class="form-control  "><br>
 
@@ -325,15 +329,15 @@
                                                 <label for="client_testimonial[0][en_client_testimonial]">Client
                                                     Testemonial
                                                     in English</label>
-                                                <textarea id="client_testimonial[0][en_client_testimonial]" name="client_testimonial[0][en_client_testimonial]"
-                                                    class="form-control  ">{{ $client_testimonial->en_client_testimonial }}</textarea><br>
+                                                <textarea id="client_testimonial[0][en_client_testimonial]"
+                                                    name="client_testimonial[{{ $client_testimonial->id }}][en_client_testimonial]" class="form-control  ">{{ $client_testimonial->en_client_testimonial }}</textarea><br>
 
                                                 <label for="client_testimonial[0][nl_client_testimonial]">Client
                                                     Testemonial
                                                     in Dutch
                                                 </label>
-                                                <textarea id="client_testimonial[0][nl_client_testimonial]" name="client_testimonial[0][nl_client_testimonial]"
-                                                    class="form-control  ">{{ $client_testimonial->nl_client_testimonial }}</textarea><br>
+                                                <textarea id="client_testimonial[0][nl_client_testimonial]"
+                                                    name="client_testimonial[{{ $client_testimonial->id }}][nl_client_testimonial]" class="form-control  ">{{ $client_testimonial->nl_client_testimonial }}</textarea><br>
                                                 <button type="button" class="delete-client_testimoniall">Delete
                                                     Client Testimoniall </button>
 
@@ -345,24 +349,23 @@
                                 <button type="button" id="add-more-testimonial">Add More Testimonial</button>
                         </div>
 
-                        <button type="button" id="add-more-for_who_service">Add More For Who
-                            Service</button>
-
-                        <div class="ln_solid"></div>
-                        <div class="item form-group">
-                            <div class="col-md-6 col-sm-6 offset-md-3">
-                                <button class="btn btn-primary" type="button">Cancel</button>
-                                <button class="btn btn-primary" type="reset">Reset</button>
-                                <button type="submit" class="btn btn-success">Submit</button>
-                            </div>
-                        </div>
-                        </form>
                     </div>
+
+                    <div class="ln_solid"></div>
+                    <div class="item form-group">
+                        <div class="col-md-6 col-sm-6 offset-md-3">
+                            <button class="btn btn-primary" type="button">Cancel</button>
+                            <button class="btn btn-primary" type="reset">Reset</button>
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    </div>
+
+
 
 
     <script>
