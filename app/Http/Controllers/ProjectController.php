@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+use function PHPSTORM_META\map;
+
 class ProjectController extends Controller
 {
 
@@ -28,7 +30,7 @@ class ProjectController extends Controller
         $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
 
 
-        foreach ($projects as $project) {
+        /* foreach ($projects as $project) {
             foreach ($project->service_categories as $category) {
                 $serviceName = $locale == 'en' ? $category->services->en_name :  $category->services->nl_name;
                 if (!isset($groupedProjects[$serviceName])) {
@@ -38,7 +40,7 @@ class ProjectController extends Controller
 
                 if ($image) {
                     $img = $image['image_path'];
-                    $groupedProjects[$serviceName][] = [
+                    $result[$serviceName][] = [
                         'id' => $project->id,
                         'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
                         'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
@@ -46,7 +48,7 @@ class ProjectController extends Controller
 
                     ];
                 } else {
-                    $groupedProjects[$serviceName][] = [
+                    $result[$serviceName][] = [    ////////////////// $groupedProjects[$serviceName][]
                         'id' => $project->id,
                         'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
                         'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
@@ -55,14 +57,48 @@ class ProjectController extends Controller
                     ];
                 }
             }
-        }
+        }*/
+        //   $projects = Project::all();
+        $process = $projects->map(function ($project) use ($locale) {
+            $image = $project->project_images()->first();
 
+            if ($image) {
+                $img = $image['image_path'];
+                $data = [
+                    'id' => $project->id,
+                    'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
+                    'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
+                    'image' => asset('storage/' . $img)
 
+                ];
+
+                $data['categories'] = $project->service_categories->map(function ($related) use ($locale) {
+                    $serviceName = $locale == 'en' ? $related->services->en_name :  $related->services->nl_name;
+                    return
+                        $serviceName;
+                });
+            } else {
+                $data = [
+                    'id' => $project->id,
+                    'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
+                    'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
+                    'image' => ''
+
+                ];
+
+                $data['categories'] = $project->service_categories->map(function ($related) use ($locale) {
+                    $serviceName = $locale == 'en' ? $related->services->en_name :  $related->services->nl_name;
+                    return
+                        $serviceName;
+                });
+            }
+            return $data;
+        });
 
         return response()->json(
             [
                 'success' => 1,
-                'result' => $groupedProjects,
+                'result' => $process,
                 'message' => __('app.data_returnd_sucssesfully')
             ]
         );
@@ -591,6 +627,293 @@ class ProjectController extends Controller
         }
     }
 
+
+    public function edit($id)
+    {
+        $project = Project::with('service_categories')->findOrFail($id);
+        $client = $project->client()->get();
+        $selectedServiceCategories = $project->service_categories->pluck('id')->toArray();
+        $services = Service::all();
+        if ($project) {
+            return view('admin.Projects.edit', compact('project', 'client', 'services', 'selectedServiceCategories'));
+        } else {
+
+            return redirect()->back();
+        }
+    }
+    public function update(Request $request)
+    {
+        if ($request->client_id) {
+            $validatedDat = Validator::make($request->all(), [
+                'en_title' => 'required|string|max:255',
+                'nl_title' => 'required|string|max:255',
+                'en_description' => 'required',
+                'nl_description' => 'required',
+                'en_result' => 'required',
+                'nl_result' => 'required',
+                'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'client_id' => 'required',
+                'begin_date' => 'required|date',
+                'service_ids.*' => 'required',
+                'end_date' => 'required|date|after_or_equal:begin_date',
+
+
+            ]);
+            if ($validatedDat->fails()) {
+
+                return response()->json([
+                    'sucsess' => 0,
+                    'result' => null,
+                    'message' => $validatedDat->errors(),
+                ], 200);
+            }
+
+
+
+            DB::beginTransaction();
+
+            try {
+                $validatedData = $request->all();
+
+                $project = Project::create([
+                    'client_id' => $validatedData['client_id'],
+                    'en_title' => $validatedData['en_title'],
+                    'nl_title' => $validatedData['nl_title'],
+                    'en_description' => $validatedData['en_description'],
+                    'nl_description' => $validatedData['nl_description'],
+                    //  'begin_date' =>Carbon::createFromFormat('d-m-Y',$validatedData['begin_date']),
+                    'begin_date' => Carbon::parse($validatedData['begin_date']),
+                    'end_date' => Carbon::parse($validatedData['end_date']),
+                    'en_result' => $validatedData['en_result'],
+                    'nl_result' => $validatedData['nl_result'],
+                ]);
+
+
+                if ($request->has('service_ids')) {
+                    foreach ($request->service_ids as $service_id) {
+                        $service = Service::findOrFail($service_id);
+                        $project->service_categories()->create(
+                            [
+                                'service_id' => $service->id
+
+                            ]
+                        );
+                    }
+                }
+
+                if (!empty($validatedData['achievements'])) {
+                    foreach ($validatedData['achievements'] as $achievements) {
+
+                        $project->achievements()->create(
+                            [
+                                'en_achievement_name' => $achievements['en_achievement_name'],
+                                'nl_achievement_name' => $achievements['nl_achievement_name'],
+
+                            ]
+                        );
+                    }
+                }
+
+                if (!empty($validatedData['challenges'])) {
+                    foreach ($validatedData['challenges'] as $challenges) {
+
+                        $project->challenges()->create(
+                            [
+                                'en_challenge_name' => $challenges['en_challenge_name'],
+                                'nl_challenge_name' => $challenges['nl_challenge_name'],
+                                'en_challenge_description' => $challenges['en_challenge_description'],
+                                'nl_challenge_description' => $challenges['nl_challenge_description'],
+
+                            ]
+                        );
+                    }
+                }
+                if (!empty($validatedData['project_live_links'])) {
+                    foreach ($validatedData['project_live_links'] as $project_live_links) {
+                        $project->project_live_links()->create(
+                            [
+                                'link' => $project_live_links['link'],
+
+                            ]
+                        );
+                    }
+                }
+                if (!empty($validatedData['project_technologies'])) {
+                    foreach ($validatedData['project_technologies'] as $project_technologies) {
+                        $project->project_technologies()->create(
+                            [
+                                'tools' => $project_technologies['tools'],
+                            ]
+                        );
+                    }
+                }
+                if ($request->hasFile('image_path')) {
+                    foreach ($request->file('image_path') as $file) {
+                        if (!$file->isValid()) {
+                            return "A";
+                        }
+                        $filename = time() . '_' . $file->getClientOriginalName();
+                        $filePath = $file->storeAs('project_images', $filename, 'public');
+                        $project->project_images()->create([
+                            'image_path' => $filePath
+                        ]);
+                    }
+                }
+
+
+
+                DB::commit();
+                return response()->json([
+                    'sucsess' => 1,
+                    'result' => $project,
+                    'message' => "Client With His project Stored Sucsessfully",
+                ], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json([
+                    'success' => 0,
+                    'result' => null,
+                    'message' => $e
+                ], 200);
+            }
+        } else {
+
+            $validatedDat = Validator::make($request->all(), [
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'required|email|unique:clients,email',
+                'phone_number' => 'required',
+                'projects' => 'array',
+                'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'begin_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:begin_date',
+
+
+            ]);
+            if ($validatedDat->fails()) {
+
+                return response()->json([
+                    'sucsess' => 0,
+                    'result' => null,
+                    'message' => $validatedDat->errors(),
+                ], 200);
+            }
+
+
+
+            DB::beginTransaction();
+
+            try {
+                $validatedData = $request->all();
+
+                $client = Client::create([
+                    'first_name' => $validatedData['first_name'],
+                    'last_name' => $validatedData['last_name'],
+                    'email' => $validatedData['email'],
+                    'phone_number' => $validatedData['phone_number'],
+                ]);
+
+                //    foreach ($validatedData['projects'] as $projectData) {
+                $project = $client->projects()->create([
+                    'client_id' => $client->id,
+                    'en_title' => $validatedData['en_title'],
+                    'nl_title' => $validatedData['nl_title'],
+                    'en_description' => $validatedData['en_description'],
+                    'nl_description' => $validatedData['nl_description'],
+                    'begin_date' => Carbon::parse($validatedData['begin_date']),
+                    'end_date' => Carbon::parse($validatedData['end_date']),
+                    'en_result' => $validatedData['en_result'],
+                    'nl_result' => $validatedData['nl_result'],
+                ]);
+
+                if (!empty($validatedData['service_categories'])) {
+                    foreach ($validatedData['service_categories'] as $service_categories) {
+
+                        $project->service_categories()->create(
+                            [
+                                'service_id' => $service_categories['service_id']
+
+                            ]
+                        );
+                    }
+                }
+
+                if (!empty($validatedData['achievements'])) {
+                    foreach ($validatedData['achievements'] as $achievements) {
+
+                        $project->achievements()->create(
+                            [
+                                'en_achievement_name' => $achievements['en_achievement_name'],
+                                'nl_achievement_name' => $achievements['nl_achievement_name'],
+                                //   'en_how_we_achieved_it' => $achievements['en_how_we_achieved_it'],
+                                //   'nl_how_we_achieved_it' => $achievements['nl_how_we_achieved_it'],
+
+                            ]
+                        );
+                    }
+                }
+
+                if (!empty($validatedData['challenges'])) {
+                    foreach ($validatedData['challenges'] as $challenges) {
+
+                        $project->challenges()->create(
+                            [
+                                'en_challenge_name' => $challenges['en_challenge_name'],
+                                'nl_challenge_name' => $challenges['nl_challenge_name'],
+                                'en_challenge_description' => $challenges['en_challenge_description'],
+                                'nl_challenge_description' => $challenges['nl_challenge_description'],
+
+                            ]
+                        );
+                    }
+                }
+                if (!empty($validatedData['project_live_links'])) {
+                    foreach ($validatedData['project_live_links'] as $project_live_links) {
+                        $project->project_live_links()->create(
+                            [
+                                'link' => $project_live_links['link'],
+
+                            ]
+                        );
+                    }
+                }
+                if (!empty($validatedData['project_technologies'])) {
+                    foreach ($validatedData['project_technologies'] as $project_technologies) {
+                        $project->project_technologies()->create(
+                            [
+                                'tools' => $project_technologies['tools'],
+                            ]
+                        );
+                    }
+                }
+                if ($request->hasFile('image_path')) {
+                    foreach ($request->file('image_path') as $file) {
+                        $filename = time() . '_' . $file->getClientOriginalName();
+                        $filePath = $file->storeAs('project_images', $filename, 'public');
+                        $project->project_images()->create([
+                            'image_path' => $filePath
+                        ]);
+                    }
+                }
+
+
+                DB::commit();
+                return response()->json([
+                    'sucsess' => 1,
+                    'result' => $client,
+                    'message' => "Client With His project Stored Sucsessfully",
+
+                ], 200);
+            } catch (\Exception $e) {
+                DB::rollback();
+                return response()->json([
+                    'success' => 0,
+                    'result' => null,
+                    'message' => $e
+                ], 200);
+            }
+        }
+    }
 
     public function destroy($id)
     {

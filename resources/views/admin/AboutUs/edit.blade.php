@@ -239,24 +239,24 @@
                                             <div class="steps_process">
                                                 <label for="steps_processs[0][en_name]">English Name:</label>
                                                 <input type="text" id="steps_processs[0][en_name]"
-                                                    name="steps_processs[0][en_name]"
+                                                    name="steps_processs[{{$steps_processs->id}}][en_name]"
                                                     value="{{ $steps_processs->en_name }}" class="form-control  "><br>
 
 
                                                 <label for="steps_processs[0][nl_name]">Dutch Name:</label>
                                                 <input type="text" id="steps_processs[0][nl_name]"
-                                                    name="steps_processs[0][nl_name]"
+                                                    name="steps_processs[{{$steps_processs->id}}][nl_name]"
                                                     value="{{ $steps_processs->nl_name }}" class="form-control  "><br>
 
                                                 <br>
                                                 <label for="steps_processs[0][en_description]">English
                                                     Description:</label>
-                                                <textarea id="steps_processs[0][en_description]" name="steps_processs[0][en_description]" class="form-control  ">{{ $steps_processs->en_description }}</textarea><br>
+                                                <textarea id="steps_processs[0][en_description]" name="steps_processs[{{$steps_processs->id}}][en_description]" class="form-control  ">{{ $steps_processs->en_description }}</textarea><br>
 
 
                                                 <label for="steps_processs[0][nl_description]">Dutch
                                                     Description:</label>
-                                                <textarea id="steps_processs[0][nl_description]" name="steps_processs[0][nl_description]" class="form-control  ">{{ $steps_processs->nl_description }}</textarea><br>
+                                                <textarea id="steps_processs[0][nl_description]" name="steps_processs[{{$steps_processs->id}}][nl_description]" class="form-control  ">{{ $steps_processs->nl_description }}</textarea><br>
                                                 <button type="button" class="delete-steps_process">Delete
                                                     Steps Processs </button>
 

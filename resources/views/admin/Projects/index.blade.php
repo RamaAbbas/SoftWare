@@ -14,8 +14,7 @@
                             <div class="title_right">
                                 <div class="col-md-2 col-sm-2 form-group pull-right top_search">
                                     <div>
-                                        <a href="{{route('project.add')}}"><button
-                                                class="btn-success">Add New Project
+                                        <a href="{{ route('project.add') }}"><button class="btn-success">Add New Project
                                             </button></a>
                                     </div>
                                 </div>
@@ -37,12 +36,14 @@
                                                                 class="fa fa-cogs"></i></a>
                                                         <div></div>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                            <a class="dropdown-item" href="">Edit</a>
+                                                            <a class="dropdown-item"
+                                                                href="{{ route('project.edit', $project['id']) }}">Edit</a>
                                                         </div>
                                                     </li>
                                                     <li>
                                                         <div class="">
-                                                            <form action="{{route('project.delete',$project['id'])}}" method="POST" style="display:grid;"
+                                                            <form action="{{ route('project.delete', $project['id']) }}"
+                                                                method="POST" style="display:grid;"
                                                                 onsubmit="return confirm('Are you sure you want to delete this Project?');">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -66,7 +67,8 @@
 
                                             </div>
                                             <button class="">
-                                                <a class="" href="{{route('project.view', $project['id'])}}">{{__('app.show_more_details')}}
+                                                <a class=""
+                                                    href="{{ route('project.view', $project['id']) }}">{{ __('app.show_more_details') }}
                                                 </a>
                                             </button>
                                         </div>

@@ -65,8 +65,9 @@ Route::middleware([SetLocal::class])->group(function () {
         Route::get('/project/view/{id}', [ProjectController::class, 'view'])->name('project.view');
         Route::get('/add/project', [ProjectController::class, 'addproject'])->name('project.add');
         Route::post('/store-project', [ProjectController::class, 'store'])->name("project.store");
-        Route::post('/project/store-img', [ProjectController::class, 'store_image'])->name('img.store');
         Route::delete('/delete-project/{id}', [ProjectController::class, 'destroy'])->name("project.delete");
+        Route::get('/edit/project/{id}', [ProjectController::class, 'edit'])->name('project.edit');
+        Route::post('/update-project/{id}', [ProjectController::class, 'update'])->name('project.update');
     });
 
 
