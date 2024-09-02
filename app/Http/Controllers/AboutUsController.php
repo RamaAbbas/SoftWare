@@ -63,82 +63,31 @@ class AboutUsController extends Controller
 
         $services = Service::with(['requirment', 'service_benefits', 'service_processs', 'client_testimonial', 'service_images'])->get();
         $data['services'] = $services->map(function ($service) use ($locale) {
-            $image = $service->service_images()->first();
+            return [
+                'id' => $service->id,
+                'name' => $locale == 'en' ? $service->en_name : $service->nl_name,
+                'description' => $locale == 'en' ? $service->en_description : $service->nl_description,
+                'image' => $service->service_images->map(function ($related) use ($locale) {
 
-            if ($image) {
-                $img = $image['image_path'];
-
-                return [
-                    'id' => $service->id,
-                    'name' => $locale == 'en' ? $service->en_name : $service->nl_name,
-                    'description' => $locale == 'en' ? $service->en_description : $service->nl_description,
-                    'image' => asset('storage/' . $img)
-                ];
-            } else {
-                return [
-                    'id' => $service->id,
-                    'name' => $locale == 'en' ? $service->en_name : $service->nl_name,
-                    'description' => $locale == 'en' ? $service->en_description : $service->nl_description,
-                    'image' => ''
-
-                ];
-            }
+                    return [
+                        'image_path' => asset('storage/' . $related->image_path)
+                    ];
+                }),
+            ];
         });
 
         $projects = Project::all();
         ///////////////////////
         $data['projects'] = $projects->map(function ($project) use ($locale) {
-            $image = $project->project_images()->first();
 
-            if ($image) {
-                $img = $image['image_path'];
-                $data['projects']['categories'] = $project->service_categories->map(function ($related) use ($locale) {
-                    if ($related->services->en_name && $related->services->nl_name) {
-                        $serviceName = $locale == 'en' ? $related->services->en_name :  $related->services->nl_name;
-                        return
-                            $serviceName;
-                    } else {
-                        return [];
-                    }
-                });
-                return [
-                    'id' => $project->id,
-                    'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
-                    'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
-                    'image' => asset('storage/' . $img)
-
-                ];
-            } else {
-                $data['projects']['categories'] = $project->service_categories->map(function ($related) use ($locale) {
-                    if ($related->services->en_name && $related->services->nl_name) {
-                        $serviceName = $locale == 'en' ? $related->services->en_name :  $related->services->nl_name;
-                        return
-                            $serviceName;
-                    } else {
-                        return [];
-                    }
-                });
-                return [
-                    'id' => $project->id,
-                    'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
-                    'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
-                    'image' => ''
-
-                ];
-            }
-        });
-
-
-        $contacts = ContactsPage::all();
-        $data['contact_page'] = $contacts->map(function ($contact) use ($locale) {
             return [
-                //   'id' => $contact->id,
-                'title' => $locale == 'en' ? $contact->en_title : $contact->nl_title,
-                'sub_title' => $locale == 'en' ? $contact->en_sub_title : $contact->nl_sub_title,
-                'step' => $contact->contacts_whats_next->map(function ($subrelated) use ($locale) {
-                    return [
-                        'step' => $locale == 'en' ? $subrelated->en_step : $subrelated->nl_step,
+                'id' => $project->id,
+                'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
+                'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
+                'image' => $project->project_images->map(function ($related) use ($locale) {
 
+                    return [
+                        'image_path' => asset('storage/' . $related->image_path)
                     ];
                 }),
 
@@ -146,10 +95,24 @@ class AboutUsController extends Controller
         });
 
 
+        $contacts = ContactsPage::all();
+        $data['contact_page']['whats_next'] = $contacts->map(function ($contact) use ($locale) {
+            return [
+                //   'id' => $contact->id,
+                'title' => $locale == 'en' ? $contact->en_title : $contact->nl_title,
+                'sub_title' => $locale == 'en' ? $contact->en_sub_title : $contact->nl_sub_title,
+                'whats_next_steps' => $contact->contacts_whats_next->map(function ($subrelated) use ($locale, $contact) {
+                    return [
+                        'step_no' => $subrelated->step_no,
+                        'step' => $locale == 'en' ? $subrelated->en_step : $subrelated->nl_step,
 
-        //////////////////////////
-        //    return $data;
-        // });
+                        //     'title' => $locale == 'en' ? $contact->en_title : $contact->nl_title,
+                        //    'sub_title' => $locale == 'en' ? $contact->en_sub_title : $contact->nl_sub_title,
+                    ];
+                }),
+
+            ];
+        });
 
         return response()->json([
             'success' => 1,
@@ -164,7 +127,7 @@ class AboutUsController extends Controller
         $language = $request->header('Accept-Language');
         $defaultLanguage = 'en';
         $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
-
+     //   $data = [];
         $aboutus = AboutUs::with(['steps_process', 'client_testimonial', 'for_who_services'])->get();
 
         if ($aboutus->isEmpty()) {
@@ -176,7 +139,9 @@ class AboutUsController extends Controller
         }
 
         try {
+
             $processedAboutus = $aboutus->map(function ($about) use ($locale, $defaultLanguage) {
+
                 $data = [
                     'id' => $about->id,
                     'company_name' => $locale == 'en' ? $about->en_company_name : $about->nl_company_name,
@@ -189,6 +154,7 @@ class AboutUsController extends Controller
                     'our_partners_associates' => $locale == 'en' ? $about->en_our_partners_associates : $about->nl_our_partners_associates,
                     'end' => $locale == 'en' ? $about->en_end : $about->nl_end,
                 ];
+
 
                 // Process Steps
                 $data['steps_process'] = $about->steps_process->map(function ($step) use ($locale) {
@@ -214,6 +180,49 @@ class AboutUsController extends Controller
                         'description_of_service_for_who' => $locale == 'en' ? $service->en_description : $service->nl_description,
                     ];
                 });
+
+                $contacts = ContactsPage::all();
+                $data['contact_page']['whats_next'] = $contacts->map(function ($contact) use ($locale) {
+                    return [
+                        //   'id' => $contact->id,
+                        'title' => $locale == 'en' ? $contact->en_title : $contact->nl_title,
+                        'sub_title' => $locale == 'en' ? $contact->en_sub_title : $contact->nl_sub_title,
+                        'whats_next_steps' => $contact->contacts_whats_next->map(function ($subrelated) use ($locale, $contact) {
+                            return [
+                                'step_no' => $subrelated->step_no,
+                                'step' => $locale == 'en' ? $subrelated->en_step : $subrelated->nl_step,
+                            ];
+                        }),
+
+                    ];
+                });
+                $services = Service::with(['requirment', 'service_benefits', 'service_processs', 'client_testimonial', 'service_images'])->get();
+                $data['services'] = $services->map(function ($service) use ($locale) {
+                    return [
+                        'id' => $service->id,
+                        'name' => $locale == 'en' ? $service->en_name : $service->nl_name,
+                        'description' => $locale == 'en' ? $service->en_description : $service->nl_description,
+                        'image' => $service->service_images->map(function ($related) use ($locale) {
+
+                            return [
+                                'image_path' => asset('storage/' . $related->image_path)
+                            ];
+                        }),
+                    ];
+                });
+                $heros = HeroSection::all();
+                $data['hero_section'] = $heros->map(function ($hero) use ($locale) {
+
+                    return [
+                        'id' => $hero->id,
+                        'title' => $locale == 'en' ? $hero->en_title : $hero->nl_title,
+                        'sub_title' => $locale == 'en' ? $hero->en_sub_title : $hero->nl_sub_title,
+                        'image' => asset('storage/' . $hero->image_path)
+
+                    ];
+                });
+
+
 
                 return $data;
             });

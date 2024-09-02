@@ -8,6 +8,7 @@ use App\Models\HowItWork;
 use App\Models\Project;
 use App\Models\Requirment;
 use App\Models\Service;
+use App\Models\ServiceImage;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class ServicesController extends Controller
 {
@@ -321,7 +323,7 @@ class ServicesController extends Controller
     {
         $service = Service::with(['requirment', 'service_benefits', 'service_processs', 'client_testimonial'])->findOrFail($id);
         if ($service) {
-            return view('admin.Service.edittest', compact('service'));
+            return view('admin.Service.editservice', compact('service'));
         } else {
 
             return redirect()->back();
@@ -424,6 +426,28 @@ class ServicesController extends Controller
                                 ]);
                             }
                         }
+                    }
+                }
+                if ($request->has('remove_images')) {
+                    $removeImages = $request->input('remove_images');
+                    foreach ($removeImages as $imageId) {
+                        $image = ServiceImage::findOrFail($imageId);
+
+                        Storage::delete('public/' . $image->path);
+
+                        $image->delete();
+                    }
+                }
+                if ($request->hasFile('image_path')) {
+                    foreach ($request->file('image_path') as $file) {
+                        if (!$file->isValid()) {
+                            return "A";
+                        }
+                        $filename = time() . '_' . $file->getClientOriginalName();
+                        $filePath = $file->storeAs('Service_images', $filename, 'public');
+                        $service->service_images()->create([
+                            'image_path' => $filePath
+                        ]);
                     }
                 }
 
