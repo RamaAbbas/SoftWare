@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use App\Models\ContactMessage;
+use App\Models\ContactsPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use Illuminate\Support\Facades\App;
 
 class ContactController extends Controller
 {
@@ -41,6 +43,37 @@ class ContactController extends Controller
     {
         $contacts = Contact::with('contacts_messeges')->get();
         return view('admin.ContactUs.test', compact('contacts'));
+    }
+    public function show_contactpage()
+    {
+        $language = App::getLocale();
+        $defaultLanguage = 'en';
+        $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
+        $contacts = ContactsPage::all();
+        try {
+            $processedcontactpage = $contacts->map(function ($contact) use ($locale) {
+                $data = [
+                    'title' => $locale == 'en' ? $contact->en_title : $contact->nl_title,
+                    'sub_title' => $locale == 'en' ? $contact->en_sub_title : $contact->nl_sub_title,
+                ];
+
+
+                $data['contacts_whats_next'] =  $contact->contacts_whats_next->map(function ($subrelated) use ($locale) {
+                    return [
+                        'step' => $locale == 'en' ? $subrelated->en_step : $subrelated->nl_step,
+                    ];
+                });
+
+                return $data;
+            });
+            return view('ContactPage.contactpage', compact('processedcontactpage'));
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'result' => null,
+                'message' => $e->getMessage()
+            ], 200);
+        }
     }
 
     public function store(Request $request)
@@ -117,12 +150,56 @@ class ContactController extends Controller
         }
     }
 
-    /*
-         $table->text('en_title')->nullable();
-            $table->text('nl_title')->nullable();
-            $table->text('en_description')->nullable();
-            $table->text('nl_escription')->nullable();
-            $table->text('en_service_category')->nullable();
-            $table->text('nl_service_category')->nullable();
-     */
+    public function storecontactPage(Request $request)
+    {
+        $validatedDat = Validator::make($request->all(), [
+            'en_title' => 'required',
+            'nl_title' => 'required',
+            'en_sub_title' => 'required',
+            'nl_sub_title' => 'required',
+
+
+
+        ]);
+        if ($validatedDat->fails()) {
+
+            return response()->json([
+                'sucsess' => 0,
+                'result' => null,
+                'message' => $validatedDat->errors(),
+            ], 200);
+        }
+        try {
+
+            $data = $request->all();
+
+
+            $hero = ContactsPage::create([
+                'en_title' => $data['en_title'],
+                'nl_title' => $data['nl_title'],
+                'en_sub_title' => $data['en_sub_title'],
+                'nl_sub_title' => $data['nl_sub_title'],
+            ]);
+            if (isset($data['contacts_whats_next'])) {
+                foreach ($data['contacts_whats_next'] as $relatedData) {
+
+                    $hero->contacts_whats_next()->create($relatedData);
+                }
+            }
+
+
+
+            return response()->json([
+                'success' => 1,
+                'result' => $hero,
+                'message' => __('app.contact_stored_sucsessfully')
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'result' => null,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

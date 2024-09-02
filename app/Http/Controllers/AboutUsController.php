@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\AboutUs;
 use App\Models\ClientTestimonial;
+use App\Models\ContactsPage;
 use App\Models\ForWhoService;
+use App\Models\HeroSection;
+use App\Models\Project;
+use App\Models\Service;
 use App\Models\StepsProcess;
 use Exception;
 use Illuminate\Http\Request;
@@ -15,6 +19,144 @@ use Illuminate\Support\Facades\Validator;
 class AboutUsController extends Controller
 {
 
+
+
+
+
+
+    public function home(Request $request)
+    {
+        $language = $request->header('Accept-Language');
+        $defaultLanguage = 'en';
+        $locale = $language ? substr($language, 0, 2) : $defaultLanguage;
+
+        $aboutus = AboutUs::with(['steps_process', 'client_testimonial', 'for_who_services'])->get();
+        // $processedAboutus = $aboutus->map(function ($about) use ($locale, $defaultLanguage) {
+        $heros = HeroSection::all();
+        $data['hero_section'] = $heros->map(function ($hero) use ($locale) {
+
+            return [
+                'id' => $hero->id,
+                'title' => $locale == 'en' ? $hero->en_title : $hero->nl_title,
+                'sub_title' => $locale == 'en' ? $hero->en_sub_title : $hero->nl_sub_title,
+                'image' => asset('storage/' . $hero->image_path)
+
+            ];
+        });
+        $data['about_us'] = $aboutus->map(function ($about) use ($locale, $defaultLanguage) {
+            return [
+                'company_name' => $locale == 'en' ? $about->en_company_name : $about->nl_company_name,
+                'introduction' => $locale == 'en' ? $about->en_introduction : $about->nl_introduction,
+                'our_mission' => $locale == 'en' ? $about->en_our_mission : $about->nl_our_mission,
+                'our_goals' => $locale == 'en' ? $about->en_our_goals : $about->nl_our_goals,
+                'our_partners_associates' => $locale == 'en' ? $about->en_our_partners_associates : $about->nl_our_partners_associates,
+                'client_testimonial' => $about->client_testimonial->map(function ($testimonial) use ($locale) {
+                    return [
+                        'client_name' => $testimonial->client_name,
+                        'client_testimonial' => $locale == 'en' ? $testimonial->en_client_testimonial : $testimonial->nl_client_testimonial,
+                    ];
+                }),
+            ];
+        });
+
+
+
+        $services = Service::with(['requirment', 'service_benefits', 'service_processs', 'client_testimonial', 'service_images'])->get();
+        $data['services'] = $services->map(function ($service) use ($locale) {
+            $image = $service->service_images()->first();
+
+            if ($image) {
+                $img = $image['image_path'];
+
+                return [
+                    'id' => $service->id,
+                    'name' => $locale == 'en' ? $service->en_name : $service->nl_name,
+                    'description' => $locale == 'en' ? $service->en_description : $service->nl_description,
+                    'image' => asset('storage/' . $img)
+                ];
+            } else {
+                return [
+                    'id' => $service->id,
+                    'name' => $locale == 'en' ? $service->en_name : $service->nl_name,
+                    'description' => $locale == 'en' ? $service->en_description : $service->nl_description,
+                    'image' => ''
+
+                ];
+            }
+        });
+
+        $projects = Project::all();
+        ///////////////////////
+        $data['projects'] = $projects->map(function ($project) use ($locale) {
+            $image = $project->project_images()->first();
+
+            if ($image) {
+                $img = $image['image_path'];
+                $data['projects']['categories'] = $project->service_categories->map(function ($related) use ($locale) {
+                    if ($related->services->en_name && $related->services->nl_name) {
+                        $serviceName = $locale == 'en' ? $related->services->en_name :  $related->services->nl_name;
+                        return
+                            $serviceName;
+                    } else {
+                        return [];
+                    }
+                });
+                return [
+                    'id' => $project->id,
+                    'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
+                    'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
+                    'image' => asset('storage/' . $img)
+
+                ];
+            } else {
+                $data['projects']['categories'] = $project->service_categories->map(function ($related) use ($locale) {
+                    if ($related->services->en_name && $related->services->nl_name) {
+                        $serviceName = $locale == 'en' ? $related->services->en_name :  $related->services->nl_name;
+                        return
+                            $serviceName;
+                    } else {
+                        return [];
+                    }
+                });
+                return [
+                    'id' => $project->id,
+                    'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
+                    'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
+                    'image' => ''
+
+                ];
+            }
+        });
+
+
+        $contacts = ContactsPage::all();
+        $data['contact_page'] = $contacts->map(function ($contact) use ($locale) {
+            return [
+                //   'id' => $contact->id,
+                'title' => $locale == 'en' ? $contact->en_title : $contact->nl_title,
+                'sub_title' => $locale == 'en' ? $contact->en_sub_title : $contact->nl_sub_title,
+                'step' => $contact->contacts_whats_next->map(function ($subrelated) use ($locale) {
+                    return [
+                        'step' => $locale == 'en' ? $subrelated->en_step : $subrelated->nl_step,
+
+                    ];
+                }),
+
+            ];
+        });
+
+
+
+        //////////////////////////
+        //    return $data;
+        // });
+
+        return response()->json([
+            'success' => 1,
+            'result' => $data, //$processedAboutus,
+            'message' => __('app.data_returnd_sucssesfully')
+        ], 200);
+    }
 
 
     public function index(Request $request)
@@ -236,7 +378,7 @@ class AboutUsController extends Controller
             ], 200);*/
         } catch (Exception $e) {
             DB::rollBack();
-           /* return response()->json([
+            /* return response()->json([
                 'success' => 0,
                 'result' => null,
                 'message' => $e
@@ -285,9 +427,9 @@ class AboutUsController extends Controller
             "for_who_services" => 'array',
         ]);
         if ($validation->fails()) {
-            $about=AboutUs::findOrFail($id);
-            return redirect()->route('aboutus.edit',$about->id)->with('error', $validation->errors());
-           /* return response()->json([
+            $about = AboutUs::findOrFail($id);
+            return redirect()->route('aboutus.edit', $about->id)->with('error', $validation->errors());
+            /* return response()->json([
                 'sucsess' => 0,
                 'result' => null,
                 'message' => $validation->errors(),
@@ -354,7 +496,6 @@ class AboutUsController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->route('showall.about-us')->with('error', 'AboutUs Updated Faild!');
-
         }
     }
 

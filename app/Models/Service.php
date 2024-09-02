@@ -43,4 +43,8 @@ class Service extends Model
             $service->service_categories()->delete();
         });
     }
+    public function service_images(): HasMany
+    {
+        return $this->hasMany(ServiceImage::class, 'service_id', 'id');
+    }
 }

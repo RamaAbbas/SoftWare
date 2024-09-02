@@ -42,6 +42,16 @@
                             <i class="fa fa-list"></i> Projects
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('showall.contact-page')}}">
+                            <i class="fa fa-list"></i>Contact Page
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fa fa-list"></i>Hero Section
+                        </a>
+                    </li>
 
                 </ul>
             </div>

@@ -109,7 +109,8 @@ class ServicesController extends Controller
             'requirment' => 'array',
             'client_testimonial' => 'array',
             'service_benefits' => 'array',
-            'service_processs' => 'array'
+            'service_processs' => 'array',
+            'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
 
 
@@ -117,7 +118,7 @@ class ServicesController extends Controller
         ]);
         if ($validatedDat->fails()) {
 
-            /* return response()->json([
+            /*return response()->json([
                 'sucsess' => 0,
                 'result' => null,
                 'message' => $validatedDat->errors(),
@@ -148,6 +149,19 @@ class ServicesController extends Controller
                 'cost' => $validatedData['cost']
 
             ]);
+
+            if ($request->hasFile('image_path')) {
+                foreach ($request->file('image_path') as $file) {
+                    if (!$file->isValid()) {
+                        return "A";
+                    }
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs('Service_images', $filename, 'public');
+                    $service->service_images()->create([
+                        'image_path' => $filePath,
+                    ]);
+                }
+            }
 
             if (isset($validatedData['requirment'])) {
                 foreach ($validatedData['requirment'] as $relatedData) {
@@ -191,10 +205,11 @@ class ServicesController extends Controller
             }
 
 
+
             DB::commit();
             return redirect()->route('showall.service')->with('success', 'Service created successfully!');
 
-            /* return response()->json([
+            /*  return response()->json([
                 'sucsess' => 1,
                 'result' => $service,
                 'message' => __('app.servive_stored_sucsessfully'),
@@ -216,7 +231,7 @@ class ServicesController extends Controller
 
     public function addservice()
     {
-        return view('admin.Service.add');
+        return view('admin.Service.addtest');
     }
 
 
