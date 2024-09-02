@@ -95,13 +95,13 @@ class AboutUsController extends Controller
         });
 
 
-        $contacts = ContactsPage::all();
-        $data['contact_page']['whats_next'] = $contacts->map(function ($contact) use ($locale) {
-            return [
+        $contact = ContactsPage::first();
+       // $data['contact_page']['whats_next'] = $contacts->map(function ($contact) use ($locale) {
+            //return [
                 //   'id' => $contact->id,
-                'title' => $locale == 'en' ? $contact->en_title : $contact->nl_title,
-                'sub_title' => $locale == 'en' ? $contact->en_sub_title : $contact->nl_sub_title,
-                'whats_next_steps' => $contact->contacts_whats_next->map(function ($subrelated) use ($locale, $contact) {
+                $data['contact_page']['whats_next']['title'] = $locale == 'en' ? $contact->en_title : $contact->nl_title;
+                 $data['contact_page']['whats_next']['sub_title'] = $locale == 'en' ? $contact->en_sub_title : $contact->nl_sub_title;
+             $data['contact_page']['whats_next']['whats_next_steps'] =$contact->contacts_whats_next->map(function ($subrelated) use ($locale, $contact) {
                     return [
                         'step_no' => $subrelated->step_no,
                         'step' => $locale == 'en' ? $subrelated->en_step : $subrelated->nl_step,
@@ -109,10 +109,10 @@ class AboutUsController extends Controller
                         //     'title' => $locale == 'en' ? $contact->en_title : $contact->nl_title,
                         //    'sub_title' => $locale == 'en' ? $contact->en_sub_title : $contact->nl_sub_title,
                     ];
-                }),
+                });
 
-            ];
-        });
+        //    ];
+      //  });
 
         return response()->json([
             'success' => 1,
