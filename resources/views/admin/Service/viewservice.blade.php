@@ -25,7 +25,8 @@
                                                 </li>
                                                 <li>
                                                     <div class="">
-                                                        <form action="{{route('service.delete',$data['id'])}}" method="POST" style="display:grid;"
+                                                        <form action="{{ route('service.delete', $data['id']) }}"
+                                                            method="POST" style="display:grid;"
                                                             onsubmit="return confirm('Are you sure you want to delete this Service?');">
                                                             @csrf
                                                             @method('DELETE')
@@ -44,6 +45,20 @@
                                                     <h4 style="color: black">{{ $data['description'] }}</h4>
 
 
+                                                    <br>
+                                                    <h3 style="color: rgb(11, 212, 188)">Service Images</h3>
+                                                    <h4 style="color: black"></h4>
+                                                    <ul class="navbar-right" style="display: flex; align-items: center;">
+                                                        @foreach ($data['service_images'] as $img)
+                                                            <li style="color: black" class="nav-item">
+                                                                <img src="{{ Storage::url($img['image_path']) }}"
+                                                                    data-bs-image="{{ Storage::url($img['image_path']) }}"
+                                                                    style="height: 150px; width:150px;" alt="Project Image"
+                                                                    class="img-fluid project-image" data-bs-toggle="modal"
+                                                                    data-bs-target="#imageModal">
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
                                                     <br>
 
                                                     <h3 style="color: rgb(11, 212, 188)">Requirments</h3>
@@ -120,4 +135,45 @@
 
         </div>
     </div>
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img src="" alt="Focused Image" id="modalImage">
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .project-image {
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .project-image:hover {
+            transform: scale(1.05);
+        }
+
+        /* Optional: Adjust the size of the modal image */
+        .modal-dialog img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var imageModal = document.getElementById('imageModal');
+            var modalImage = document.getElementById('modalImage');
+
+            imageModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                var imageSrc = button.getAttribute(
+                    'data-bs-image');
+                modalImage.src = imageSrc;
+            });
+        });
+    </script>
 @endsection

@@ -23,8 +23,13 @@
             <div class="menu_section">
                 <ul class="nav side-menu">
                     <li class="nav-item">
+                        <a class="nav-link" href="{{route('showhome')}}">
+                            <i class="fa fa-home"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('showall.service') }}">
-                            <i class="fa fa-list"></i> {{ __('app.service') }}
+                            <i class="fa fa-tasks"></i> {{ __('app.service') }}
                         </a>
                     </li>
                     <li class="nav-item">
@@ -34,21 +39,26 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('showall.contact-us') }}">
-                            <i class="fa fa-list"></i> {{ __('app.contact_us') }}
+                            <i class="fa fa-envelope"></i> {{ __('app.contact_us') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('showall.projects') }}">
-                            <i class="fa fa-list"></i> Projects
+                            <i class="fa fa-check"></i> Projects
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('showall.contact-page')}}">
-                            <i class="fa fa-list"></i>Contact Page
+                            <i class="fa fa-comment"></i>Contact Page
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">
+                        <a class="nav-link" href="{{route('showall.members')}}">
+                            <i class="fa fa-group"></i>Members
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('showall.herosection')}}">
                             <i class="fa fa-list"></i>Hero Section
                         </a>
                     </li>

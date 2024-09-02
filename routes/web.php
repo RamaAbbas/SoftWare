@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HeroSectionController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\TeamMemberController;
 use App\Http\Middleware\SetLocal;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
@@ -68,6 +70,24 @@ Route::middleware([SetLocal::class])->group(function () {
         Route::delete('/delete-project/{id}', [ProjectController::class, 'destroy'])->name("project.delete");
         Route::get('/edit/project/{id}', [ProjectController::class, 'edit'])->name('project.edit');
         Route::post('/update-project/{id}', [ProjectController::class, 'update'])->name('project.update');
+
+
+        ////////////////////////////member
+        Route::get('/admin-members', [TeamMemberController::class, 'show_all'])->name('showall.members');
+        Route::get('/admin-home', [AboutUsController::class, 'show_home'])->name('showhome');
+        Route::get('/add/member', [TeamMemberController::class, 'addmember'])->name('member.add');
+        Route::post('/store-member', [TeamMemberController::class, 'store'])->name('member.store');
+        Route::delete('/delete-member/{id}', [TeamMemberController::class, 'destroy'])->name("member.delete");
+        Route::post('/update-member/{id}', [TeamMemberController::class, 'update'])->name('member.update');
+        Route::get('/edit/member/{id}', [TeamMemberController::class, 'edit'])->name('member.edit');
+
+
+        /////////////////////////Hero Section
+        Route::get('/admin-hero-section', [HeroSectionController::class, 'show_all'])->name('showall.herosection');
+        Route::get('/add/herosection', [HeroSectionController::class, 'addherosection'])->name('hero_section.add');
+        Route::post('/store-herosection', [HeroSectionController::class, 'store'])->name('herosection.store');
+        Route::delete('/delete-section/{id}', [HeroSectionController::class, 'destroy'])->name("section.delete");
+        Route::get('/edit/section/{id}', [HeroSectionController::class, 'edit'])->name('section.edit');
     });
 
 

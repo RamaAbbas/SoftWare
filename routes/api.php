@@ -7,6 +7,7 @@ use App\Http\Controllers\HeroSectionController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\TeamMemberController;
 use App\Http\Middleware\SetLocal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +21,7 @@ Route::middleware([SetLocal::class])->group(function () {
 
     Route::get('/services', [ServicesController::class, 'index']);
     Route::get('/service/show/{id}', [ServicesController::class, 'show'])->name('service.show');
-   // Route::post('/store-service', [ServicesController::class, 'store'])->name("service.store");
+    // Route::post('/store-service', [ServicesController::class, 'store'])->name("service.store");
 
     ////about us
     Route::get('/about-us', [AboutUsController::class, 'index']);
@@ -50,6 +51,10 @@ Route::middleware([SetLocal::class])->group(function () {
     /////////////////////hero
 
     Route::post('/store-herosection', [HeroSectionController::class, 'store']);
+
+
+    /////////////////////////team member
+    Route::post('/store-member', [TeamMemberController::class, 'store']);
 });
 
 //Route::post('/store-aboutus', [AboutUsController::class, 'store']);

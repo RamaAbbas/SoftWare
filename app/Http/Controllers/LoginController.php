@@ -50,7 +50,7 @@ class LoginController extends Controller
                 session(['api_token' => $token]);
 
 
-                return redirect()->route('showall.service');
+                return redirect()->route('showhome');
             } else {
 
                 return redirect()->back();

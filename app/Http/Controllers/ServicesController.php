@@ -290,6 +290,7 @@ class ServicesController extends Controller
                 ];
             });
 
+
             // Process Service Processes and Procedures
             $data['service_processes'] = $service->service_processs->map(function ($related) use ($locale) {
                 return [
@@ -527,6 +528,12 @@ class ServicesController extends Controller
                 return [
                     'name' => $locale == 'en' ? $related->en_name : $related->nl_name,
                     'description' => $locale == 'en' ? $related->en_description : $related->nl_description,
+                ];
+            });
+            $data['service_images'] = $service->service_images->map(function ($related) use ($locale) {
+                return [
+                    'image_path' => $related->image_path
+
                 ];
             });
 

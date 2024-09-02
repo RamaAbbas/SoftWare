@@ -286,7 +286,8 @@
                                             name="service_processs[0][step_no]"
                                             value="{{ old('service_processes.0.step_no') }}" class="form-control  "><br>
 
-
+                                        <button type="button" class="delete-service_process">Delete
+                                            Service Process</button>
                                         <div class="process_procedure">
                                             <label for="service_processs[0][process_procedures][0][en_name]">Procedure
                                                 English Name:</label>
@@ -335,21 +336,24 @@
                                             <label for="client_testimonial[0][client_name]">Client Name:</label>
                                             <input type="text" id="client_testimonial[0][client_name]"
                                                 name="client_testimonial[0][client_name]"
-                                                value="{{ old('client_testimonial.0.client_name') }}"  class="form-control  "><br>
+                                                value="{{ old('client_testimonial.0.client_name') }}"
+                                                class="form-control  "><br>
 
                                             <br>
                                             <label for="client_testimonial[0][en_client_testimonial]">Client
                                                 Testemonial
                                                 in English</label>
-                                            <textarea id="client_testimonial[0][en_client_testimonial]" name="client_testimonial[0][en_client_testimonial]"  class="form-control  ">{{ old('client_testimonial.0.en_client_testimonial') }}</textarea><br>
+                                            <textarea id="client_testimonial[0][en_client_testimonial]" name="client_testimonial[0][en_client_testimonial]"
+                                                class="form-control  ">{{ old('client_testimonial.0.en_client_testimonial') }}</textarea><br>
 
                                             <label for="client_testimonial[0][nl_client_testimonial]">Client
                                                 Testemonial
                                                 in Dutch
                                             </label>
-                                            <textarea id="client_testimonial[0][nl_client_testimonial]" name="client_testimonial[0][nl_client_testimonial]"  class="form-control  ">{{ old('client_testimonial.0.nl_client_testimonial') }}</textarea><br>
+                                            <textarea id="client_testimonial[0][nl_client_testimonial]" name="client_testimonial[0][nl_client_testimonial]"
+                                                class="form-control  ">{{ old('client_testimonial.0.nl_client_testimonial') }}</textarea><br>
                                             <button type="button" class="delete-client_testimonial">Delete
-                                               Client Testimonial</button>
+                                                Client Testimonial</button>
 
 
                                         </div>
@@ -472,12 +476,18 @@
 
                     <label for="service_processes[${index}][process_procedures][0][nl_description]">Procedure Dutch Description:</label>
                     <textarea id="service_processes[${index}][process_procedures][0][nl_description]" name="service_processs[${index}][process_procedures][0][nl_description]"  class="form-control  "></textarea><br>
-
+                    <button type="button" class="delete-service_process">Delete
+                                                        Service Process</button>
                     <button type="button" class="add-more-procedure" data-service-process-index="${index}">Add More Procedure</button>
                 </div>
             `;
 
             serviceProcessesDiv.appendChild(newServiceProcess);
+        });
+        document.addEventListener('click', function(event) {
+            if (event.target && event.target.classList.contains('delete-service_process')) {
+                event.target.closest('.service_process').remove();
+            }
         });
 
         document.addEventListener('click', function(event) {
