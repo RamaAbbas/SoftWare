@@ -171,22 +171,44 @@
                                 </div>
                                 <div class="form-group row">
                                     <label for="en_meet_our_team"
-                                        class="col-form-label col-md-3 col-sm-3 label-align">Meet Our Team
+                                        class="col-form-label col-md-3 col-sm-3 label-align">Title Meet Our Team
                                         in English
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input id="en_meet_our_team" class="form-control col" type="text"
-                                            name="en_meet_our_team" value="{{ $aboutus->en_meet_our_team }}">
+                                            name="en_title_meet_our_team" value="{{ $aboutus->en_title_meet_our_team }}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="nl_meet_our_team"
-                                        class="col-form-label col-md-3 col-sm-3 label-align">Meet Our Team
+                                        class="col-form-label col-md-3 col-sm-3 label-align">Title Meet Our Team
                                         in Dutch
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input id="nl_meet_our_team" class="form-control col" type="text"
-                                            name="nl_meet_our_team" value="{{ $aboutus->nl_meet_our_team }}">
+                                            name="nl_title_meet_our_team" value="{{ $aboutus->nl_title_meet_our_team }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="en_meet_our_team" class="col-form-label col-md-3 col-sm-3 label-align">Sub
+                                        Title Meet Our Team
+                                        in English
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 ">
+                                        <input id="en_meet_our_team" class="form-control col" type="text"
+                                            name="en_sub_title_meet_our_team"
+                                            value="{{ $aboutus->en_sub_title_meet_our_team }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="nl_meet_our_team" class="col-form-label col-md-3 col-sm-3 label-align">Sub
+                                        Title Meet Our Team
+                                        in Dutch
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 ">
+                                        <input id="nl_meet_our_team" class="form-control col" type="text"
+                                            name="nl_sub_title_meet_our_team"
+                                            value="{{ $aboutus->nl_sub_title_meet_our_team }}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -319,6 +341,8 @@
                                     <div id="client_testimonials">
                                         @foreach ($aboutus->client_testimonial as $client_testimonial)
                                             <div class="client_testimoniall">
+                                                <input type="hidden"
+                                                    name="client_testimonial[{{ $client_testimonial->id }}][id]" value="{{ $client_testimonial->id }}">
                                                 <label for="client_testimonial[0][client_name]">Client Name:</label>
                                                 <input type="text" id="client_testimonial[0][client_name]"
                                                     name="client_testimonial[{{ $client_testimonial->id }}][client_name]"
@@ -338,6 +362,19 @@
                                                 </label>
                                                 <textarea id="client_testimonial[0][nl_client_testimonial]"
                                                     name="client_testimonial[{{ $client_testimonial->id }}][nl_client_testimonial]" class="form-control  ">{{ $client_testimonial->nl_client_testimonial }}</textarea><br>
+                                                <div class="form-group">
+                                                    <label for="ffff_image_path_{{ $loop->index }}"> Image</label>
+                                                    @if ($client_testimonial->image_path)
+                                                        <div class="mb-2">
+                                                            <img src="{{ Storage::url($client_testimonial->image_path) }}"
+                                                                alt="FFFF Image" width="100">
+                                                        </div>
+                                                    @endif
+                                                    <input type="file"
+                                                        name="client_testimonial[{{ $client_testimonial->id }}][image_path]"
+                                                        id="ffff_image_path_{{ $loop->index }}" class="form-control"
+                                                        accept="image/*">
+                                                </div>
                                                 <button type="button" class="delete-client_testimoniall">Delete
                                                     Client Testimoniall </button>
 
@@ -444,6 +481,7 @@
 
             newclient_testimonial.innerHTML = `
 <h6>Client Testimonial ${index+1} </h6>
+
     <label for="client_testimonial[${index}][client_name]">Client Name:</label>
     <input type="text" id="client_testimonial[${index}][client_name]" name="client_testimonial[${index}][client_name]"><br>
 
@@ -452,6 +490,9 @@
 
     <label for="client_testimonial[${index}][nl_client_testimonial]">Client Testemonial in Dutch</label>
     <textarea id="client_testimonial[${index}][nl_client_testimonial]" name="client_testimonial[${index}][nl_client_testimonial]"></textarea><br>
+    <input type="file" name="client_testimonial[${index}][image_path]"
+                                                        id="" class="form-control"
+                                                        accept="image/*">
     <button type="button" class="delete-client_testimoniall">Delete Client Testimonial</button>
 `;
 

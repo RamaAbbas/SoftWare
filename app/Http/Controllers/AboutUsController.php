@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AboutUsController extends Controller
@@ -515,8 +516,8 @@ class AboutUsController extends Controller
             'nl_title_for_who' => 'required',
             'en_title_steps_process' => 'required',
             'nl_title_steps_process' => 'required',
-            'en_meet_our_team' => 'required',
-            'nl_meet_our_team' => 'required',
+            // 'en_meet_our_team' => 'required',
+            // 'nl_meet_our_team' => 'required',
             'en_our_partners_associates' => 'required',
             'nl_our_partners_associates' => 'required',
             'en_end' => 'required',
@@ -553,8 +554,8 @@ class AboutUsController extends Controller
                 $aboutus->nl_title_for_who = $validatedData['nl_title_for_who'];
                 $aboutus->en_title_steps_process = $validatedData['en_title_steps_process'];
                 $aboutus->nl_title_steps_process = $validatedData['nl_title_steps_process'];
-                $aboutus->en_meet_our_team = $validatedData['en_meet_our_team'];
-                $aboutus->nl_meet_our_team = $validatedData['nl_meet_our_team'];
+                //  $aboutus->en_meet_our_team = $validatedData['en_meet_our_team'];
+                //  $aboutus->nl_meet_our_team = $validatedData['nl_meet_our_team'];
                 $aboutus->en_our_partners_associates = $validatedData['en_our_partners_associates'];
                 $aboutus->nl_our_partners_associates = $validatedData['nl_our_partners_associates'];
                 $aboutus->en_end = $validatedData['en_end'];
@@ -570,11 +571,80 @@ class AboutUsController extends Controller
                         $aboutus->steps_process()->create($relatedData);
                     }
                 }
-                ClientTestimonial::where('about_us_id', $aboutus->id)->delete();
+                /* ClientTestimonial::where('about_us_id', $aboutus->id)->delete();
                 if (isset($validatedData['client_testimonial'])) {
                     foreach ($validatedData['client_testimonial'] as $relatedData) {
 
                         $aboutus->client_testimonial()->create($relatedData);
+                    }
+                }*/
+              //  ClientTestimonial::where('about_us_id', $aboutus->id)->delete();
+                if (isset($validatedData['client_testimonial'])) {
+                    foreach ($validatedData['client_testimonial'] as $index => $ffffData) {
+                          $aboutus->client_testimonial()->create($ffffData);
+                          if (isset($ffffData['id'])) {
+                            ////////
+                          /*  if ($request->hasFile('image_path')) {
+                                $file = $request->image_path;
+                                $filename = time() . '_' . $file->getClientOriginalName();
+                                $filePath = $file->storeAs('Team_Members_images', $filename, 'public');
+
+                                $member->name = $request->name;
+                                $member->position = $request->position;
+                                $member->description = $request->description;
+                                $member->image_path = $filePath;
+                                $member->save();
+                            } else {
+
+                                $member->name = $request->name;
+                                $member->position = $request->position;
+                                $member->description = $request->description;
+                                $member->save();
+                            }*/
+
+                            /////////
+
+                            $ffff = ClientTestimonial::findOrFail($ffffData['id']);
+                         //   return [$ffff,"AAAAAAAAAAAAAAAAAAAAAAAAAAa"];
+
+                            $ffff->client_name = $ffffData['client_name'];
+                            $ffff->en_client_testimonial = $ffffData['en_client_testimonial'];
+                            $ffff->nl_client_testimonial = $ffffData['nl_client_testimonial'];
+
+
+
+                            if ($request->hasFile("client_testimonial.$index.image_path")) {
+                                if ($ffff->image_path) {
+                                    Storage::disk('public')->delete($ffff->image_path);
+                                }
+                                $ffffImagePath = $request->file("client_testimonial.$index.image_path")->store('ffff_images', 'public');
+                                $ffff->image_path = $ffffImagePath;
+                            }
+
+                            $ffff->save();
+                        } else {
+
+                        $ffffImagePath = null;
+                        if ($request->hasFile("client_testimonial.$index.image_path")) {
+
+                            $ffffImagePath = $request->file("client_testimonial.$index.image_path")->store('ffff_images', 'public');
+                            $k = $aboutus->client_testimonial()->create([
+                                'en_client_testimonial' => $ffffData['en_client_testimonial'],
+                                'nl_client_testimonial' => $ffffData['nl_client_testimonial'],
+                                'client_name' => $ffffData['client_name'],
+                                'image_path' => $ffffImagePath,
+                            ]);
+                          //  return $k;
+                        }
+
+                        // return $ffffImagePath;
+
+                        /*   $aboutus->client_testimonial()->create([
+                            //  'name' => $ffffData['name'],
+                            'client_name' => $ffffData['client_name'],
+                            'image_path' => $ffffImagePath,
+                        ]);*/
+                         }
                     }
                 }
                 ForWhoService::where('about_us_id', $aboutus->id)->delete();

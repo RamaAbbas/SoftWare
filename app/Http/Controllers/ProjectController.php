@@ -201,46 +201,51 @@ class ProjectController extends Controller
                     foreach ($validatedData['achievements'] as $achievements) {
 
                         $project->achievements()->create(
-                            [
+                            $achievements
+                           /* [
                                 'en_achievement_name' => $achievements['en_achievement_name'],
                                 'nl_achievement_name' => $achievements['nl_achievement_name'],
 
 
-                            ]
+                            ]*/
+
                         );
                     }
                 }
 
-                if (!empty($validatedData['challenges'])) {
+                if (isset($validatedData['challenges'])) {
                     foreach ($validatedData['challenges'] as $challenges) {
 
                         $project->challenges()->create(
-                            [
+                         /*   [
                                 'en_challenge_name' => $challenges['en_challenge_name'],
                                 'nl_challenge_name' => $challenges['nl_challenge_name'],
                                 'en_challenge_description' => $challenges['en_challenge_description'],
                                 'nl_challenge_description' => $challenges['nl_challenge_description'],
 
-                            ]
+                            ]*/
+                            $challenges
                         );
                     }
                 }
-                if (!empty($validatedData['project_live_links'])) {
+                if (isset($validatedData['project_live_links'])) {
                     foreach ($validatedData['project_live_links'] as $project_live_links) {
                         $project->project_live_links()->create(
-                            [
+                          /*  [
                                 'link' => $project_live_links['link'],
 
-                            ]
+                            ]*/
+                            $project_live_links
                         );
                     }
                 }
-                if (!empty($validatedData['project_technologies'])) {
+                if (isset($validatedData['project_technologies'])) {
                     foreach ($validatedData['project_technologies'] as $project_technologies) {
                         $project->project_technologies()->create(
-                            [
+                          /*  [
                                 'tools' => $project_technologies['tools'],
-                            ]
+                            ]*/
+                            $project_technologies
                         );
                     }
                 }
