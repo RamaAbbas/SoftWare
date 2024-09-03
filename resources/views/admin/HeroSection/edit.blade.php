@@ -41,7 +41,7 @@
                         <div class="x_content">
                             <br />
                             <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left"
-                                action="{{ route('herosection.store') }}" enctype="multipart/form-data" method="post">
+                                action="{{ route('section.update',$hero->id) }}" enctype="multipart/form-data" method="post">
                                 @csrf
 
                                 <div class="form-group row">
@@ -50,7 +50,7 @@
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input type="text" id="name"  class="form-control  "
-                                            name="en_title">
+                                            name="en_title" value="{{$hero->en_title}}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -59,7 +59,7 @@
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input type="text" id="name"  class="form-control  "
-                                            name="nl_title">
+                                            name="nl_title"  value="{{$hero->nl_title}}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -68,7 +68,7 @@
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input type="text" id="name"  class="form-control  "
-                                            name="en_sub_title">
+                                            name="en_sub_title" value="{{$hero->en_sub_title}}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -77,7 +77,7 @@
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input type="text" id="name"  class="form-control  "
-                                            name="nl_sub_title">
+                                            name="nl_sub_title"  value="{{$hero->nl_sub_title}}">
                                     </div>
                                 </div>
 

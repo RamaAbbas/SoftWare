@@ -88,6 +88,7 @@ Route::middleware([SetLocal::class])->group(function () {
         Route::post('/store-herosection', [HeroSectionController::class, 'store'])->name('herosection.store');
         Route::delete('/delete-section/{id}', [HeroSectionController::class, 'destroy'])->name("section.delete");
         Route::get('/edit/section/{id}', [HeroSectionController::class, 'edit'])->name('section.edit');
+        Route::post('/update-section/{id}', [HeroSectionController::class, 'update'])->name('section.update');
     });
 
 

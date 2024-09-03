@@ -352,8 +352,14 @@
                                             </label>
                                             <textarea id="client_testimonial[0][nl_client_testimonial]" name="client_testimonial[0][nl_client_testimonial]"
                                                 class="form-control  ">{{ old('client_testimonial.0.nl_client_testimonial') }}</textarea><br>
+                                            <div class="form-group">
+                                                <label for="ffff_image_path"> Image</label>
+                                                <input type="file" name="client_testimonial[0][image_src]"
+                                                accept="image/*" class="form-control" required>
+                                            </div>
                                             <button type="button" class="delete-client_testimonial">Delete
                                                 Client Testimonial</button>
+
 
 
                                         </div>
@@ -532,6 +538,11 @@
 
                 <label for="client_testimonial[${index}][nl_client_testimonial]">Client Testemonial in Dutch</label>
                 <textarea id="client_testimonial[${index}][nl_client_testimonial]" name="client_testimonial[${index}][nl_client_testimonial]" class="form-control  "></textarea><br>
+                <div class="form-group">
+                                                <label for="ffff_image_path"> Image</label>
+                                                <input type="file" name="client_testimonial[${index}][image_src]"
+                                                    class="form-control" required>
+                                            </div>
                 <button type="button" class="delete-client_testimonial">Delete Client Testimonial</button>
             `;
 

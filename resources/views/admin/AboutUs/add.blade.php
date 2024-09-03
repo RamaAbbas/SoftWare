@@ -394,6 +394,11 @@
                                                     </label>
                                                     <textarea id="client_testimonial[0][nl_client_testimonial]" name="client_testimonial[0][nl_client_testimonial]"
                                                         class="form-control  ">{{ old('client_testimonial.0.nl_client_testimonial') }}</textarea><br>
+                                                    <div class="form-group">
+                                                        <label for="ffff_image_path"> Image</label>
+                                                        <input type="file" name="client_testimonial[0][image_path]"
+                                                            accept="image/*" class="form-control" required>
+                                                    </div>
                                                     <button type="button" class="delete-client_testimoniall">Delete
                                                         Client Testimoniall </button>
 

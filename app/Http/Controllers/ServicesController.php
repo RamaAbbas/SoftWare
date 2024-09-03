@@ -177,11 +177,42 @@ class ServicesController extends Controller
                     $service->service_benefits()->create($relatedData);
                 }
             }
+            /* if (isset($validatedData['client_testimonial'])) {
+                foreach ($validatedData['client_testimonial'] as $index=> $relatedData) {
+                    if ($request->hasFile("client_testimonial.$index.image_src")) {
+
+                     //   return "A";            ///////////isset($relatedData->image_src)
+                      //  $file = $request->file("client_testimonial.$index.image_src"); //$relatedData['image_src'];
+                      //  $filename = time() . '_' . $file->getClientOriginalName();
+                       // $filePath = $file->storeAs('client_images', $filename, 'public');
+                      // $ImagePath = $request->file("client_testimonial.$index.image_src")->store('ffff_images', 'public');
+                        $service->client_testimonial()->create([
+                            'client_name' => $relatedData->client_name,
+                      //      'image_src' => $ImagePath//$filePath
+                        ]);
+                    } else {
+                        $service->client_testimonial()->create($relatedData);
+                    }
+                }
+            }*/
             if (isset($validatedData['client_testimonial'])) {
-                foreach ($validatedData['client_testimonial'] as $relatedData) {
-                    $service->client_testimonial()->create($relatedData);
+                foreach ($validatedData['client_testimonial'] as $index => $ffffData) {
+                    $ffffImagePath = null;
+
+                    // Check for FFFF image upload using the index
+                    if ($request->hasFile("client_testimonial.$index.image_src")) {
+                        $ffffImagePath = $request->file("client_testimonial.$index.image_src")->store('Client_images', 'public');
+                    }
+
+                    $service->client_testimonial()->create([
+                        'client_name' => $ffffData['client_name'],
+                        'en_client_testimonial' => $ffffData['en_client_testimonial'],
+                        'nl_client_testimonial' => $ffffData['nl_client_testimonial'],
+                        'image_src' => $ffffImagePath,
+                    ]);
                 }
             }
+
 
             if (!empty($validatedData['service_processs'])) {
                 foreach ($validatedData['service_processs'] as $service_processsdata) {

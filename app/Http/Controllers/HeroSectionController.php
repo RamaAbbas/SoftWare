@@ -87,6 +87,47 @@ class HeroSectionController extends Controller
         $hero = HeroSection::findOrFail($id);
         return view('admin.HeroSection.edit', compact('hero'));
     }
+    public function update(Request $request, $id)
+    {
+        $validation = Validator::make($request->all(), [
+            'en_title' => 'nullable',
+            'nl_title' => 'nullable',
+            'en_sub_title' => 'nullable',
+            'nl_sub_title' => 'nullable',
+            'image_path' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        if ($validation->fails()) {
+            $section = HeroSection::findOrFail($id);
+            return redirect()->route('section.edit', $section->id)->with('error', $validation->errors());
+        }
+        try {
+            $data = $request->all();
+            $section = HeroSection::findOrFail($id);
+            if ($section) {
+                if ($request->hasFile('image_path')) {
+                    $file = $request->image_path;
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs('Team_Members_images', $filename, 'public');
+
+                    $section->en_title = $request->en_title;
+                    $section->nl_title = $request->nl_title;
+                    $section->en_sub_title = $request->en_sub_title;
+                    $section->nl_sub_title = $request->nl_sub_title;
+                    $section->image_path = $filePath;
+                    $section->save();
+                } else {
+                    $section->en_title = $request->en_title;
+                    $section->nl_title = $request->nl_title;
+                    $section->en_sub_title = $request->en_sub_title;
+                    $section->nl_sub_title = $request->nl_sub_title;
+                    $section->save();
+                }
+            }
+            return redirect()->route('showall.herosection')->with('success', "Section Updated Sucsessfully");
+        } catch (Exception $e) {
+            return redirect()->route('section.edit')->with('error', $e);
+        }
+    }
 
     public function show_all()
     {

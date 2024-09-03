@@ -44,9 +44,9 @@
                         <div class="row">
                             @foreach ($processed as $process)
                                 <div class="col-md-55">
-                                    <div class="thumbnail">
-                                        <div class="image view view-first">
-                                            <img style="width: 100%; display: block;"
+                                    <div class="thumbnail" style="height: 400px; color:gray">
+                                        <div class="image view view-first" style="height: 300px; color:gray">
+                                            <img style="width: 100%;  display: block;"
                                                 src="{{ Storage::url($process['image_path']) }}" alt="image" />
                                             <div class="mask">
 

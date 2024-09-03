@@ -231,8 +231,8 @@ class AboutUsController extends Controller
                     'introduction' => $locale == 'en' ? $about->en_introduction : $about->nl_introduction,
                     'our_mission' => $locale == 'en' ? $about->en_our_mission : $about->nl_our_mission,
                     'our_goals' => $locale == 'en' ? $about->en_our_goals : $about->nl_our_goals,
-                    'title_for_who' => $locale == 'en' ? $about->en_title_for_who : $about->nl_title_for_who,
-                    'title_steps_process' => $locale == 'en' ? $about->en_title_steps_process : $about->nl_title_steps_process,
+                    //   'title_for_who' => $locale == 'en' ? $about->en_title_for_who : $about->nl_title_for_who,
+                    //    'title_steps_process' => $locale == 'en' ? $about->en_title_steps_process : $about->nl_title_steps_process,
                     //   'meet_our_team' => $locale == 'en' ? $about->en_meet_our_team : $about->nl_meet_our_team,
                     'our_partners_associates' => $locale == 'en' ? $about->en_our_partners_associates : $about->nl_our_partners_associates,
                     'end' => $locale == 'en' ? $about->en_end : $about->nl_end,
@@ -240,7 +240,8 @@ class AboutUsController extends Controller
 
 
                 // Process Steps
-                $data['steps_process'] = $about->steps_process->map(function ($step) use ($locale) {
+                $data['steps_process']['title'] = $locale == 'en' ? $about->en_title_steps_process : $about->nl_title_steps_process;
+                $data['steps_process']['steps'] = $about->steps_process->map(function ($step) use ($locale) {
                     return [
                         'step_no' => $step->step_no,
                         'process_name' => $locale == 'en' ? $step->en_name : $step->nl_name,
@@ -257,34 +258,20 @@ class AboutUsController extends Controller
                     ];
                 });
 
-                // Process For Who Services
-                $data['for_who'] = $about->for_who_services->map(function ($service) use ($locale) {
+
+                $data['for_who']['title'] = $locale == 'en' ? $about->en_title_for_who : $about->nl_title_for_who;
+                $data['for_who']['benefits'] = $about->for_who_services->map(function ($service) use ($locale) {
                     return [
                         'name' => $locale == 'en' ? $service->en_name : $service->nl_name,
                         'description' => $locale == 'en' ? $service->en_description : $service->nl_description,
                     ];
                 });
-                ////
-                /*   $data['meet_our_team'] = $about->steps_process->map(function ($step) use ($locale,$about) {
 
-                    return [
-                        'title' => $locale == 'en' ? $about->en_title_meet_our_team : $step->nl_title_meet_our_team,
-                        'process_name' => $locale == 'en' ? $about->en_sub_title_meet_our_team : $step->nl_sub_title_meet_our_team,
-                        'team_members' =>$members->map(function ($member) use ($locale) {
-                            return [
 
-                                'name' => $member->name,
-                                'position' => $member->position,
-                                'description' => $member->descciption,
-                                'image_path' => asset('storage/' . $member->image_path)
 
-                            ];
-                        }),
-                    ];
-                });*/
                 $members = TeamMember::all();
                 $data['meet_our_team']['title'] = 'en' ? $about->en_title_meet_our_team : $about->nl_title_meet_our_team;
-                $data['meet_our_team']['sub_title'] = 'en' ? $about->en_title_meet_our_team : $about->nl_title_meet_our_team;
+                $data['meet_our_team']['sub_title'] = 'en' ? $about->en_sub_title_meet_our_team : $about->nl_sub_title_meet_our_team;
                 $data['meet_our_team']['team_members'] = $members->map(function ($member) use ($locale) {
                     return [
 
@@ -294,18 +281,6 @@ class AboutUsController extends Controller
                         'image_path' => asset('storage/' . $member->image_path)
                     ];
                 });
-                //////
-                /*  $members = TeamMember::all();
-                $data['team_members'] = $members->map(function ($member) use ($locale) {
-                    return [
-
-                        'name' => $member->name,
-                        'position' => $member->position,
-                        'description' => $member->descciption,
-                        'image_path' => asset('storage/' . $member->image_path)
-
-                    ];
-                });*/
 
 
                 $contact = ContactsPage::first();
@@ -444,12 +419,14 @@ class AboutUsController extends Controller
                 'nl_our_mission' => $validatedData['nl_our_mission'],
                 'en_our_goals' => $validatedData['en_our_goals'],
                 'nl_our_goals' => $validatedData['nl_our_goals'],
-                'en_title_for_who' => $validatedData['en_title_for_who'],
-                'nl_title_for_who' => $validatedData['nl_title_for_who'],
-                'en_title_steps_process' => $validatedData['en_title_steps_process'],
-                'nl_title_steps_process' => $validatedData['nl_title_steps_process'],
-                //  'en_meet_our_team' => $validatedData['en_meet_our_team'],
-                //  'nl_meet_our_team' => $validatedData['nl_meet_our_team'],
+                'en_title_for_who' => $request->en_title_for_who, //$validatedData['en_title_for_who'],
+                'nl_title_for_who' => $request->nl_title_for_who,
+                'en_title_steps_process' =>  $request->en_title_steps_process,
+                'nl_title_steps_process' =>  $request->nl_title_steps_process,
+                'en_title_meet_our_team' => $validatedData['en_title_meet_our_team'],
+                'nl_title_meet_our_team' => $validatedData['nl_title_meet_our_team'],
+                'en_sub_title_meet_our_team' => $validatedData['en_sub_title_meet_our_team'],
+                'nl_sub_title_meet_our_team' => $validatedData['nl_sub_title_meet_our_team'],
                 'en_our_partners_associates' => $validatedData['en_our_partners_associates'],
                 'nl_our_partners_associates' => $validatedData['nl_our_partners_associates'],
                 'en_end' => $validatedData['en_end'],
@@ -463,10 +440,27 @@ class AboutUsController extends Controller
                     $about_us->steps_process()->create($relatedData);
                 }
             }
-            if (isset($validatedData['client_testimonial'])) {
+            /* if (isset($validatedData['client_testimonial'])) {
                 foreach ($validatedData['client_testimonial'] as $relatedData) {
 
                     $about_us->client_testimonial()->create($relatedData);
+                }
+            }*/
+            if (isset($validatedData['client_testimonial'])) {
+                foreach ($validatedData['client_testimonial'] as $index => $ffffData) {
+                    $ffffImagePath = null;
+
+                    // Check for FFFF image upload using the index
+                    if ($request->hasFile("client_testimonial.$index.image_path")) {
+                        $ffffImagePath = $request->file("client_testimonial.$index.image_path")->store('Client_images', 'public');
+                    }
+
+                    $about_us->client_testimonial()->create([
+                        'client_name' => $ffffData['client_name'],
+                        'en_client_testimonial' => $ffffData['en_client_testimonial'],
+                        'nl_client_testimonial' => $ffffData['nl_client_testimonial'],
+                        'image_path' => $ffffImagePath,
+                    ]);
                 }
             }
             if (isset($validatedData['for_who_services'])) {
@@ -610,7 +604,7 @@ class AboutUsController extends Controller
 
     public function addaboutus()
     {
-        return view('admin.AboutUs.add');
+        return view('admin.AboutUs.addtest');
     }
 
     ////////////////////////////////////////////////////////////////
