@@ -259,6 +259,12 @@
                                     <div id="steps_processs">
                                         @foreach ($aboutus->steps_process as $steps_processs)
                                             <div class="steps_process">
+                                                <label for="steps_processs[0][step_no]">Step No:</label>
+                                                <input type="number" id="steps_processs[0][step_no]"
+                                                    name="steps_processs[{{ $steps_processs->id }}][step_no]"
+                                                    class="form-control  " value="{{ $steps_processs->step_no }}"><br>
+
+                                                <br>
                                                 <label for="steps_processs[0][en_name]">English Name:</label>
                                                 <input type="text" id="steps_processs[0][en_name]"
                                                     name="steps_processs[{{ $steps_processs->id }}][en_name]"
@@ -338,32 +344,42 @@
 
                                 <h2>Client Testemonial</h2>
                                 <div class="form-group row">
-                                    <div id="client_testimonials">
+                                    <div class="ffff-container" id="client_testimonials">
+                                        <h4>FFFF Objects</h4>
                                         @foreach ($aboutus->client_testimonial as $client_testimonial)
-                                            <div class="client_testimoniall">
+                                            <div class="ffff-item" id="client_testimonial">
                                                 <input type="hidden"
-                                                    name="client_testimonial[{{ $client_testimonial->id }}][id]" value="{{ $client_testimonial->id }}">
-                                                <label for="client_testimonial[0][client_name]">Client Name:</label>
-                                                <input type="text" id="client_testimonial[0][client_name]"
-                                                    name="client_testimonial[{{ $client_testimonial->id }}][client_name]"
-                                                    value="{{ $client_testimonial->client_name }}"
-                                                    class="form-control  "><br>
-
-                                                <br>
-                                                <label for="client_testimonial[0][en_client_testimonial]">Client
-                                                    Testemonial
-                                                    in English</label>
-                                                <textarea id="client_testimonial[0][en_client_testimonial]"
-                                                    name="client_testimonial[{{ $client_testimonial->id }}][en_client_testimonial]" class="form-control  ">{{ $client_testimonial->en_client_testimonial }}</textarea><br>
-
-                                                <label for="client_testimonial[0][nl_client_testimonial]">Client
-                                                    Testemonial
-                                                    in Dutch
-                                                </label>
-                                                <textarea id="client_testimonial[0][nl_client_testimonial]"
-                                                    name="client_testimonial[{{ $client_testimonial->id }}][nl_client_testimonial]" class="form-control  ">{{ $client_testimonial->nl_client_testimonial }}</textarea><br>
+                                                    name="client_testimonial[{{ $client_testimonial->id }}][id]"
+                                                    value="{{ $client_testimonial->id }}">
+                                                <input type="hidden"
+                                                    name="client_testimonial[{{ $client_testimonial->id }}][_delete]"
+                                                    class="delete-ffff" value="0">
                                                 <div class="form-group">
-                                                    <label for="ffff_image_path_{{ $loop->index }}"> Image</label>
+                                                    <label for="ffff_name_{{ $loop->index }}">Client Name</label>
+                                                    <input type="text"
+                                                        name="client_testimonial[{{ $client_testimonial->id }}][client_name]"
+                                                        id="ffff_name_{{ $client_testimonial->id }}" class="form-control"
+                                                        value="{{ $client_testimonial->client_name }}" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ffff_name_{{ $loop->index }}">En Client
+                                                        Testimonial</label>
+                                                    <input type="text"
+                                                        name="client_testimonial[{{ $client_testimonial->id }}][en_client_testimonial]"
+                                                        id="ffff_name_{{ $client_testimonial->id }}" class="form-control"
+                                                        value="{{ $client_testimonial->en_client_testimonial }}" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ffff_name_{{ $loop->index }}">Nl Client
+                                                        Testimonial</label>
+                                                    <input type="text"
+                                                        name="client_testimonial[{{ $client_testimonial->id }}][nl_client_testimonial]"
+                                                        id="ffff_name_{{ $client_testimonial->id }}" class="form-control"
+                                                        value="{{ $client_testimonial->nl_client_testimonial }}" required>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="ffff_image_path_{{ $loop->index }}">FFFF Image</label>
                                                     @if ($client_testimonial->image_path)
                                                         <div class="mb-2">
                                                             <img src="{{ Storage::url($client_testimonial->image_path) }}"
@@ -372,18 +388,20 @@
                                                     @endif
                                                     <input type="file"
                                                         name="client_testimonial[{{ $client_testimonial->id }}][image_path]"
-                                                        id="ffff_image_path_{{ $loop->index }}" class="form-control"
-                                                        accept="image/*">
+                                                        id="ffff_image_path_{{ $client_testimonial->id }}"
+                                                        class="form-control" accept="image/*">
                                                 </div>
-                                                <button type="button" class="delete-client_testimoniall">Delete
-                                                    Client Testimoniall </button>
 
+                                                <button type="button" class="btn btn-danger remove-ffff">Remove</button>
                                             </div>
-                                            <br>
                                         @endforeach
+
+                                        <button type="button" class="btn btn-secondary add-ffff"
+                                            id="add-more-testimonial">Add Testimonial</button>
+
+
                                     </div>
                                 </div>
-                                <button type="button" id="add-more-testimonial">Add More Testimonial</button>
                         </div>
 
                     </div>
@@ -406,6 +424,88 @@
 
 
     <script>
+        document.getElementById('add-more-testimonial').addEventListener('click', function() {
+            var client_testimonialsDiv = document.getElementById('client_testimonials');
+            var index = client_testimonialsDiv.children.length - 1;
+
+            var newclient_testimonial = document.createElement('div');
+            newclient_testimonial.className = 'client_testimoniall';
+
+            newclient_testimonial.innerHTML = `
+<h6>Client Testimonial ${index+1} </h6>
+
+
+                                                <div class="form-group">
+                                                    <label for="ffff_name_">FFFF Name</label>
+                                                    <input type="text"
+                                                        name="client_testimonial[${index}][client_name]"
+                                                        id="ffff_name_{{ $client_testimonial->id }}" class="form-control"
+                                                         required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ffff_name_">En Client Testimonial</label>
+                                                    <input type="text"
+                                                        name="client_testimonial[${index}][en_client_testimonial]"
+                                                        id="ffff_name_{{ $client_testimonial->id }}" class="form-control"
+                                                        required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="ffff_name_">Nl Client Testimonial</label>
+                                                    <input type="text"
+                                                        name="client_testimonial[${index}][nl_client_testimonial]"
+                                                        id="ffff_name_{{ $client_testimonial->id }}" class="form-control"
+                                                         required>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="ffff_image_path_">FFFF Image</label>
+
+                                                    <input type="file"
+                                                        name="client_testimonial[${index}][image_path]"
+                                                        id="ffff_image_path_{{ $client_testimonial->id }}"
+                                                        class="form-control" accept="image/*">
+                                                </div>
+
+                                                <button type="button" class="btn btn-danger remove-ffff">Remove</button>
+`;
+
+            client_testimonialsDiv.appendChild(newclient_testimonial);
+        });
+        ////////////////////////////
+        document.addEventListener('DOMContentLoaded', function() {
+            let addFfffBtn = document.querySelector('.add-ffff');
+            let ffffContainer = document.querySelector('.ffff-container');
+            let ffffTemplate = document.querySelector('.ffff-template');
+
+            addFfffBtn.addEventListener('click', function() {
+                let newFfff = ffffTemplate.cloneNode(true);
+                newFfff.classList.remove('d-none');
+                ffffContainer.appendChild(newFfff);
+
+                let removeFfffBtn = newFfff.querySelector('.remove-ffff');
+                removeFfffBtn.addEventListener('click', function() {
+                    newFfff.remove();
+                });
+            });
+
+            document.querySelectorAll('.remove-ffff').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    let ffffItem = this.closest('.ffff-item');
+                    let deleteInput = ffffItem.querySelector('.delete-ffff');
+
+
+                    if (deleteInput) {
+                        deleteInput.value = '1';
+                    }
+
+
+                    ffffItem.style.display = 'none';
+                });
+            });
+        });
+
+
+        ///////////////////////////
         document.getElementById('add-more-steps').addEventListener('click', function() {
             // console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             var steps_processsDiv = document.getElementById('steps_processs');
@@ -472,14 +572,14 @@
 
 
 
-        document.getElementById('add-more-testimonial').addEventListener('click', function() {
-            var client_testimonialsDiv = document.getElementById('client_testimonials');
-            var index = client_testimonialsDiv.children.length - 1;
+        /*   document.getElementById('add-more-testimonial').addEventListener('click', function() {
+                                        var client_testimonialsDiv = document.getElementById('client_testimonials');
+                                        var index = client_testimonialsDiv.children.length - 1;
 
-            var newclient_testimonial = document.createElement('div');
-            newclient_testimonial.className = 'client_testimoniall';
+                                        var newclient_testimonial = document.createElement('div');
+                                        newclient_testimonial.className = 'client_testimoniall';
 
-            newclient_testimonial.innerHTML = `
+                                        newclient_testimonial.innerHTML = `
 <h6>Client Testimonial ${index+1} </h6>
 
     <label for="client_testimonial[${index}][client_name]">Client Name:</label>
@@ -496,12 +596,12 @@
     <button type="button" class="delete-client_testimoniall">Delete Client Testimonial</button>
 `;
 
-            client_testimonialsDiv.appendChild(newclient_testimonial);
-        });
-        document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('delete-client_testimoniall')) {
-                event.target.closest('.client_testimoniall').remove();
-            }
-        });
+                                        client_testimonialsDiv.appendChild(newclient_testimonial);
+                                    });
+                                    document.addEventListener('click', function(event) {
+                                        if (event.target && event.target.classList.contains('delete-client_testimoniall')) {
+                                            event.target.closest('.client_testimoniall').remove();
+                                        }
+                                    });*/
     </script>
 @endsection

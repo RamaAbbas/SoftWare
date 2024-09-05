@@ -578,13 +578,15 @@ class AboutUsController extends Controller
                         $aboutus->client_testimonial()->create($relatedData);
                     }
                 }*/
-              //  ClientTestimonial::where('about_us_id', $aboutus->id)->delete();
-                if (isset($validatedData['client_testimonial'])) {
+                //  ClientTestimonial::where('about_us_id', $aboutus->id)->delete();
+
+                //////////////////////////********************** */
+                if (isset($validatedData['client_testimoniall'])) {
                     foreach ($validatedData['client_testimonial'] as $index => $ffffData) {
-                          $aboutus->client_testimonial()->create($ffffData);
-                          if (isset($ffffData['id'])) {
+                        $aboutus->client_testimonial()->create($ffffData);
+                        if (isset($ffffData['id'])) {
                             ////////
-                          /*  if ($request->hasFile('image_path')) {
+                            /*  if ($request->hasFile('image_path')) {
                                 $file = $request->image_path;
                                 $filename = time() . '_' . $file->getClientOriginalName();
                                 $filePath = $file->storeAs('Team_Members_images', $filename, 'public');
@@ -605,7 +607,7 @@ class AboutUsController extends Controller
                             /////////
 
                             $ffff = ClientTestimonial::findOrFail($ffffData['id']);
-                         //   return [$ffff,"AAAAAAAAAAAAAAAAAAAAAAAAAAa"];
+                            //   return [$ffff,"AAAAAAAAAAAAAAAAAAAAAAAAAAa"];
 
                             $ffff->client_name = $ffffData['client_name'];
                             $ffff->en_client_testimonial = $ffffData['en_client_testimonial'];
@@ -624,29 +626,75 @@ class AboutUsController extends Controller
                             $ffff->save();
                         } else {
 
-                        $ffffImagePath = null;
-                        if ($request->hasFile("client_testimonial.$index.image_path")) {
+                            $ffffImagePath = null;
+                            if ($request->hasFile("client_testimonial.$index.image_path")) {
 
-                            $ffffImagePath = $request->file("client_testimonial.$index.image_path")->store('ffff_images', 'public');
-                            $k = $aboutus->client_testimonial()->create([
-                                'en_client_testimonial' => $ffffData['en_client_testimonial'],
-                                'nl_client_testimonial' => $ffffData['nl_client_testimonial'],
-                                'client_name' => $ffffData['client_name'],
-                                'image_path' => $ffffImagePath,
-                            ]);
-                          //  return $k;
-                        }
+                                $ffffImagePath = $request->file("client_testimonial.$index.image_path")->store('ffff_images', 'public');
+                                $k = $aboutus->client_testimonial()->create([
+                                    'en_client_testimonial' => $ffffData['en_client_testimonial'],
+                                    'nl_client_testimonial' => $ffffData['nl_client_testimonial'],
+                                    'client_name' => $ffffData['client_name'],
+                                    'image_path' => $ffffImagePath,
+                                ]);
+                                //  return $k;
+                            }
 
-                        // return $ffffImagePath;
+                            // return $ffffImagePath;
 
-                        /*   $aboutus->client_testimonial()->create([
+                            /*   $aboutus->client_testimonial()->create([
                             //  'name' => $ffffData['name'],
                             'client_name' => $ffffData['client_name'],
                             'image_path' => $ffffImagePath,
                         ]);*/
-                         }
+                        }
                     }
                 }
+                /////////////////************************** */
+                ////////////&&&&&&&&&&&&&&&&&&&&&
+                if (isset($validatedData['client_testimonial'])) {
+                    foreach ($validatedData['client_testimonial'] as $index => $ffffData) {
+                        if (isset($ffffData['id'])) {
+                            if (isset($ffffData['_delete']) && $ffffData['_delete'] == 1) {
+
+                                $ffff = ClientTestimonial::findOrFail($ffffData['id']);
+                                if ($ffff->image_path) {
+                                    Storage::disk('public')->delete($ffff->image_path);
+                                }
+                                $ffff->delete();
+                            } else {
+
+                                $ffff = ClientTestimonial::findOrFail($ffffData['id']);
+                                $ffff->en_client_testimonial = $ffffData['en_client_testimonial'];
+                                $ffff->nl_client_testimonial = $ffffData['nl_client_testimonial'];
+
+
+                                if ($request->hasFile("client_testimonial.$index.image_path")) {
+                                    if ($ffff->image_path) {
+                                        Storage::disk('public')->delete($ffff->image_path);
+                                    }
+                                    $ffffImagePath = $request->file("client_testimonial.$index.image_path")->store('Client_images', 'public');
+                                    $ffff->image_path = $ffffImagePath;
+                                }
+
+                                $ffff->save();
+                            }
+                        } else {
+
+                            $ffffImagePath = null;
+                            if ($request->hasFile("client_testimonial.$index.image_path")) {
+                                $ffffImagePath = $request->file("client_testimonial.$index.image_path")->store('Client_images', 'public');
+                            }
+
+                            $aboutus->client_testimonial()->create([
+                                'client_name' => $ffffData['client_name'],
+                                'en_client_testimonial' => $ffffData['en_client_testimonial'],
+                                'nl_client_testimonial' => $ffffData['nl_client_testimonial'],
+                                'image_path' => $ffffImagePath,
+                            ]);
+                        }
+                    }
+                }
+                ///////////////////&&&&&&&&&&&&&&&&
                 ForWhoService::where('about_us_id', $aboutus->id)->delete();
                 if (isset($validatedData['for_who_services'])) {
                     foreach ($validatedData['for_who_services'] as $relatedData) {
@@ -772,3 +820,49 @@ class AboutUsController extends Controller
     }
     ////////////////////////////////////////////////////////////////
 }
+/*
+ <div id="client_testimonials">
+                                        @foreach ($aboutus->client_testimonial as $client_testimonial)
+                                            <div class="client_testimoniall">
+                                                <input type="hidden"
+                                                    name="client_testimonial[{{ $client_testimonial->id }}][id]" value="{{ $client_testimonial->id }}">
+                                                <label for="client_testimonial[0][client_name]">Client Name:</label>
+                                                <input type="text" id="client_testimonial[0][client_name]"
+                                                    name="client_testimonial[{{ $client_testimonial->id }}][client_name]"
+                                                    value="{{ $client_testimonial->client_name }}"
+                                                    class="form-control  "><br>
+
+                                                <br>
+                                                <label for="client_testimonial[0][en_client_testimonial]">Client
+                                                    Testemonial
+                                                    in English</label>
+                                                <textarea id="client_testimonial[0][en_client_testimonial]"
+                                                    name="client_testimonial[{{ $client_testimonial->id }}][en_client_testimonial]" class="form-control  ">{{ $client_testimonial->en_client_testimonial }}</textarea><br>
+
+                                                <label for="client_testimonial[0][nl_client_testimonial]">Client
+                                                    Testemonial
+                                                    in Dutch
+                                                </label>
+                                                <textarea id="client_testimonial[0][nl_client_testimonial]"
+                                                    name="client_testimonial[{{ $client_testimonial->id }}][nl_client_testimonial]" class="form-control  ">{{ $client_testimonial->nl_client_testimonial }}</textarea><br>
+                                                <div class="form-group">
+                                                    <label for="ffff_image_path_{{ $loop->index }}"> Image</label>
+                                                    @if ($client_testimonial->image_path)
+                                                        <div class="mb-2">
+                                                            <img src="{{ Storage::url($client_testimonial->image_path) }}"
+                                                                alt="FFFF Image" width="100">
+                                                        </div>
+                                                    @endif
+                                                    <input type="file"
+                                                        name="client_testimonial[{{ $client_testimonial->id }}][image_path]"
+                                                        id="ffff_image_path_{{ $loop->index }}" class="form-control"
+                                                        accept="image/*">
+                                                </div>
+                                                <button type="button" class="delete-client_testimoniall">Delete
+                                                    Client Testimoniall </button>
+
+                                            </div>
+                                            <br>
+                                        @endforeach
+                                    </div>
+*/

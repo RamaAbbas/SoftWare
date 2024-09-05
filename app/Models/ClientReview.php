@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Client extends Model
+class ClientReview extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
 
-    protected $table = "clients";
+    protected $table = "client_review";
 
     public function project()
     {

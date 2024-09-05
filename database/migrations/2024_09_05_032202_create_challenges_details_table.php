@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('challenges_details', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email')->unique()->nullable();
-            $table->string('phone_number')->unique()->nullable();
+            $table->foreignId('achievement_id')->references('id')->on('challenges')->onUpdate('cascade')->onDelete('cascade');
+            $table->text('en_step')->nullable();
+            $table->text('nl_step')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('challenges_details');
     }
 };

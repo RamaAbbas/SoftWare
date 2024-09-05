@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('project_technologies', function (Blueprint $table) {
+        Schema::create('achievement_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->references('id')->on('projects')->onUpdate('cascade')->onDelete('cascade');
-            $table->text('tools');
+            $table->foreignId('achievement_id')->references('id')->on('achievements')->onUpdate('cascade')->onDelete('cascade');
+            $table->text('en_step')->nullable();
+            $table->text('nl_step')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('project_technologies');
+        Schema::dropIfExists('achievement_details');
     }
 };

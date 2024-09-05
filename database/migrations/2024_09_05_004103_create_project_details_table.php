@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('challenges', function (Blueprint $table) {
+        Schema::create('project_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->references('id')->on('projects')->onUpdate('cascade')->onDelete('cascade');
-            $table->text('en_challenge_name')->nullable();
-            $table->text('nl_challenge_name')->nullable();
-            $table->text('en_challenge_description')->nullable();
-            $table->text('nl_challenge_description')->nullable();
+            $table->text('step')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('challenges');
+        Schema::dropIfExists('project_details');
     }
 };

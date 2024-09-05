@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('achievements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->references('id')->on('projects')->onUpdate('cascade')->onDelete('cascade');
-            $table->text('en_achievement_name')->nullable();
-            $table->text('nl_achievement_name')->nullable();
-            $table->text('en_how_we_achieved_it')->nullable();
-            $table->text('nl_how_we_achieved_it')->nullable();
+            $table->string('en_title')->nullable();
+            $table->string('nl_title')->nullable();
+            $table->string('en_sub_title')->nullable();
+            $table->string('nl_sub_title')->nullable();
+            $table->text('en_description')->nullable();
+            $table->text('nl_description')->nullable();
             $table->timestamps();
         });
     }

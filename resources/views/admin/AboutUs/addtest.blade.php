@@ -243,7 +243,7 @@
                                 <div class="form-group row">
                                     <div id="steps_processs">
                                         <div class="steps_process">
-                                            <label for="steps_processs[0][step_no]">Dutch Name:</label>
+                                            <label for="steps_processs[0][step_no]">Step No:</label>
                                             <input type="number" id="steps_processs[0][step_no]"
                                                 name="steps_processs[0][step_no]" class="form-control  "><br>
 

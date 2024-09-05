@@ -15,33 +15,39 @@ class Project extends Model
 
     protected $table = "projects";
 
-    public function client(): BelongsTo
-    {
-        return $this->belongsTo(Client::class, 'client_id', 'id');
-    }
 
     public function project_images(): HasMany
     {
         return $this->hasMany(ProjectImage::class, 'project_id', 'id');
     }
-    public function project_live_links(): HasMany
+
+    public function project_details(): HasMany
     {
-        return $this->hasMany(ProjectLiveLinks::class, 'project_id', 'id');
+        return $this->hasMany(ProjectDetail::class, 'project_id', 'id');
     }
-    public function project_technologies(): HasMany
+    public function project_services(): HasMany
     {
-        return $this->hasMany(ProjectTechnology::class, 'project_id', 'id');
+        return $this->hasMany(ProjectService::class, 'project_id', 'id');
     }
-    public function service_categories(): HasMany
-    {
-        return $this->hasMany(ServiceCategory::class, 'project_id', 'id');
-    }
+
     public function achievements(): HasMany
     {
         return $this->hasMany(Achievement::class, 'project_id', 'id');
     }
+    public function results(): HasMany
+    {
+        return $this->hasMany(Result::class, 'project_id', 'id');
+    }
     public function challenges(): HasMany
     {
         return $this->hasMany(Challenge::class, 'project_id', 'id');
+    }
+    public function client()
+    {
+        return $this->hasOne(Client::class);
+    }
+    public function client_review()
+    {
+        return $this->hasOne(ClientReview::class);
     }
 }

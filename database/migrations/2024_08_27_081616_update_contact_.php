@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->dropColumn('email');
-            $table->dropColumn('mobile_number');
+           // $table->dropColumn('email');
+          //  $table->dropColumn('mobile_number');
 
-            $table->string('email')->nullable()->after('last_name');
-            $table->string('mobile_number')->nullable()->after('email');
+           // $table->string('email')->nullable()->after('last_name');
+          //  $table->string('mobile_number')->nullable()->after('email');
         });
     }
 
@@ -26,10 +26,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->string('email');
-            $table->string('mobile_number');
-            $table->dropColumn('email');
-            $table->dropColumn('mobile_number');
+           // $table->string('email');
+           // $table->string('mobile_number');
+         //   $table->dropColumn('email');
+         //   $table->dropColumn('mobile_number');
         });
     }
 };

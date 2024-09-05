@@ -49,17 +49,24 @@
                                         <option value="">Select Existing Client</option>
                                         @foreach ($clients as $client)
                                             <option value="{{ $client->id }}">
-                                                {{ $client->first_name }},{{ $client->last_name }}</option>
+                                                {{ $client->full_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <label for="">Or Add New Client</label><br>
                                 <div class="form-group row">
-
+                                    <label for="new_client_name">English Title</label>
+                                    <input type="text" class="form-control" id="new_client_name" name="c_en_title">
+                                    <label for="new_client_name">Dutch Title</label>
+                                    <input type="text" class="form-control" id="new_client_name8" name="c_nl_title">
+                                    <label for="new_client_name">English Sub Title</label>
+                                    <input type="text" class="form-control" id="new_client_name7" name="c_en_sub_title">
+                                    <label for="new_client_name">Dutch Sub Title</label>
+                                    <input type="text" class="form-control" id="new_client_name6" name="c_nl_sub_title">
                                     <label for="new_client_name">First Name</label>
-                                    <input type="text" class="form-control" id="new_client_name" name="first_name">
-                                    <label for="new_client_name2">Last Name</label>
-                                    <input type="text" class="form-control" id="new_client_name2" name="last_name">
+                                    <input type="text" class="form-control" id="new_client_name5" name="full_name">
+                                    <label for="new_client_name2">Position</label>
+                                    <input type="text" class="form-control" id="new_client_name2" name="position">
                                     <label for="new_client_name3">Email</label>
                                     <input type="text" class="form-control" id="new_client_name3" name="email">
                                     <label for="new_client_name4">Phone Number</label>
@@ -84,6 +91,26 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="name">Project
+                                        ٍSub Title
+                                        in English <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 ">
+                                        <input type="text" id="name" required="required" class="form-control  "
+                                            name="en_sub_title">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="name">Project Sub
+                                        Title
+                                        in Dutch <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 ">
+                                        <input type="text" id="name" required="required" class="form-control  "
+                                            name="nl_sub_title">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label class="col-form-label col-md-3 col-sm-3 label-align"
                                         for="description">Description in English
                                         <span class="required">*</span>
@@ -104,39 +131,62 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="description">Result
-                                        in English
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="description">Link
                                         <span class="required">*</span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input type="text" id="description" required="required" class="form-control "
-                                            name="en_result">
+                                            name="link">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="description">Result
-                                        in Dutch
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="description">Duration
                                         <span class="required">*</span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input type="text" id="description" required="required" class="form-control "
-                                            name="nl_result">
+                                            name="duration">
                                     </div>
                                 </div>
+                                <h2 class="StepTitle">More Details For Project</h2>
+
                                 <div class="form-group row">
-                                    <label for="image">Project Image</label>
-                                    <input type="file" name="image_path[]" accept="image/*" multiple >
+                                    <div id="project_details">
+                                        <div class="project_detail">
+                                            <label for="project_details[0][en_step]">English Name:</label>
+                                            <input type="text" id="project_details[0][en_name]"
+                                                name="project_details[0][en_step]" class="form-control  "><br>
+
+                                            <label for="project_details[0][nl_step]">Dutch Name:</label>
+                                            <input type="text" id="project_details[0][nl_step]"
+                                                name="project_details[0][nl_step]" class="form-control  "><br>
+
+                                            <br>
+
+                                            <button type="button" class="delete-detail">Delete
+                                                Detail </button>
+                                        </div>
+                                        <br>
+                                    </div>
+
+
                                 </div>
-                                <div class="form-group " id="date-of-birthday-id">
-                                    <label for="birthday_date">Begin Date</label>
-                                    <input type="date" name="begin_date" id="birthday_date" class="form-control"
-                                        value="">
+
+                                <button type="button" id="add-more-details">Add More Details</button>
+
+                                <br>
+                                <div class="clearfix"></div>
+                                <div class="form-group row">
+                                    <label for="image">Project Main Image</label>
+                                    <input type="file" name="main_image" accept="image/*">
                                 </div>
-                                <div class="form-group" id="date-of-birthday-id">
-                                    <label for="birthday_date">End Date</label>
-                                    <input type="date" name="end_date" id="birthday_date" class="form-control"
-                                        value="">
+                                <br>
+                                <div class="clearfix"></div>
+                                <div class="form-group row">
+                                    <label for="image">Project Images</label>
+                                    <input type="file" name="image_path[]" accept="image/*" multiple>
                                 </div>
+
                                 <br>
                                 <h2>Select The Services </h2>
                                 @foreach ($services as $service)
@@ -149,104 +199,242 @@
                                 @endforeach
                                 <br>
                                 <h2 class="StepTitle">Achievements</h2>
-                                <input type="hidden" name="achievements[]">
 
                                 <div class="form-group row">
-                                    <div id="achievements">
-                                        <div class="achievement">
-                                            <label for="achievements[0][en_achievement_name]">English Name:</label>
-                                            <input type="text" id="requirement[0][en_name]"
-                                                name="achievements[0][en_achievement_name]" class="form-control  "><br>
+                                    <div id="achievementss-container">
+                                        <h4>Achievements</h4>
 
-                                            <label for="achievements[0][nl_achievement_name]">Dutch Name:</label>
-                                            <input type="text" id="achievements[0][nl_achievement_name]"
-                                                name="achievements[0][nl_achievement_name]" class="form-control  "><br>
+                                        <div class="result-block">
+                                            <div class="form-group">
+                                                <label for="result_name">En Title</label>
+                                                <input type="text" name="achievements[0][en_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">Nl Title</label>
+                                                <input type="text" name="achievements[0][nl_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">En Sub Title</label>
+                                                <input type="text" name="achievements[0][en_sub_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">Nl Sub Title</label>
+                                                <input type="text" name="achievements[0][nl_sub_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">En Description</label>
+                                                <input type="text" name="achievements[0][en_description]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">Nl Description</label>
+                                                <input type="text" name="achievements[0][nl_description]"
+                                                    class="form-control" >
+                                            </div>
 
-                                            <br>
+                                            <div id="achievements-container">
+                                                <h4>Result Details</h4>
 
-                                            <button type="button" class="delete-achievement">Delete
-                                                Achievement </button>
+                                                <div class="a_detail-block">
+                                                    <div class="form-group">
+                                                        <label for="detail_name">Detail English Name</label>
+                                                        <input type="text"
+                                                            name="achievements[0][achievement_details][0][en_step]"
+                                                            class="form-control" >
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="detail_name">Detail Dutch Name</label>
+                                                        <input type="text"
+                                                            name="achievements[0][achievement_details][0][nl_step]"
+                                                            class="form-control" >
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-secondary" id="add-a-detail">Add
+                                                Detail</button>
+
                                         </div>
-                                        <br>
                                     </div>
 
 
                                 </div>
-
-                                <button type="button" id="add-more-achievements">Add More Achievements</button>
-
                                 <br>
                                 <h2 class="StepTitle">Challenges</h2>
+
                                 <div class="form-group row">
+                                    <div id="achievementss-container">
+                                        <h4>Challenges</h4>
 
-                                    <div id="challenges">
-                                        <div class="challenge">
-                                            <label for="challenges[0][en_challenge_name]">English Name:</label>
-                                            <input type="text" id="challenges[0][en_challenge_name]"
-                                                name="challenges[0][en_challenge_name]" class="form-control  "><br>
+                                        <div class="result-block">
+                                            <div class="form-group">
+                                                <label for="result_name">En Title</label>
+                                                <input type="text" name="challenges[0][en_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">Nl Title</label>
+                                                <input type="text" name="challenges[0][nl_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">En Sub Title</label>
+                                                <input type="text" name="challenges[0][en_sub_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">Nl Sub Title</label>
+                                                <input type="text" name="challenges[0][nl_sub_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">En Description</label>
+                                                <input type="text" name="challenges[0][en_description]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">Nl Description</label>
+                                                <input type="text" name="challenges[0][nl_description]"
+                                                    class="form-control" >
+                                            </div>
 
-                                            <label for="challenges[0][nl_challenge_name]">Dutch Name:</label>
-                                            <input type="text" id="challenges[0][nl_challenge_name]"
-                                                name="challenges[0][nl_challenge_name]" class="form-control  "><br>
-                                            <br>
-                                            <label for="challenges[0][en_challenge_description]">English
-                                                Description:</label>
-                                            <textarea id="challenges[0][en_challenge_description]" name="challenges[0][en_challenge_description]"
-                                                class="form-control  "></textarea><br>
+                                            <div id="challenges-container">
+                                                <h4>Challenge Details</h4>
 
-                                            <label for="service_benefits[0][nl_challenge_description]">Dutch
-                                                Description:</label>
-                                            <textarea id="challenges[0][nl_challenge_description]" name="challenges[0][nl_challenge_description]"
-                                                class="form-control  "></textarea><br>
-                                            <button type="button" class="delete-challenge">Delete
-                                                Challenge</button>
+                                                <div class="c_detail-block">
+                                                    <div class="form-group">
+                                                        <label for="detail_name">Detail English Name</label>
+                                                        <input type="text"
+                                                            name="challenges[0][challenges_details][0][en_step]"
+                                                            class="form-control" >
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="detail_name">Detail Dutch Name</label>
+                                                        <input type="text"
+                                                            name="challenges[0][challenges_details][0][nl_step]"
+                                                            class="form-control" >
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-secondary" id="add-c-detail">Add
+                                                Detail</button>
 
                                         </div>
-                                        <br>
                                     </div>
+
+
                                 </div>
-                                <button type="button" id="add-more-challenges">Add More challenges</button>
+                                <h2 class="StepTitle">Results</h2>
+
+                                <div class="form-group row">
+                                    <div id="result-container">
+                                        <h4>Results</h4>
+
+                                        <div class="result-block">
+                                            <div class="form-group">
+                                                <label for="result_name">En Title</label>
+                                                <input type="text" name="results[0][en_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">Nl Title</label>
+                                                <input type="text" name="results[0][nl_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">En Sub Title</label>
+                                                <input type="text" name="results[0][en_sub_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">Nl Sub Title</label>
+                                                <input type="text" name="results[0][nl_sub_title]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">En Description</label>
+                                                <input type="text" name="results[0][en_description]"
+                                                    class="form-control" >
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="result_name">Nl Description</label>
+                                                <input type="text" name="results[0][nl_description]"
+                                                    class="form-control" >
+                                            </div>
+
+                                            <div id="details-container">
+                                                <h4>Result Details</h4>
+
+                                                <div class="detail-block">
+                                                    <div class="form-group">
+                                                        <label for="detail_name">Detail English Name</label>
+                                                        <input type="text"
+                                                            name="results[0][result_details][0][en_step]"
+                                                            class="form-control" >
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="detail_name">Detail Dutch Name</label>
+                                                        <input type="text"
+                                                            name="results[0][result_details][0][nl_step]"
+                                                            class="form-control" >
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" class="btn btn-secondary" id="add-detail">Add
+                                                Detail</button>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+
 
                                 <br>
-                                <h2 class="StepTitle">Project Live Links </h2>
-                                <div class="form-group row">
-
-                                    <div id="project_live_links">
-                                        <div class="project_live_link">
-                                            <label for="project_live_links[0][link]">Link
-                                            </label>
-                                            <input type="text" id="project_live_links[0][link]"
-                                                name="project_live_links[0][link]" class="form-control "><br>
-
-
-                                            <button type="button" class="delete-link">Delete
-                                                Link</button>
-
-                                        </div>
-                                        <br>
-                                    </div>
+                                <h2 class="StepTitle">Client Review</h2>
+                                <div class="form-group">
+                                    <label for="result_name">En Title</label>
+                                    <input type="text" name="r_en_title" class="form-control"
+                                       >
                                 </div>
-                                <button type="button" id="add-more-links">Add More Links</button>
-                                <br>
-                                <h2 class="StepTitle">Project Technology</h2>
-                                <div class="form-group row">
-
-                                    <div id="project_technologies">
-                                        <div class="project_technology">
-                                            <label for="project_technologies[0][tools]">Link
-                                            </label>
-                                            <input type="text" id="project_technologies[0][tools]"
-                                                name="project_technologies[0][tools]" class="form-control "><br>
-
-
-                                            <button type="button" class="delete-tool">Delete
-                                                Tool</button>
-
-                                        </div>
-                                        <br>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="result_name">Nl  Title</label>
+                                    <input type="text" name="r_nl_title" class="form-control"
+                                       >
                                 </div>
-                                <button type="button" id="add-more-tools">Add More Tools</button>
+                                <div class="form-group">
+                                    <label for="result_name">En Sub Title</label>
+                                    <input type="text" name="r_en_sub_title" class="form-control"
+                                        >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Nl Sub Title</label>
+                                    <input type="text" name="r_nl_sub_title" class="form-control"
+                                       >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">En Review</label>
+                                    <input type="text" name="en_review" class="form-control"
+                                        >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Nl Review</label>
+                                    <input type="text" name="nl_review" class="form-control"
+                                        >
+                                </div>
+                                <div class="form-group row">
+                                    <label for="image">Client Image</label>
+                                    <input type="file" name="image_src" accept="image/*">
+                                </div>
+
 
 
                                 <div class="ln_solid"></div>
@@ -268,113 +456,102 @@
 
 
     <script>
-        document.getElementById('add-more-achievements').addEventListener('click', function() {
-            var achievementsDiv = document.getElementById('achievements');
+        ////////////////////////Results
+        let detailIndex = 1;
+        document.getElementById('add-detail').addEventListener('click', function() {
+            let detailsContainer = document.getElementById('details-container');
+            let newDetailBlock = document.querySelector('.detail-block').cloneNode(true);
+
+            newDetailBlock.querySelectorAll('input').forEach(input => {
+                input.name = input.name.replace(/\[0\]\[result_details\]\[0\]/, '[0][result_details][' +
+                    detailIndex + ']');
+                input.value = '';
+            });
+
+            detailsContainer.appendChild(newDetailBlock);
+
+            detailIndex++;
+        });
+        ///////////////////////////////////////Achivement
+        let detailIndex1 = 1;
+        document.getElementById('add-c-detail').addEventListener('click', function() {
+            let detailsContainer = document.getElementById('challenges-container');
+            let newDetailBlock = document.querySelector('.c_detail-block').cloneNode(true);
+
+            newDetailBlock.querySelectorAll('input').forEach(input => {
+                input.name = input.name.replace(/\[0\]\[challenges_details\]\[0\]/,
+                    '[0][challenges_details][' + detailIndex1 + ']');
+                input.value = '';
+            });
+
+            detailsContainer.appendChild(newDetailBlock);
+
+            detailIndex1++;
+        });
+
+
+        let detailIndex2 = 1;
+        document.getElementById('add-a-detail').addEventListener('click', function() {
+            let detailsContainer = document.getElementById('achievements-container');
+            let newDetailBlock = document.querySelector('.a_detail-block').cloneNode(true);
+
+            newDetailBlock.querySelectorAll('input').forEach(input => {
+                input.name = input.name.replace(/\[0\]\[achievement_details\]\[0\]/,
+                    '[0][achievement_details][' + detailIndex2 + ']');
+                input.value = '';
+            });
+
+            detailsContainer.appendChild(newDetailBlock);
+
+            detailIndex2++;
+        });
+
+
+        ///////////////////////////////////
+        document.getElementById('add-more-details').addEventListener('click', function() {
+            var achievementsDiv = document.getElementById('project_details');
             var index = achievementsDiv.children.length - 1;
 
             var newachievement = document.createElement('div');
-            newachievement.className = 'achievement';
+            newachievement.className = 'project_detail';
 
             newachievement.innerHTML = `
-            <h6>Achievement ${index+1} </h6>
-                <label for="achievements[${index}][en_achievement_name]">English Name:</label>
-                <input type="text" id="achievements[${index}][en_achievement_name]" name="achievements[${index}][en_achievement_name]"  class="form-control  "><br>
+            <h6>Detail ${index+1} </h6>
+                <label for="project_details[${index}][en_step]">English Name:</label>
+                <input type="text" id="achievements[${index}][en_achievement_name]" name="project_details[${index}][en_step]"  class="form-control  "><br>
 
                 <label for="achievements[${index}][nl_achievement_name]">Dutch Name:</label>
-                <input type="text" id="achievements[${index}][nl_achievement_name]" name="achievements[${index}][nl_achievement_name]"  class="form-control  "><br>
+                <input type="text" id="achievements[${index}][nl_achievement_name]" name="project_details[${index}][nl_step]"  class="form-control  "><br>
 
-                <button type="button" class="delete-achievement">Delete achievement</button>
+                <button type="button" class="delete-detail">Delete Detail</button>
             `;
 
             achievementsDiv.appendChild(newachievement);
         });
-
-        document.getElementById('add-more-challenges').addEventListener('click', function() {
-            var challengesDiv = document.getElementById('challenges');
-            var index = challengesDiv.children.length - 1;
-
-            var newchallenge = document.createElement('div');
-            newchallenge.className = 'challenge';
-
-            newchallenge.innerHTML = `
-            <h6>Challenges ${index+1} </h6>
-                <label for="challenges[${index}][en_challenge_name]">English Name:</label>
-                <input type="text" id="challenges[${index}][en_challenge_name]" name="challenges[${index}][en_challenge_name]"  class="form-control  "><br>
-
-                <label for="challenges[${index}][nl_challenge_name]">Dutch Name:</label>
-                <input type="text" id="challenges[${index}][nl_challenge_name]" name="challenges[${index}][nl_challenge_name]"  class="form-control  "><br>
-
-                <label for="challenges[${index}][en_challenge_description]">English Description:</label>
-                <textarea id="challenges[${index}][en_challenge_description]" name="challenges[${index}][en_challenge_description]"  class="form-control  "></textarea><br>
-
-                <label for="challenges[${index}][nl_challenge_description]">Dutch Description:</label>
-                <textarea id="challenges[${index}][nl_challenge_description]" name="challenges[${index}][nl_challenge_description]"  class="form-control  "></textarea><br>
-                <button type="button" class="delete-challenge">Delete Challenges</button>
-            `;
-
-            challengesDiv.appendChild(newchallenge);
-        });
-
-
-
-
-
-
-        document.getElementById('add-more-links').addEventListener('click', function() {
-            var project_live_linksDiv = document.getElementById('project_live_links');
-            var index = project_live_linksDiv.children.length - 1;
-
-            var newproject_live_link = document.createElement('div');
-            newproject_live_link.className = 'project_live_link';
-
-            newproject_live_link.innerHTML = `
-            <h6>Project Live Links ${index+1} </h6>
-                <label for="project_live_links[${index}][link]">Link</label>
-                <input type="text" id="project_live_links[${index}][link]" name="project_live_links[${index}][link]" class="form-control  "><br>
-                <button type="button" class="delete-link">Delete Project Live Links</button>
-            `;
-
-            project_live_linksDiv.appendChild(newproject_live_link);
-        });
         document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('delete-link')) {
-                event.target.closest('.project_live_link').remove();
+            if (event.target && event.target.classList.contains('delete-detail')) {
+                event.target.closest('.project_detail').remove();
             }
         });
+
+
+
+
+
+
+
+
+
+
         /////////
-        document.getElementById('add-more-tools').addEventListener('click', function() {
-            var project_technologiesDiv = document.getElementById('project_technologies');
-            var index = project_technologiesDiv.children.length - 1;
-
-            var newproject_technology = document.createElement('div');
-            newproject_technology.className = 'project_technology';
-
-            newproject_technology.innerHTML = `
-            <h6>Project Technologies ${index+1} </h6>
-                <label for="project_technologies[${index}][tools]">Tool</label>
-                <input type="text" id="project_technologies[${index}][tools]" name="project_technologies[${index}][tools]" class="form-control  "><br>
-                <button type="button" class="delete-tool">Delete Tool</button>
-            `;
-
-            project_technologiesDiv.appendChild(newproject_technology);
-        });
-        document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('delete-tool')) {
-                event.target.closest('.project_technology').remove();
-            }
-        });
-        /////////////////////////
+        ////////////////
 
         document.addEventListener('click', function(event) {
             if (event.target && event.target.classList.contains('delete-achievement')) {
                 event.target.closest('.achievement').remove();
             }
         });
-        document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('delete-challenge')) {
-                event.target.closest('.challenge').remove();
-            }
-        });
+
 
 
         ////////////////////
@@ -384,6 +561,10 @@
             const newClientInput2 = document.getElementById('new_client_name2');
             const newClientInput3 = document.getElementById('new_client_name3');
             const newClientInput4 = document.getElementById('new_client_name4');
+            const newClientInput5 = document.getElementById('new_client_name5');
+            const newClientInput6 = document.getElementById('new_client_name6');
+            const newClientInput7 = document.getElementById('new_client_name7');
+            const newClientInput8 = document.getElementById('new_client_name8');
 
             clientSelect.addEventListener('change', function() {
                 if (clientSelect.value) {
@@ -395,11 +576,23 @@
                     newClientInput3.value = '';
                     newClientInput4.disabled = true;
                     newClientInput4.value = '';
+                    newClientInput5.disabled = true;
+                    newClientInput5.value = '';
+                    newClientInput6.disabled = true;
+                    newClientInput6.value = '';
+                    newClientInput7.disabled = true;
+                    newClientInput7.value = '';
+                    newClientInput8.disabled = true;
+                    newClientInput8.value = '';
                 } else {
                     newClientInput.disabled = false;
                     newClientInput2.disabled = false;
                     newClientInput3.disabled = false;
                     newClientInput4.disabled = false;
+                    newClientInput5.disabled = false;
+                    newClientInput6.disabled = false;
+                    newClientInput7.disabled = false;
+                    newClientInput8.disabled = false;
                 }
             });
 

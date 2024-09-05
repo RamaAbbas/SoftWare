@@ -11,11 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('service_categories', function (Blueprint $table) {
+        Schema::create('client_review', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->references('id')->on('projects')->onUpdate('cascade')->onDelete('cascade');
-            $table->text('en_service_name');
-            $table->text('nl_service_name');
+            $table->string('en_title')->nullable();
+            $table->string('nl_title')->nullable();
+            $table->string('en_sub_title')->nullable();
+            $table->string('nl_sub_title')->nullable();
+            $table->text('image_src')->nullable();
+            $table->text('en_review')->nullable();
+            $table->text('nl_review')->nullable();
+
+
             $table->timestamps();
         });
     }
@@ -25,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('service_categories');
+        Schema::dropIfExists('client_review');
     }
 };

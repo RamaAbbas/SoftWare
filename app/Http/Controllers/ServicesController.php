@@ -432,12 +432,57 @@ class ServicesController extends Controller
                         $service->service_benefits()->create($relatedData);
                     }
                 }
-                ClientTestimonialService::where('service_id', $service->id)->delete();
+              /*  ClientTestimonialService::where('service_id', $service->id)->delete();
                 if (isset($validatedData['client_testimonial'])) {
                     foreach ($validatedData['client_testimonial'] as $relatedData) {
                         $service->client_testimonial()->create($relatedData);
                     }
+                }*/
+                ////////////////////////////////////////////////
+                if (isset($validatedData['client_testimonial'])) {
+                    foreach ($validatedData['client_testimonial'] as $index => $ffffData) {
+                        if (isset($ffffData['id'])) {
+                            if (isset($ffffData['_delete']) && $ffffData['_delete'] == 1) {
+
+                                $ffff = ClientTestimonialService::findOrFail($ffffData['id']);
+                                if ($ffff->image_path) {
+                                    Storage::disk('public')->delete($ffff->image_path);
+                                }
+                                $ffff->delete();
+                            } else {
+
+                                $ffff = ClientTestimonialService::findOrFail($ffffData['id']);
+                                $ffff->en_client_testimonial = $ffffData['en_client_testimonial'];
+                                $ffff->nl_client_testimonial = $ffffData['nl_client_testimonial'];
+
+
+                                if ($request->hasFile("client_testimonial.$index.image_src")) {
+                                    if ($ffff->image_path) {
+                                        Storage::disk('public')->delete($ffff->image_path);
+                                    }
+                                    $ffffImagePath = $request->file("client_testimonial.$index.image_src")->store('Client_images', 'public');
+                                    $ffff->image_path = $ffffImagePath;
+                                }
+
+                                $ffff->save();
+                            }
+                        } else {
+
+                            $ffffImagePath = null;
+                            if ($request->hasFile("client_testimonial.$index.image_src")) {
+                                $ffffImagePath = $request->file("client_testimonial.$index.image_src")->store('Client_images', 'public');
+                            }
+
+                            $service->client_testimonial()->create([
+                                'client_name' => $ffffData['client_name'],
+                                'en_client_testimonial' => $ffffData['en_client_testimonial'],
+                                'nl_client_testimonial' => $ffffData['nl_client_testimonial'],
+                                'image_src' => $ffffImagePath,
+                            ]);
+                        }
+                    }
                 }
+                ////////////////////////////////////////////////
                 HowItWork::where('service_id', $service->id)->delete();
                 if (!empty($validatedData['service_processs'])) {
                     foreach ($validatedData['service_processs'] as $service_processsdata) {

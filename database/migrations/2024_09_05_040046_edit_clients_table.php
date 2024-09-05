@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->dropColumn('nl_escription');
-            $table->text('nl_description')->nullable()->after('en_description');
+        Schema::table('clients', function (Blueprint $table) {
+            $table->foreignId('project_id')->after('id')->references('id')->on('projects')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->text('nl_escription');
-            $table->dropColumn('nl_description');
+        Schema::table('clients', function (Blueprint $table) {
+            $table->dropColumn('project_id');
         });
     }
 };

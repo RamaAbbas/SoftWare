@@ -40,8 +40,8 @@ Route::middleware([SetLocal::class])->group(function () {
 
 
     ////////////////Projects
-    Route::post('/store-project', [ClientController::class, 'store'])->name("project.store");
-    Route::post('/store-project2', [ProjectController::class, 'store']);
+   // Route::post('/store-project', [ClientController::class, 'store'])->name("project.store");
+    Route::post('/store-project', [ProjectController::class, 'store']);
     Route::get('/projects', [ProjectController::class, 'index']);
     Route::get('/project/show/{id}', [ProjectController::class, 'show']);
 
