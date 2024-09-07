@@ -66,11 +66,7 @@
                                                     <br>
                                                     <h3 style="color: rgb(11, 212, 188)">Project Technologies</h3>
                                                     <ul>
-                                                        @foreach ($data['project_technologies'] as $project_technologies)
-                                                            <li style="color: black">
-                                                                <strong>{{ $project_technologies['tools'] }}</strong>&emsp;
-                                                            </li>
-                                                        @endforeach
+
                                                     </ul>
                                                     <br>
                                                     <h3 style="color: rgb(11, 212, 188)">Project Images</h3>
@@ -89,11 +85,7 @@
                                                     <br>
                                                     <h3 style="color: rgb(11, 212, 188)">Project Live Links</h3>
                                                     <ul>
-                                                        @foreach ($data['project_live_links'] as $project_live_links)
-                                                            <li style="color: black">
-                                                                <strong>{{ $project_live_links['link'] }}</strong>&emsp;
-                                                            </li>
-                                                        @endforeach
+
                                                     </ul>
                                                     <br>
 

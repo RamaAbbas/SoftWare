@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Achievement;
 use App\Models\Challenge;
 use App\Models\Client;
+use App\Models\ClientReview;
 use App\Models\Project;
 use App\Models\ProjectImage;
 use App\Models\ProjectLiveLinks;
+use App\Models\ProjectService;
 use App\Models\ProjectTechnology;
 use App\Models\Service;
 use App\Models\ServiceCategory;
@@ -113,11 +115,11 @@ class ProjectController extends Controller
 
         ]);
         if ($validatedDat->fails()) {
-            return response()->json([
+            /*  return response()->json([
                 'success' => 0,
                 'result' => null,
                 'message' => $validatedDat->errors()
-            ], 200);
+            ], 200);*/
 
 
             return redirect()->route('showall.projects')->with('error', $validatedDat->errors());
@@ -301,11 +303,11 @@ class ProjectController extends Controller
 
 
             DB::commit();
-            return response()->json([
+            /* return response()->json([
                 'success' => 1,
                 'result' => $project,
                 'message' => ""
-            ], 200);
+            ], 200);*/
 
             return redirect()->route('showall.projects')->with('sucsess', "Client With His project Stored Sucsessfully");
 
@@ -313,18 +315,37 @@ class ProjectController extends Controller
             //  return redirect()->route('clients.index')->with('success', 'Client created successfully.');
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json([
+            /* return response()->json([
                 'success' => 0,
                 'result' => "",
                 'message' => $e
-            ], 200);
+            ], 200);*/
             return redirect()->route('showall.projects')->with('error', $e);
         }
     }
     public function addproject()
     {
-        $clients = Client::all();
-        $services = Service::all();
+        /*  $clients = DB::table('clients')
+        ->select('id','full_name') // You can select additional fields as needed
+        ->distinct()
+        ->get();*/
+
+        /*  $clients = DB::table('clients')
+            ->select('email', DB::raw('MIN(id) as id'))  // or use MAX(id) as needed
+            ->groupBy('email')
+            ->get();*/
+        $clients = DB::table('clients as u1')
+            ->select('u1.email', 'u1.full_name', 'u1.id')
+            ->join(DB::raw('(SELECT email, MIN(id) as min_id FROM clients GROUP BY email) as u2'), function ($join) {
+                $join->on('u1.id', '=', 'u2.min_id');
+            })
+            ->get();
+        // return $clients;
+        /* $clients = Client::select('email', 'full_name')
+            ->groupBy('email')
+            ->get();*/
+        //Client::all();
+        $services = Service::select('services.*')->distinct()->get();
         return view('admin.Projects.test1', compact('clients', 'services'));
     }
 
@@ -371,6 +392,10 @@ class ProjectController extends Controller
             });
             $data['services'] = $project->project_services->map(function ($service) use ($locale) {
                 return  $locale == 'en' ? $service->en_name : $service->nl_name;
+            });
+
+            $data['images'] = $project->project_images->map(function ($image) use ($locale) {
+                return  asset('storage/' . $image->image_path);
             });
 
             //  $project->en_description : $project->nl_description,
@@ -432,19 +457,7 @@ class ProjectController extends Controller
 
 
 
-            /*if($project->)
-              $data['results'] = $project->results->map(function ($related) use ($locale) {
-                return [
-                    'title' => $locale == 'en' ? $related->en_title : $related->nl_title,
-                    'sub_title' => $locale == 'en' ? $related->en_sub_title : $related->nl_sub_title,
-                    'description' => $locale == 'en' ? $related->en_description : $related->nl_description,
-                    'more_details' => $related->result_details->map(function ($detail) use ($locale) {
-                        return [
-                            'step' => $locale == 'en' ? $detail->en_step : $detail->nl_step,
-                        ];
-                    }),
-                ];
-            });*/
+
             $result = $project->results->first();
             if ($result) {
                 $data['results']['title'] = $locale == 'en' ? $result->en_title : $result->nl_title;
@@ -461,48 +474,15 @@ class ProjectController extends Controller
                 $data['results'] = [];
             }
 
-            //   $data['results']['title'] = $locale == 'en' ? $result->en_title : $result->nl_title;
-            //   $data['results']['sub_title'] = $locale == 'en' ? $result->en_sub_title : $result->nl_sub_title;
-            //  $data['results']['description'] = $locale == 'en' ? $result->en_description : $result->nl_description;
-            /*  $data['results']['more_details'] = $result->result_details->map(function ($detail) use ($locale) {
-                if ($locale == 'en') {
-                    return $detail->en_step;
-                } else {
-                    return $detail->nl_step;
-                }
-            });*/
 
-            //  $data['client_review']['title'] = $locale == 'en' ? $project->client_review['en_title'] : $project->client_review['nl_title'];
-            // $data['client_review']['sub_title'] = $locale == 'en' ?  $project->client_review['en_sub_title'] : $project->client_review['nl_sub_title'];
+            $data['client_review']['title'] = $locale == 'en' ? $project->client_review['en_title'] : $project->client_review['nl_title'];
+            $data['client_review']['sub_title'] = $locale == 'en' ?  $project->client_review['en_sub_title'] : $project->client_review['nl_sub_title'];
             $data['client_review']['client_image'] = asset('storage/' .  $project->client_review['image_src']);
             $data['client_review']['review'] = $locale == 'en' ?  $project->client_review['en_review'] : $project->client_review['nl_review'];
 
 
 
-            /*  $data['project_technologies'] = $project->project_technologies->map(function ($related) use ($locale) {
-                return [
-                    'tools' => $related->tools,
-                ];
-            });
-            $data['project_images'] = $project->project_images->map(function ($related) use ($locale) {
 
-                return [
-                    'image_path' => asset('storage/' . $related->image_path)
-                ];
-            });
-
-            $data['challenges'] = $project->challenges->map(function ($related) use ($locale) {
-                return [
-                    'challenge_name' => $locale == 'en' ? $related->en_challenge_name : $related->nl_challenge_name,
-                    'challenge_description' => $locale == 'en' ? $related->en_challenge_description : $related->nl_challenge_description,
-                ];
-            });
-            $data['project_live_links'] = $project->project_live_links->map(function ($related) use ($locale) {
-                return [
-                    'link' => $related->link,
-                ];
-            });
-*/
 
 
             return response()->json([
@@ -610,12 +590,14 @@ class ProjectController extends Controller
 
     public function edit($id)
     {
-        $project = Project::with('service_categories')->findOrFail($id);
+        $project = Project::with('project_services')->findOrFail($id);
         $client = $project->client()->get();
-        $selectedServiceCategories = $project->service_categories->pluck('id')->toArray();
+        $clientreview = $project->client_review->get();
+          $selectedServiceCategories = $project->project_services->pluck('id')->toArray();
+        $selectedServices = $project->project_services->pluck('en_name')->toArray();
         $services = Service::all();
         if ($project) {
-            return view('admin.Projects.edit', compact('project', 'client', 'services', 'selectedServiceCategories'));
+            return view('admin.Projects.edit', compact('project', 'client', 'services', 'selectedServiceCategories','selectedServices', 'clientreview'));
         } else {
 
             return redirect()->back();
@@ -623,251 +605,264 @@ class ProjectController extends Controller
     }
     public function update(Request $request, $id)
     {
-        if ($request->client_id) {
-            $validatedDat = Validator::make($request->all(), [
-                'en_title' => 'required|string|max:255',
-                'nl_title' => 'required|string|max:255',
-                'en_description' => 'required',
-                'nl_description' => 'required',
-                'en_result' => 'required',
-                'nl_result' => 'required',
-                'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'client_id' => 'required',
-                'begin_date' => 'required|date',
-                'service_ids.*' => 'required',
-                'end_date' => 'required|date|after_or_equal:begin_date',
+
+        $validatedDat = Validator::make($request->all(), [
+            'en_title' => 'required|string|max:255',
+            'nl_title' => 'required|string|max:255',
+            'en_sub_title' => 'nullable|string|max:255',
+            'nl_sub_title' => 'nullable|string|max:255',
+            'en_description' => 'nullable',
+            'nl_description' => 'nullable',
+            'link' => 'nullable',
+            'duration' => 'nullable',
+            'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'main_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_src' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
 
-            ]);
-            $pro = Project::findOrFail($id);
-            if ($validatedDat->fails()) {
-                return redirect()->route('project.edit', $pro->id)->with('error', $validatedDat->errors());
-            }
+        ]);
+        $pro = Project::findOrFail($id);
+        if ($validatedDat->fails()) {
+            return redirect()->route('project.edit', $pro->id)->with('error', $validatedDat->errors());
+        }
 
 
 
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            try {
-                $validatedData = $request->all();
-                $project = Project::findOrFail($id);
-                if ($project) {
-                    $project->en_title = $validatedData['en_title'];
-                    $project->nl_title = $validatedData['nl_title'];
-                    $project->en_description = $validatedData['en_description'];
-                    $project->nl_description = $validatedData['nl_description'];
-                    $project->client_id = $validatedData['client_id'];
-                    $project->begin_date = Carbon::parse($validatedData['begin_date']);
-                    $project->end_date = Carbon::parse($validatedData['end_date']);
-                    $project->en_result = $validatedData['en_result'];
-                    $project->nl_result = $validatedData['nl_result'];
-                    $project->save();
+        try {
+            $validatedData = $request->all();
+            $project = Project::findOrFail($id);
+            /*
+                  'en_title' => $request->en_title,
+                    'nl_title' => $request->nl_title,
+                    'en_sub_title' => $request->en_sub_title,
+                    'nl_sub_title' => $request->nl_sub_title,
+                    'en_description' => $request->en_description,
+                    'nl_description' => $request->nl_description,
+                    'link' => $request->link,
+                    'duration' => $request->duration, */
+            if ($project) {
+                $project->en_title =  $request->en_title;
+                $project->nl_title =  $request->nl_title;
+                $project->en_sub_title =  $request->en_sub_title;
+                $project->nl_sub_title = $request->nl_sub_title;
+                $project->en_description =  $request->en_description;
+                $project->nl_description = $request->nl_description;
+                $project->link = $request->link;
+                $project->duration = $request->duration;
+
+                if ($request->hasFile('main_image')) {
+                    $file = $request->main_image;
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs('Project_images', $filename, 'public');
+                    $project->main_image = $filePath;
+                } else {
+                    // $project->main_image=$project->main_image;
+                }
 
 
-                    ServiceCategory::where('project_id', $project->id)->delete();
-                    if ($request->has('service_ids')) {
-                        foreach ($request->service_ids as $service_id) {
-                            $service = Service::findOrFail($service_id);
-                            $project->service_categories()->create(
-                                [
-                                    'service_id' => $service->id
+                $project->save();
 
-                                ]
-                            );
-                        }
-                    }
-                    Achievement::where('project_id', $project->id)->delete();
 
-                    if (!empty($validatedData['achievements'])) {
-                        foreach ($validatedData['achievements'] as $achievements) {
 
-                            $project->achievements()->create(
-                                [
-                                    'en_achievement_name' => $achievements['en_achievement_name'],
-                                    'nl_achievement_name' => $achievements['nl_achievement_name'],
-
-                                ]
-                            );
-                        }
-                    }
-                    Challenge::where('project_id', $project->id)->delete();
-                    if (!empty($validatedData['challenges'])) {
-                        foreach ($validatedData['challenges'] as $challenges) {
-
-                            $project->challenges()->create(
-                                [
-                                    'en_challenge_name' => $challenges['en_challenge_name'],
-                                    'nl_challenge_name' => $challenges['nl_challenge_name'],
-                                    'en_challenge_description' => $challenges['en_challenge_description'],
-                                    'nl_challenge_description' => $challenges['nl_challenge_description'],
-
-                                ]
-                            );
-                        }
-                    }
-                    ProjectLiveLinks::where('project_id', $project->id)->delete();
-                    if (!empty($validatedData['project_live_links'])) {
-                        foreach ($validatedData['project_live_links'] as $project_live_links) {
-                            $project->project_live_links()->create(
-                                [
-                                    'link' => $project_live_links['link'],
-
-                                ]
-                            );
-                        }
-                    }
-                    ProjectTechnology::where('project_id', $project->id)->delete();
-                    if (!empty($validatedData['project_technologies'])) {
-                        foreach ($validatedData['project_technologies'] as $project_technologies) {
-                            $project->project_technologies()->create(
-                                [
-                                    'tools' => $project_technologies['tools'],
-                                ]
-                            );
-                        }
-                    }
-
-                    //  ProjectImage::where('project_id', $project->id)->delete();
-                    if ($request->has('remove_images')) {
-                        $removeImages = $request->input('remove_images');
-                        foreach ($removeImages as $imageId) {
-                            $image = ProjectImage::findOrFail($imageId);
-
-                            Storage::delete('public/' . $image->path);
-
-                            $image->delete();
-                        }
-                    }
-                    if ($request->hasFile('image_path')) {
-                        foreach ($request->file('image_path') as $file) {
-                            if (!$file->isValid()) {
-                                return "A";
-                            }
-                            $filename = time() . '_' . $file->getClientOriginalName();
-                            $filePath = $file->storeAs('project_images', $filename, 'public');
-                            $project->project_images()->create([
-                                'image_path' => $filePath
+                $existingDetailIds4 = collect($request->input('project_details'))
+                    ->filter(function ($detail) {
+                        return isset($detail['id']);
+                    })
+                    ->pluck('id')
+                    ->toArray();
+                foreach ($request->input('project_details') as $detailData) {
+                    if (isset($detailData['id'])) {
+                        $existingDetail = $project->project_details()->find($detailData['id']);
+                        if ($existingDetail) {
+                            $existingDetail->update([
+                                'en_step' => $detailData['en_step'],
+                                'nl_step' => $detailData['nl_step'],
                             ]);
                         }
+                    } else {
+                        $newDetail = $project->project_details()->create([
+                            'en_step' => $detailData['en_step'],
+                            'nl_step' => $detailData['nl_step'],
+                        ]);
+                        $existingDetailIds4[] = $newDetail->id;
                     }
-
-
-
-                    DB::commit();
-                    return redirect()->route('showall.projects')->with('success', 'Project Updated successfully!');
                 }
-            } catch (\Exception $e) {
-                DB::rollback();
 
-                return redirect()->route('showall.projects')->with('error', 'Project Updated faild!');
-            }
-        } else {
-
-            $validatedDat = Validator::make($request->all(), [
-                'first_name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
-                'email' => 'required|email|unique:clients,email',
-                'phone_number' => 'required',
-                'projects' => 'array',
-                'image_path.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'begin_date' => 'required|date',
-                'end_date' => 'required|date|after_or_equal:begin_date',
+                $project->project_details()->whereNotIn('id', $existingDetailIds4)->delete();
 
 
-            ]);
-            $pro = Project::findOrFail($id);
-            if ($validatedDat->fails()) {
+                ProjectService::where('project_id', $project->id)->delete();
+                if ($request->has('service_ids')) {
+                    foreach ($request->service_ids as $service_id) {
+                        $service = Service::findOrFail($service_id);
+                        $project->project_services()->create(
+                            [
+                                'en_name' => $service->en_name,
+                                'nl_name' => $service->nl_name
 
-                return redirect()->route('project.edit', $pro->id)->with('error', $validatedDat->errors());
-            }
+                            ]
+                        );
+                    }
+                }
 
+                ////////////////////////////////////////////Ach
+                $ach = $project->achievements()->first();
+                $ach->update([
+                    'en_title' => $request->input('achievements.0.en_title'),
+                    'nl_title' => $request->input('achievements.0.nl_title'),
+                    'en_sub_title' => $request->input('achievements.0.en_sub_title'),
+                    'nl_sub_title' => $request->input('achievements.0.nl_sub_title'),
+                    'en_description' => $request->input('achievements.0.en_description'),
+                    'nl_description' => $request->input('achievements.0.nl_description'),
 
-
-            DB::beginTransaction();
-
-            try {
-                $validatedData = $request->all();
-
-                $client = Client::create([
-                    'first_name' => $validatedData['first_name'],
-                    'last_name' => $validatedData['last_name'],
-                    'email' => $validatedData['email'],
-                    'phone_number' => $validatedData['phone_number'],
                 ]);
 
-                //    foreach ($validatedData['projects'] as $projectData) {
-                $project = $client->projects()->create([
-                    'client_id' => $client->id,
-                    'en_title' => $validatedData['en_title'],
-                    'nl_title' => $validatedData['nl_title'],
-                    'en_description' => $validatedData['en_description'],
-                    'nl_description' => $validatedData['nl_description'],
-                    'begin_date' => Carbon::parse($validatedData['begin_date']),
-                    'end_date' => Carbon::parse($validatedData['end_date']),
-                    'en_result' => $validatedData['en_result'],
-                    'nl_result' => $validatedData['nl_result'],
+                $existingDetails1 = collect($request->input('achievements.0.achievement_details'));
+                $existingDetailIds3 = collect($request->input('achievements.0.achievement_details'))
+                    ->filter(function ($detail) {
+                        return isset($detail['id']);
+                    })
+                    ->pluck('id')
+                    ->toArray();
+
+
+                foreach ($existingDetails1 as $index => $detailData) {
+                    if (isset($detailData['id'])) {
+
+                        $resultDetail = $ach->achievement_details()->find($detailData['id']);
+                        $resultDetail->update([
+                            'en_step' => $detailData['en_step'],
+                            'nl_step' => $detailData['nl_step'],
+                        ]);
+                    } else {
+
+
+                        $newDetail = $ach->achievement_details()->create([
+                            'en_step' => $detailData['en_step'],
+                            'nl_step' => $detailData['nl_step'],
+                        ]);
+                        $existingDetailIds3[] = $newDetail->id;
+                    }
+                }
+                $actDetailsToDelete = $ach->achievement_details()->whereNotIn('id', $existingDetailIds3)->get();
+                foreach ($actDetailsToDelete as $detail) {
+                    $detail->delete();
+                }
+
+
+
+                ////////////////////Cha
+                $cha = $project->challenges()->first();
+                $cha->update([
+                    'en_title' => $request->input('challenges.0.en_title'),
+                    'nl_title' => $request->input('challenges.0.nl_title'),
+                    'en_sub_title' => $request->input('challenges.0.en_sub_title'),
+                    'nl_sub_title' => $request->input('challenges.0.nl_sub_title'),
+                    'en_description' => $request->input('challenges.0.en_description'),
+                    'nl_description' => $request->input('challenges.0.nl_description'),
                 ]);
 
-                if (!empty($validatedData['service_categories'])) {
-                    foreach ($validatedData['service_categories'] as $service_categories) {
+                $existingDetails2 = collect($request->input('challenges.0.challenges_details'));
+                // $existingIds2 = $existingDetails2->pluck('id')->filter();
+                $existingDetailIds2 = collect($request->input('challenges.0.challenges_details'))
+                    ->filter(function ($detail) {
+                        // Only keep items that have an ID (existing details)
+                        return isset($detail['id']);
+                    })
+                    ->pluck('id')
+                    ->toArray();
 
-                        $project->service_categories()->create(
-                            [
-                                'service_id' => $service_categories['service_id']
 
-                            ]
-                        );
+                foreach ($existingDetails2 as $index => $detailData) {
+                    if (isset($detailData['id'])) {
+
+                        $resultDetail = $cha->challenges_details()->find($detailData['id']);
+                        $resultDetail->update([
+                            'en_step' => $detailData['en_step'],
+                            'nl_step' => $detailData['nl_step'],
+                        ]);
+                    } else {
+
+                        $newDetail =  $cha->challenges_details()->create([
+                            'en_step' => $detailData['en_step'],
+                            'nl_step' => $detailData['nl_step'],
+                        ]);
+                        $existingDetailIds2[] = $newDetail->id;
                     }
                 }
-
-                if (!empty($validatedData['achievements'])) {
-                    foreach ($validatedData['achievements'] as $achievements) {
-
-                        $project->achievements()->create(
-                            [
-                                'en_achievement_name' => $achievements['en_achievement_name'],
-                                'nl_achievement_name' => $achievements['nl_achievement_name'],
-
-                            ]
-                        );
-                    }
+                $resultDetailsToDelete2 = $cha->challenges_details()->whereNotIn('id', $existingDetailIds2)->get();
+                foreach ($resultDetailsToDelete2 as $detail) {
+                    $detail->delete();
                 }
 
-                if (!empty($validatedData['challenges'])) {
-                    foreach ($validatedData['challenges'] as $challenges) {
+                //////////////////////////////////Res
+                $result = $project->results()->first();
+                $result->update([
+                    'en_title' => $request->input('results.0.en_title'),
+                    'nl_title' => $request->input('results.0.nl_title'),
+                    'en_sub_title' => $request->input('results.0.en_sub_title'),
+                    'nl_sub_title' => $request->input('results.0.nl_sub_title'),
+                    'en_description' => $request->input('results.0.en_description'),
+                    'nl_description' => $request->input('results.0.nl_description'),
+                ]);
 
-                        $project->challenges()->create(
-                            [
-                                'en_challenge_name' => $challenges['en_challenge_name'],
-                                'nl_challenge_name' => $challenges['nl_challenge_name'],
-                                'en_challenge_description' => $challenges['en_challenge_description'],
-                                'nl_challenge_description' => $challenges['nl_challenge_description'],
+                $existingDetails = collect($request->input('results.0.result_details'));
+                // $existingIds = $existingDetails->pluck('id')->filter();
+                $existingDetailIds = collect($request->input('results.0.result_details'))
+                    ->filter(function ($detail) {
+                        // Only keep items that have an ID (existing details)
+                        return isset($detail['id']);
+                    })
+                    ->pluck('id')
+                    ->toArray();
 
-                            ]
-                        );
+                foreach ($existingDetails as $index => $detailData) {
+                    if (isset($detailData['id'])) {
+
+                        $resultDetail = $result->result_details()->find($detailData['id']);
+                        $resultDetail->update([
+                            'en_step' => $detailData['en_step'],
+                            'nl_step' => $detailData['nl_step'],
+                        ]);
+                    } else {
+
+                        $newDetail = $result->result_details()->create([
+                            'en_step' => $detailData['en_step'],
+                            'nl_step' => $detailData['nl_step'],
+                        ]);
+                        $existingDetailIds[] = $newDetail->id;
                     }
                 }
-                if (!empty($validatedData['project_live_links'])) {
-                    foreach ($validatedData['project_live_links'] as $project_live_links) {
-                        $project->project_live_links()->create(
-                            [
-                                'link' => $project_live_links['link'],
-
-                            ]
-                        );
-                    }
+                $resultDetailsToDelete = $result->result_details()->whereNotIn('id', $existingDetailIds)->get();
+                foreach ($resultDetailsToDelete as $detail) {
+                    $detail->delete();
                 }
-                if (!empty($validatedData['project_technologies'])) {
-                    foreach ($validatedData['project_technologies'] as $project_technologies) {
-                        $project->project_technologies()->create(
-                            [
-                                'tools' => $project_technologies['tools'],
-                            ]
-                        );
+
+
+
+
+
+
+
+
+                //  ProjectImage::where('project_id', $project->id)->delete();
+                if ($request->has('remove_images')) {
+                    $removeImages = $request->input('remove_images');
+                    foreach ($removeImages as $imageId) {
+                        $image = ProjectImage::findOrFail($imageId);
+
+                        Storage::delete('public/' . $image->path);
+
+                        $image->delete();
                     }
                 }
                 if ($request->hasFile('image_path')) {
                     foreach ($request->file('image_path') as $file) {
+                        if (!$file->isValid()) {
+                            return "A";
+                        }
                         $filename = time() . '_' . $file->getClientOriginalName();
                         $filePath = $file->storeAs('project_images', $filename, 'public');
                         $project->project_images()->create([
@@ -876,13 +871,45 @@ class ProjectController extends Controller
                     }
                 }
 
+                $pi = $project->client_review->get();
+                // $i=$pi->image_src;
+                ClientReview::where('project_id', $project->id)->delete();
+
+                if ($request->hasFile('image_src')) {
+                    $file = $request->image_src;
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs('Project_images', $filename, 'public');
+
+                    $project->client_review()->create([
+                        'en_title' => $request->r_en_title,
+                        'nl_title' => $request->r_nl_title,
+                        'en_sub_title' => $request->r_en_sub_title,
+                        'nl_sub_title' => $request->r_nl_sub_title,
+                        'en_review' => $request->en_review,
+                        'nl_review' => $request->nl_review,
+                        'image_src' => $filePath,
+                    ]);
+                } else {
+                    $project->client_review()->create([
+                        'en_title' => $request->r_en_title,
+                        'nl_title' => $request->r_nl_title,
+                        'en_sub_title' => $request->r_en_sub_title,
+                        'nl_sub_title' => $request->r_nl_sub_title,
+                        'en_review' => $request->en_review,
+                        'nl_review' => $request->nl_review,
+                        //     'image_src' => $i,
+                    ]);
+                }
+
+
 
                 DB::commit();
                 return redirect()->route('showall.projects')->with('success', 'Project Updated successfully!');
-            } catch (\Exception $e) {
-                DB::rollback();
-                return redirect()->route('showall.projects')->with('error', 'Project Updated faild!');
             }
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return redirect()->route('showall.projects')->with('error', 'Project Updated faild!');
         }
     }
 

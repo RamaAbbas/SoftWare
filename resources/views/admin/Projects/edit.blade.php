@@ -50,12 +50,24 @@
                                 <input type="hidden" value="{{ $client[0]['id'] }}" name="client_id">
                                 <div class="form-group row">
 
+                                    <label for="new_client_name">English Title</label>
+                                    <input type="text" class="form-control" id="new_client_name" name="c_en_title"
+                                        value="{{ $client[0]['en_title'] }}" readonly>
+                                    <label for="new_client_name">Dutch Title</label>
+                                    <input type="text" class="form-control" id="new_client_name8" name="c_nl_title"
+                                        value="{{ $client[0]['nl_title'] }}" readonly>
+                                    <label for="new_client_name">English Sub Title</label>
+                                    <input type="text" class="form-control" id="new_client_name7" name="c_en_sub_title"
+                                        value="{{ $client[0]['en_sub_title'] }}" readonly>
+                                    <label for="new_client_name">Dutch Sub Title</label>
+                                    <input type="text" class="form-control" id="new_client_name6" name="c_nl_sub_title"
+                                        value="{{ $client[0]['nl_sub_title'] }}" readonly>
                                     <label for="new_client_name">First Name</label>
-                                    <input type="text" class="form-control" id="new_client_name" name="first_name"
-                                        value="{{ $client[0]['first_name'] }}" readonly>
-                                    <label for="new_client_name2">Last Name</label>
-                                    <input type="text" class="form-control" id="new_client_name2" name="last_name"
-                                        value="{{ $client[0]['last_name'] }}" readonly>
+                                    <input type="text" class="form-control" id="new_client_name5" name="full_name"
+                                        value="{{ $client[0]['full_name'] }}" readonly>
+                                    <label for="new_client_name2">Position</label>
+                                    <input type="text" class="form-control" id="new_client_name2" name="position"
+                                        value="{{ $client[0]['position'] }}" readonly>
                                     <label for="new_client_name3">Email</label>
                                     <input type="text" class="form-control" id="new_client_name3" name="email"
                                         value="{{ $client[0]['email'] }}" readonly>
@@ -73,12 +85,33 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="name">Project Title
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="name">Project
+                                        Title
                                         in Dutch <span class="required">*</span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input type="text" id="name" required="required" class="form-control  "
                                             name="nl_title" value="{{ $project['nl_title'] }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="name">Project
+                                        ٍSub Title
+                                        in English <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 ">
+                                        <input type="text" id="name" required="required" class="form-control  "
+                                            name="en_sub_title" value="{{ $project['en_sub_title'] }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="name">Project Sub
+                                        Title
+                                        in Dutch <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 ">
+                                        <input type="text" id="name" required="required" class="form-control  "
+                                            name="nl_sub_title" value="{{ $project['nl_sub_title'] }}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -102,25 +135,66 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="description">Result
-                                        in English
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="description">Link
                                         <span class="required">*</span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input type="text" id="description" required="required" class="form-control "
-                                            name="en_result" value="{{ $project['en_result'] }}">
+                                            name="link" value="{{ $project['link'] }}">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="description">Result
-                                        in Dutch
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="description">Duration
                                         <span class="required">*</span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
                                         <input type="text" id="description" required="required" class="form-control "
-                                            name="nl_result" value="{{ $project['nl_result'] }}">
+                                            name="duration" value="{{ $project['duration'] }}">
                                     </div>
                                 </div>
+
+                                <br>
+                                <div class="form-group">
+                                    <label for="main_image">Main Image</label>
+                                    <input type="file" name="main_image" class="form-control-file" id="main_image">
+                                </div>
+                                <div class="clearfix"></div>
+
+                                @if ($project->main_image)
+                                    <div class="form-group">
+                                        <label>Current Main Image:</label>
+                                        <img src="{{ Storage::url($project->main_image) }}" alt="Main Image"
+                                            style="max-width: 200px;">
+                                    </div>
+                                @endif
+                                <div class="clearfix"></div>
+                                <h4>Project Details</h4>
+                                <div id="project-details-container">
+                                    @foreach ($project->project_details as $index => $detail)
+                                        <div class="project-detail-block">
+                                            <input type="hidden" name="project_details[{{ $index }}][id]"
+                                                value="{{ $detail->id }}">
+
+                                            <div class="form-group">
+                                                <label for="en_step">EN Step</label>
+                                                <input type="text"
+                                                    name="project_details[{{ $index }}][en_step]"
+                                                    class="form-control" value="{{ $detail->en_step }}" required>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="nl_step">NL Step</label>
+                                                <input type="text"
+                                                    name="project_details[{{ $index }}][nl_step]"
+                                                    class="form-control" value="{{ $detail->nl_step }}" required>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <!-- Add New Detail Button -->
+                                <button type="button" id="add-project-detail" class="btn btn-primary">Add Project
+                                    Detail</button>
                                 <h4>Images</h4>
                                 <div class="existing-images">
                                     @foreach ($project->project_images as $image)
@@ -132,31 +206,18 @@
                                         </div>
                                     @endforeach
                                 </div>
-
+                                <div class="clearfix"></div>
                                 <h4>Add New Images</h4>
                                 <div class="new-images">
                                     <input type="file" name="image_path[]" multiple>
                                 </div>
-                                <div class="form-group " id="date-of-birthday-id">
-                                    <label for="birthday_date">Begin Date</label>
-                                    <input type="date" name="begin_date" id="birthday_date" class="form-control"
-                                        value="{{ $project['begin_date'] }}">
-                                </div>
-                                <div class="form-group" id="date-of-birthday-id">
-                                    <label for="birthday_date">End Date</label>
-                                    <input type="date" name="end_date" id="birthday_date" class="form-control"
-                                        value="{{ $project['end_date'] }}">
-                                </div>
-                                <br>
+
                                 <h2>Select The Services </h2>
                                 @foreach ($services as $service)
                                     <div>
                                         <label>
                                             <input type="checkbox" name="service_ids[]" value="{{ $service->id }}"
-                                                {{ $project->service_categories->contains($service->id) ? 'checked' : '' }}
-                                                {{ $project->service_categories->contains($service->id) ? 'checked' : '' }}
-                                                @if (in_array($service->id, $project->service_categories->pluck('service_id')->toArray())) checked @endif
-                                                {{ in_array($service->id, $selectedServiceCategories) ? 'checked' : '' }}>
+                                            @if(in_array($service->en_name, $selectedServices)) checked @endif>
                                             {{ $service->en_name }}
                                         </label>
                                     </div>
@@ -165,133 +226,276 @@
                                 <h2 class="StepTitle">Achievements</h2>
 
 
-                                <div class="form-group row">
-                                    <div id="achievements">
-                                        @foreach ($project->achievements as $achievements)
-                                            <div class="achievement">
-                                                <label for="achievements[0][en_achievement_name]">English
-                                                    Name:</label>
-                                                <input type="text" id="requirement[0][en_name]"
-                                                    name="achievements[{{ $achievements->id }}][en_achievement_name]"
-                                                    class="form-control"
-                                                    value="{{ $achievements->en_achievement_name }}"><br>
-
-                                                <label for="achievements[0][nl_achievement_name]">Dutch Name:</label>
-                                                <input type="text" id="achievements[0][nl_achievement_name]"
-                                                    name="achievements[{{ $achievements->id }}][nl_achievement_name]"
-                                                    class="form-control "
-                                                    value="{{ $achievements->en_achievement_name }}"><br>
-
-                                                <br>
-
-                                                <button type="button" class="delete-achievement">Delete
-                                                    Achievement </button>
-                                            </div>
-                                            <br>
-                                        @endforeach
-                                    </div>
-
-
+                                <div class="form-group">
+                                    <label for="result_name">Achievement En Title</label>
+                                    <input type="text" name="achievements[0][en_title]" class="form-control"
+                                        id="result_name" value="{{ $project->achievements->first()->en_title }}"
+                                        >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Achievement Nl Title</label>
+                                    <input type="text" name="achievements[0][nl_title]" class="form-control"
+                                        id="result_name" value="{{ $project->achievements->first()->nl_title }}"
+                                        >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Achievement En Sub Title</label>
+                                    <input type="text" name="achievements[0][en_sub_title]" class="form-control"
+                                        id="result_name" value="{{ $project->achievements->first()->en_sub_title }}"
+                                    >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Achievement Nl Sub Title</label>
+                                    <input type="text" name="achievements[0][en_sub_title]" class="form-control"
+                                        id="result_name" value="{{ $project->achievements->first()->en_sub_title }}"
+                                        >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Achievement en Description</label>
+                                    <input type="text" name="achievements[0][en_description]" class="form-control"
+                                        id="result_name" value="{{ $project->achievements->first()->en_description }}"
+                                        >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Achievement Nl Description</label>
+                                    <input type="text" name="achievements[0][nl_description]" class="form-control"
+                                        id="result_name" value="{{ $project->achievements->first()->nl_description }}"
+                                        >
                                 </div>
 
-                                <button type="button" id="add-more-achievements">Add More Achievements</button>
+                                <div id="achievements-container">
+                                    <h4>Achievements Details</h4>
+                                    @foreach ($project->achievements->first()->achievement_details as $index => $detail)
+                                        <div class="detail1-block" data-index="{{ $index }}">
+                                            <input type="hidden"
+                                                name="achievements[0][achievement_details][{{ $index }}][id]"
+                                                value="{{ $detail->id }}">
+
+                                            <div class="form-group">
+                                                <label for="en_step">Step (English)</label>
+                                                <input type="text"
+                                                    name="achievements[0][achievement_details][{{ $index }}][en_step]"
+                                                    class="form-control" value="{{ $detail->en_step }}" >
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="nl_step">Step (Dutch)</label>
+                                                <input type="text"
+                                                    name="achievements[0][achievement_details][{{ $index }}][nl_step]"
+                                                    class="form-control" value="{{ $detail->nl_step }}" >
+                                            </div>
+
+                                            <button type="button" class="btn btn-danger remove-detail1">Remove
+                                                Detail</button>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <button type="button" class="btn btn-secondary" id="add-detail1">Add Detail</button>
+
+                                <br>
+                                <h2 class="StepTitle">Results</h2>
+
+
+                                <div class="form-group">
+                                    <label for="result_name">Result En Title</label>
+                                    <input type="text" name="results[0][en_title]" class="form-control"
+                                        id="result_name" value="{{ $project->results->first()->en_title }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Result Nl Title</label>
+                                    <input type="text" name="results[0][nl_title]" class="form-control"
+                                        id="result_name" value="{{ $project->results->first()->nl_title }}"
+                                        >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Result En Sub Title</label>
+                                    <input type="text" name="results[0][en_sub_title]" class="form-control"
+                                        id="result_name" value="{{ $project->results->first()->en_sub_title }}"
+                                        >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Result Nl Sub Title</label>
+                                    <input type="text" name="results[0][en_sub_title]" class="form-control"
+                                        id="result_name" value="{{ $project->results->first()->en_sub_title }}"
+                                        >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Result en Description</label>
+                                    <input type="text" name="results[0][en_description]" class="form-control"
+                                        id="result_name" value="{{ $project->results->first()->en_description }}"
+                                        >
+                                </div>
+                                <div class="form-group">
+                                    <label for="result_name">Result Nl Description</label>
+                                    <input type="text" name="results[0][nl_description]" class="form-control"
+                                        id="result_name" value="{{ $project->results->first()->nl_description }}"
+                                        >
+                                </div>
+
+                                <div id="details-container">
+                                    <h4>Result Details</h4>
+                                    @foreach ($project->results->first()->result_details as $index => $detail)
+                                        <div class="detail-block" data-index="{{ $index }}">
+                                            <input type="hidden"
+                                                name="results[0][result_details][{{ $index }}][id]"
+                                                value="{{ $detail->id }}">
+
+                                            <div class="form-group">
+                                                <label for="en_step">Step (English)</label>
+                                                <input type="text"
+                                                    name="results[0][result_details][{{ $index }}][en_step]"
+                                                    class="form-control" value="{{ $detail->en_step }}" >
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="nl_step">Step (Dutch)</label>
+                                                <input type="text"
+                                                    name="results[0][result_details][{{ $index }}][nl_step]"
+                                                    class="form-control" value="{{ $detail->nl_step }}" >
+                                            </div>
+
+                                            <button type="button" class="btn btn-danger remove-detail">Remove
+                                                Detail</button>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <button type="button" class="btn btn-secondary" id="add-detail">Add Detail</button>
 
                                 <br>
                                 <h2 class="StepTitle">Challenges</h2>
                                 <div class="form-group row">
 
-                                    <div id="challenges">
-                                        @foreach ($project->challenges as $challenges)
-                                            <div class="challenge">
-                                                <label for="challenges[0][en_challenge_name]">English Name:</label>
-                                                <input type="text" id="challenges[0][en_challenge_name]"
-                                                    name="challenges[{{ $challenges->id }}][en_challenge_name]"
-                                                    class="form-control"
-                                                    value="{{ $challenges->en_challenge_name }}"><br>
+                                    <div class="form-group">
+                                        <label for="result_name">Challenges En Title</label>
+                                        <input type="text" name="challenges[0][en_title]" class="form-control"
+                                            id="result_name" value="{{ $project->challenges->first()->en_title }}"
+                                            >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="result_name">Challenges Nl Title</label>
+                                        <input type="text" name="challenges[0][nl_title]" class="form-control"
+                                            id="result_name" value="{{ $project->challenges->first()->nl_title }}"
+                                            >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="result_name">Challenges En Sub Title</label>
+                                        <input type="text" name="challenges[0][en_sub_title]" class="form-control"
+                                            id="result_name" value="{{ $project->challenges->first()->en_sub_title }}"
+                                            >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="result_name">Challenges Nl Sub Title</label>
+                                        <input type="text" name="challenges[0][en_sub_title]" class="form-control"
+                                            id="result_name" value="{{ $project->challenges->first()->en_sub_title }}"
+                                            >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="result_name">Challenges en Description</label>
+                                        <input type="text" name="challenges[0][en_description]" class="form-control"
+                                            id="result_name" value="{{ $project->challenges->first()->en_description }}"
+                                        >
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="result_name">Challenges Nl Description</label>
+                                        <input type="text" name="challenges[0][nl_description]" class="form-control"
+                                            id="result_name" value="{{ $project->challenges->first()->nl_description }}"
+                                            >
+                                    </div>
 
-                                                <label for="challenges[0][nl_challenge_name]">Dutch Name:</label>
-                                                <input type="text" id="challenges[0][nl_challenge_name]"
-                                                    name="challenges[{{ $challenges->id }}][nl_challenge_name]"
-                                                    class="form-control  "
-                                                    value="{{ $challenges->nl_challenge_name }}"><br>
-                                                <br>
-                                                <label for="challenges[0][en_challenge_description]">English
-                                                    Description:</label>
-                                                <textarea id="challenges[{{ $challenges->id }}][en_challenge_description]"
-                                                    name="challenges[{{ $challenges->id }}][en_challenge_description]" class="form-control  "
-                                                    value="{{ $challenges->en_challenge_description }}">{{ $challenges->en_challenge_description }}</textarea><br>
 
-                                                <label for="service_benefits[0][nl_challenge_description]">Dutch
-                                                    Description:</label>
-                                                <textarea id="challenges[0][nl_challenge_description]"
-                                                    name="challenges[{{ $challenges->id }}][nl_challenge_description]" class="form-control  "
-                                                    value="{{ $challenges->nl_challenge_description }}">{{ $challenges->nl_challenge_description }}</textarea><br>
-                                                <button type="button" class="delete-challenge">Delete
-                                                    Challenge</button>
+                                    <div id="challenges-container">
+                                        <h4>Challenges Details</h4>
+                                        @foreach ($project->challenges->first()->challenges_details as $index => $detail)
+                                            <div class="detail2-block" data-index="{{ $index }}">
+                                                <input type="hidden"
+                                                    name="challenges[0][challenges_details][{{ $index }}][id]"
+                                                    value="{{ $detail->id }}">
 
+                                                <div class="form-group">
+                                                    <label for="en_step">Step (English)</label>
+                                                    <input type="text"
+                                                        name="challenges[0][challenges_details][{{ $index }}][en_step]"
+                                                        class="form-control" value="{{ $detail->en_step }}" required>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="nl_step">Step (Dutch)</label>
+                                                    <input type="text"
+                                                        name="challenges[0][challenges_details][{{ $index }}][nl_step]"
+                                                        class="form-control" value="{{ $detail->nl_step }}" required>
+                                                </div>
+
+                                                <button type="button" class="btn btn-danger remove-detail2">Remove
+                                                    Detail</button>
                                             </div>
-                                            <br>
                                         @endforeach
                                     </div>
-                                </div>
-                                <button type="button" id="add-more-challenges">Add More challenges</button>
 
-                                <br>
-                                <h2 class="StepTitle">Project Live Links </h2>
-                                <div class="form-group row">
+                                    <button type="button" class="btn btn-secondary" id="add-detail2">Add Detail</button>
 
-                                    <div id="project_live_links">
-                                        @foreach ($project->project_live_links as $project_live_links)
-                                            <div class="project_live_link">
-                                                <label for="project_live_links[0][link]">Link
-                                                </label>
-                                                <input type="text" id="project_live_links[0][link]"
-                                                    name="project_live_links[{{ $project_live_links->id }}][link]"
-                                                    class="form-control " value="{{ $project_live_links->link }}"><br>
-
-
-                                                <button type="button" class="delete-link">Delete
-                                                    Link</button>
-
-                                            </div>
-                                            <br>
-                                        @endforeach
+                                    <br>
+                                    <br>
+                                    <h2 class="StepTitle">Client Review</h2>
+                                    <div class="form-group">
+                                        <label for="result_name">En Title</label>
+                                        <input type="text" name="r_en_title" class="form-control"
+                                            value="{{ $project->client_review['en_title'] }}">
                                     </div>
-                                </div>
-                                <button type="button" id="add-more-links">Add More Links</button>
-                                <br>
-                                <h2 class="StepTitle">Project Technology</h2>
-                                <div class="form-group row">
-
-                                    <div id="project_technologies">
-                                        @foreach ($project->project_technologies as $project_technologies)
-                                            <div class="project_technology">
-                                                <label for="project_technologies[0][tools]">Tool
-                                                </label>
-                                                <input type="text" id="project_technologies[0][tools]"
-                                                    name="project_technologies[{{ $project_technologies->id }}][tools]"
-                                                    class="form-control " value="{{ $project_technologies->tools }}"><br>
-
-
-                                                <button type="button" class="delete-tool">Delete
-                                                    Tool</button>
-
-                                            </div>
-                                            <br>
-                                        @endforeach
+                                    <div class="form-group">
+                                        <label for="result_name">Nl Title</label>
+                                        <input type="text" name="r_nl_title" class="form-control"
+                                            value="{{ $project->client_review['nl_title'] }}">
                                     </div>
-                                </div>
-                                <button type="button" id="add-more-tools">Add More Tools</button>
-
-
-                                <div class="ln_solid"></div>
-                                <div class="item form-group">
-                                    <div class="col-md-6 col-sm-6 offset-md-3">
-                                        <button class="btn btn-primary" type="button">Cancel</button>
-                                        <button class="btn btn-primary" type="reset">Reset</button>
-                                        <button type="submit" class="btn btn-success">Submit</button>
+                                    <div class="form-group">
+                                        <label for="result_name">En Sub Title</label>
+                                        <input type="text" name="r_en_sub_title" class="form-control"
+                                            value="{{ $project->client_review['en_sub_title'] }}">
                                     </div>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="result_name">Nl Sub Title</label>
+                                        <input type="text" name="r_nl_sub_title" class="form-control"
+                                            value="{{ $project->client_review['nl_sub_title'] }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="result_name">En Review</label>
+                                        <input type="text" name="en_review" class="form-control"
+                                            value="{{ $project->client_review['en_review'] }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="result_name">Nl Review</label>
+                                        <input type="text" name="nl_review" class="form-control"
+                                            value="{{ $project->client_review['nl_review'] }}">
+                                    </div>
+                                    <br>
+                                    <div class="form-group">
+                                        <label for="main_image">Client Image</label>
+                                        <input type="file" name="image_src" class="form-control-file"
+                                            id="main_image">
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    @if ($project->client_review['image_src'])
+                                        <div class="form-group">
+                                            <label>Current Client Image:</label>
+                                            <img src="{{ Storage::url($project->client_review['image_src']) }}"
+                                                alt="Client Image" style="max-width: 200px;">
+                                        </div>
+                                    @endif
+                                    <div class="clearfix"></div>
+
+
+
+
+                                    <div class="ln_solid"></div>
+                                    <div class="item form-group">
+                                        <div class="col-md-6 col-sm-6 offset-md-3">
+                                            <button class="btn btn-primary" type="button">Cancel</button>
+                                            <button class="btn btn-primary" type="reset">Reset</button>
+                                            <button type="submit" class="btn btn-success">Submit</button>
+                                        </div>
+                                    </div>
 
                             </form>
                         </div>
@@ -303,151 +507,144 @@
 
 
     <script>
-        document.getElementById('add-more-achievements').addEventListener('click', function() {
-            var achievementsDiv = document.getElementById('achievements');
-            var index = achievementsDiv.children.length - 1;
+        let detailIndex5 = {{ $project->project_details->count() }};
+        document.getElementById('add-project-detail').addEventListener('click', function() {
+            let container = document.getElementById('project-details-container');
+            let newDetail = `
+        <div class="project-detail-block">
+            <div class="form-group">
+                <label for="en_step">EN Step</label>
+                <input type="text" name="project_details[${detailIndex5}][en_step]" class="form-control" required>
+            </div>
 
-            var newachievement = document.createElement('div');
-            newachievement.className = 'achievement';
-
-            newachievement.innerHTML = `
-            <h6>Achievement ${index+1} </h6>
-                <label for="achievements[${index}][en_achievement_name]">English Name:</label>
-                <input type="text" id="achievements[${index}][en_achievement_name]" name="achievements[${index}][en_achievement_name]"  class="form-control  "><br>
-
-                <label for="achievements[${index}][nl_achievement_name]">Dutch Name:</label>
-                <input type="text" id="achievements[${index}][nl_achievement_name]" name="achievements[${index}][nl_achievement_name]"  class="form-control  "><br>
-
-                <button type="button" class="delete-achievement">Delete achievement</button>
-            `;
-
-            achievementsDiv.appendChild(newachievement);
-        });
-
-        document.getElementById('add-more-challenges').addEventListener('click', function() {
-            var challengesDiv = document.getElementById('challenges');
-            var index = challengesDiv.children.length - 1;
-
-            var newchallenge = document.createElement('div');
-            newchallenge.className = 'challenge';
-
-            newchallenge.innerHTML = `
-            <h6>Challenges ${index+1} </h6>
-                <label for="challenges[${index}][en_challenge_name]">English Name:</label>
-                <input type="text" id="challenges[${index}][en_challenge_name]" name="challenges[${index}][en_challenge_name]"  class="form-control  "><br>
-
-                <label for="challenges[${index}][nl_challenge_name]">Dutch Name:</label>
-                <input type="text" id="challenges[${index}][nl_challenge_name]" name="challenges[${index}][nl_challenge_name]"  class="form-control  "><br>
-
-                <label for="challenges[${index}][en_challenge_description]">English Description:</label>
-                <textarea id="challenges[${index}][en_challenge_description]" name="challenges[${index}][en_challenge_description]"  class="form-control  "></textarea><br>
-
-                <label for="challenges[${index}][nl_challenge_description]">Dutch Description:</label>
-                <textarea id="challenges[${index}][nl_challenge_description]" name="challenges[${index}][nl_challenge_description]"  class="form-control  "></textarea><br>
-                <button type="button" class="delete-challenge">Delete Challenges</button>
-            `;
-
-            challengesDiv.appendChild(newchallenge);
+            <div class="form-group">
+                <label for="nl_step">NL Step</label>
+                <input type="text" name="project_details[${detailIndex5}][nl_step]" class="form-control" required>
+            </div>
+        </div>
+    `;
+            container.insertAdjacentHTML('beforeend', newDetail);
+            detailIndex5++;
         });
 
 
+        /////////////////////////////
 
+        let detailIndex1 = {{ $project->achievements->first()->achievement_details->count() }};
 
+        document.getElementById('add-detail1').addEventListener('click', function() {
+            let detailsContainer = document.getElementById('achievements-container');
+            let newDetailBlock = document.createElement('div');
+            newDetailBlock.classList.add('detail1-block');
+            newDetailBlock.dataset.index = detailIndex1;
 
+            newDetailBlock.innerHTML = `
+        <div class="form-group">
+            <label for="en_step">Step (English)</label>
+            <input type="text" name="achievements[0][achievement_details][${detailIndex1}][en_step]" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="nl_step">Step (Dutch)</label>
+            <input type="text" name="achievements[0][achievement_details][${detailIndex1}][nl_step]" class="form-control" required>
+        </div>
+        <button type="button" class="btn btn-danger remove-detail1">Remove Detail</button>
+    `;
 
-        document.getElementById('add-more-links').addEventListener('click', function() {
-            var project_live_linksDiv = document.getElementById('project_live_links');
-            var index = project_live_linksDiv.children.length - 1;
+            detailsContainer.appendChild(newDetailBlock);
 
-            var newproject_live_link = document.createElement('div');
-            newproject_live_link.className = 'project_live_link';
-
-            newproject_live_link.innerHTML = `
-            <h6>Project Live Links ${index+1} </h6>
-                <label for="project_live_links[${index}][link]">Link</label>
-                <input type="text" id="project_live_links[${index}][link]" name="project_live_links[${index}][link]" class="form-control  "><br>
-                <button type="button" class="delete-link">Delete Project Live Links</button>
-            `;
-
-            project_live_linksDiv.appendChild(newproject_live_link);
+            detailIndex1++;
         });
-        document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('delete-link')) {
-                event.target.closest('.project_live_link').remove();
-            }
-        });
-        /////////
-        document.getElementById('add-more-tools').addEventListener('click', function() {
-            var project_technologiesDiv = document.getElementById('project_technologies');
-            var index = project_technologiesDiv.children.length - 1;
 
-            var newproject_technology = document.createElement('div');
-            newproject_technology.className = 'project_technology';
-
-            newproject_technology.innerHTML = `
-            <h6>Project Technologies ${index+1} </h6>
-                <label for="project_technologies[${index}][tools]">Tool</label>
-                <input type="text" id="project_technologies[${index}][tools]" name="project_technologies[${index}][tools]" class="form-control  "><br>
-                <button type="button" class="delete-tool">Delete Tool</button>
-            `;
-
-            project_technologiesDiv.appendChild(newproject_technology);
-        });
-        document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('delete-tool')) {
-                event.target.closest('.project_technology').remove();
-            }
-        });
-        /////////////////////////
-
-        document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('delete-achievement')) {
-                event.target.closest('.achievement').remove();
-            }
-        });
-        document.addEventListener('click', function(event) {
-            if (event.target && event.target.classList.contains('delete-challenge')) {
-                event.target.closest('.challenge').remove();
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('remove-detail1')) {
+                e.target.closest('.detail1-block').remove();
             }
         });
 
 
-        ////////////////////
-        document.addEventListener('DOMContentLoaded', function() {
-            const clientSelect = document.getElementById('client');
-            const newClientInput = document.getElementById('new_client_name');
-            const newClientInput2 = document.getElementById('new_client_name2');
-            const newClientInput3 = document.getElementById('new_client_name3');
-            const newClientInput4 = document.getElementById('new_client_name4');
 
-            clientSelect.addEventListener('change', function() {
-                if (clientSelect.value) {
-                    newClientInput.disabled = true;
-                    newClientInput.value = '';
-                    newClientInput2.disabled = true;
-                    newClientInput2.value = '';
-                    newClientInput3.disabled = true;
-                    newClientInput3.value = '';
-                    newClientInput4.disabled = true;
-                    newClientInput4.value = '';
-                } else {
-                    newClientInput.disabled = false;
-                    newClientInput2.disabled = false;
-                    newClientInput3.disabled = false;
-                    newClientInput4.disabled = false;
-                }
-            });
+        /////////////////////////Chal
+        let detailIndex2 = {{ $project->achievements->first()->achievement_details->count() }};
 
-            newClientInput.addEventListener('input', function() {
-                if (newClientInput.value) {
-                    clientSelect.disabled = true;
-                    clientSelect.value = '';
-                } else {
-                    clientSelect.disabled = false;
-                }
-            });
+        document.getElementById('add-detail2').addEventListener('click', function() {
+            let detailsContainer = document.getElementById('challenges-container');
+            let newDetailBlock = document.createElement('div');
+            newDetailBlock.classList.add('detail2-block');
+            newDetailBlock.dataset.index = detailIndex1;
+
+            newDetailBlock.innerHTML = `
+<div class="form-group">
+    <label for="en_step">Step (English)</label>
+    <input type="text" name="challenges[0][challenges_details][${detailIndex1}][en_step]" class="form-control" required>
+</div>
+<div class="form-group">
+    <label for="nl_step">Step (Dutch)</label>
+    <input type="text" name="challenges[0][challenges_details][${detailIndex1}][nl_step]" class="form-control" required>
+</div>
+<button type="button" class="btn btn-danger remove-detail2">Remove Detail</button>
+`;
+
+            detailsContainer.appendChild(newDetailBlock);
+
+            detailIndex2++;
         });
-        /////////************************************************
+
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('remove-detail2')) {
+                e.target.closest('.detail2-block').remove();
+            }
+        });
+
+
+
+
+
+
+
+        /////////////////////////////Results
+        let detailIndex = {{ $project->results->first()->result_details->count() }};
+
+        document.getElementById('add-detail').addEventListener('click', function() {
+            let detailsContainer = document.getElementById('details-container');
+            let newDetailBlock = document.createElement('div');
+            newDetailBlock.classList.add('detail-block');
+            newDetailBlock.dataset.index = detailIndex;
+
+            newDetailBlock.innerHTML = `
+        <div class="form-group">
+            <label for="en_step">Step (English)</label>
+            <input type="text" name="results[0][result_details][${detailIndex}][en_step]" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="nl_step">Step (Dutch)</label>
+            <input type="text" name="results[0][result_details][${detailIndex}][nl_step]" class="form-control" required>
+        </div>
+        <button type="button" class="btn btn-danger remove-detail">Remove Detail</button>
+    `;
+
+            detailsContainer.appendChild(newDetailBlock);
+
+            detailIndex++;
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('remove-detail')) {
+                e.target.closest('.detail-block').remove();
+            }
+        });
+
+
+
+
+
+
+
+
+        ///////////////////////////////////////////////////////////
+
+
+
+
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.remove-image').forEach(button => {
                 button.addEventListener('click', function() {
