@@ -520,35 +520,115 @@ class ProjectController extends Controller
             $data = [
                 'id' => $project->id,
                 'title' => $locale == 'en' ? $project->en_title : $project->nl_title,
+                'sub_title' => $locale == 'en' ? $project->en_sub_title : $project->nl_sub_title,
+                'duration' => $project->duration,
+                'link' => $project->link,
+                'main_image' =>$project->main_image,
                 'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
-                'begin_date' => $project->begin_date,
-                'end_date' => $project->end_date,
-                'result' => $locale == 'en' ? $project->en_result : $project->nl_result,
+                // 'client'=>$project->client['full_name'],
+
             ];
+            $data['details'] = $project->project_details->map(function ($detail) use ($locale) {
+                if ($locale == 'en') {
+                    return ['step'=>$detail->en_step];
+                } else {
+                    return ['step'=>$detail->nl_step];
+                }
+            });
+            $data['services'] = $project->project_services->map(function ($service) use ($locale) {
+                return  $locale == 'en' ? $service->en_name : $service->nl_name;
+            });
 
-
-            $data['project_images'] = $project->project_images->map(function ($related) use ($locale) {
+            $data['images'] = $project->project_images->map(function ($image) use ($locale) {
                 return [
-                    'image_path' => $related->image_path,
+                    'image_path'=>$image->image_path
                 ];
             });
 
+            //  $project->en_description : $project->nl_description,
+            $client = $project->client;
+            if ($project->client['en_title'] && $locale == 'en') {
+                $data['client']['title'] = $project->client['en_title'];
+            } else {
+                $data['client']['title'] = $project->client['nl_title'];
+            }
+            if ($project->client['en_sub_title'] && $locale == 'en') {
+                $data['client']['sub_title'] = $project->client['en_sub_title'];
+            } else {
+                $data['client']['sub_title'] = $project->client['nl_sub_title'];
+            }
+            $data['client']['full_name'] = $project->client['full_name'];
+            $data['client']['position'] = $project->client['position'];
+            $data['client']['email'] = $project->client['email'];
+            $data['client']['phone_number'] = $project->client['phone_number'];
 
-            $data['achievements'] = $project->achievements->map(function ($related) use ($locale) {
-                return [
-                    'achievement_name' => $locale == 'en' ? $related->en_achievement_name : $related->nl_achievement_name,
-                    // 'description' => $locale == 'en' ? $related->en_description : $related->nl_description,
-                ];
-            });
+
+            $achievement = $project->achievements->first();
+            if ($achievement) {
+                $data['achievements']['title'] = $locale == 'en' ? $achievement->en_title : $achievement->nl_title;
+                $data['achievements']['sub_title'] = $locale == 'en' ? $achievement->en_sub_title : $achievement->nl_sub_title;
+                $data['achievements']['description'] = $locale == 'en' ? $achievement->en_description : $achievement->nl_description;
+                $data['achievements']['more_details'] = $achievement->achievement_details->map(function ($detail) use ($locale) {
+
+                    if ($locale == 'en') {
+                        return ['step'=>$detail->en_step];
+                    } else {
+                        return ['step'=>$detail->nl_step];
+                    }
+                });
+            } else {
+                $data['achievements'] = [];
+            }
 
 
 
-            $data['challenges'] = $project->challenges->map(function ($related) use ($locale) {
-                return [
-                    'challenge_name' => $locale == 'en' ? $related->en_challenge_name : $related->nl_challenge_name,
-                    'challenge_description' => $locale == 'en' ? $related->en_challenge_description : $related->nl_challenge_description,
-                ];
-            });
+
+
+
+
+            $challenge = $project->challenges->first();
+            if ($challenge) {
+                $data['challenges']['title'] = $locale == 'en' ? $challenge->en_title : $challenge->nl_title;
+                $data['challenges']['sub_title'] = $locale == 'en' ? $challenge->en_sub_title : $challenge->nl_sub_title;
+                $data['challenges']['description'] = $locale == 'en' ? $challenge->en_description : $challenge->nl_description;
+                $data['challenges']['more_details'] = $challenge->challenges_details->map(function ($detail) use ($locale) {
+                    if ($locale == 'en') {
+                        return ['step'=>$detail->en_step];
+                    } else {
+                        return ['step'=>$detail->nl_step];
+                    }
+                });
+            } else {
+                $data['challenges'] = [];
+            }
+
+
+
+
+            $result = $project->results->first();
+            if ($result) {
+                $data['results']['title'] = $locale == 'en' ? $result->en_title : $result->nl_title;
+                $data['results']['sub_title'] = $locale == 'en' ? $result->en_sub_title : $result->nl_sub_title;
+                $data['results']['description'] = $locale == 'en' ? $result->en_description : $result->nl_description;
+                $data['results']['more_details'] = $result->result_details->map(function ($detail) use ($locale) {
+                    if ($locale == 'en') {
+                        return ['step'=>$detail->en_step];
+                    } else {
+                        return ['step'=>$detail->nl_step];
+                    }
+                });
+            } else {
+                $data['results'] = [];
+            }
+
+
+            $data['client_review']['title'] = $locale == 'en' ? $project->client_review['en_title'] : $project->client_review['nl_title'];
+            $data['client_review']['sub_title'] = $locale == 'en' ?  $project->client_review['en_sub_title'] : $project->client_review['nl_sub_title'];
+            $data['client_review']['client_image'] =   $project->client_review['image_src'];
+            $data['client_review']['review'] = $locale == 'en' ?  $project->client_review['en_review'] : $project->client_review['nl_review'];
+
+
+
 
             return view('admin.Projects.viewproject', compact('data'));
         } catch (Exception $e) {
@@ -593,11 +673,11 @@ class ProjectController extends Controller
         $project = Project::with('project_services')->findOrFail($id);
         $client = $project->client()->get();
         $clientreview = $project->client_review->get();
-          $selectedServiceCategories = $project->project_services->pluck('id')->toArray();
+        $selectedServiceCategories = $project->project_services->pluck('id')->toArray();
         $selectedServices = $project->project_services->pluck('en_name')->toArray();
         $services = Service::all();
         if ($project) {
-            return view('admin.Projects.edit', compact('project', 'client', 'services', 'selectedServiceCategories','selectedServices', 'clientreview'));
+            return view('admin.Projects.edit', compact('project', 'client', 'services', 'selectedServiceCategories', 'selectedServices', 'clientreview'));
         } else {
 
             return redirect()->back();
