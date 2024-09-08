@@ -12,11 +12,11 @@ class AchievementsDetail extends Model
 
     protected $guarded = ['id'];
 
-    protected $table = "achievement_details";
+    protected $table = "project_achievements_details";
 
     public function achievement(): BelongsTo
     {
         return $this->belongsTo(Achievement::class, 'achievement_id', 'id');
     }
-   
+
 }

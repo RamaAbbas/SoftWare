@@ -191,6 +191,7 @@ class AboutUsController extends Controller
 
 
         return view('admin.home', compact('processed', 'members', 'processedServices', 'processedAboutus'));
+     // return view('admin.Projects.index');
     }
 
 

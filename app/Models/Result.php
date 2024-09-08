@@ -12,7 +12,7 @@ class Result extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    protected $table = "results";
+    protected $table = "project_results";
 
     public function projects(): BelongsTo
     {

@@ -11,11 +11,11 @@ class ChallengeDetail extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    protected $table = "challenges_details";
+    protected $table = "project_challenges_details";
 
     public function challenge(): BelongsTo
     {
-        return $this->belongsTo(Challenge::class, 'achievement_id', 'id');
+        return $this->belongsTo(Challenge::class, 'challenge_id', 'id');
     }
 
 }

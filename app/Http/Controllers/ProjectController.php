@@ -334,9 +334,9 @@ class ProjectController extends Controller
             ->select('email', DB::raw('MIN(id) as id'))  // or use MAX(id) as needed
             ->groupBy('email')
             ->get();*/
-        $clients = DB::table('clients as u1')
+        $clients = DB::table('project_clients as u1')
             ->select('u1.email', 'u1.full_name', 'u1.id')
-            ->join(DB::raw('(SELECT email, MIN(id) as min_id FROM clients GROUP BY email) as u2'), function ($join) {
+            ->join(DB::raw('(SELECT email, MIN(id) as min_id FROM project_clients GROUP BY email) as u2'), function ($join) {
                 $join->on('u1.id', '=', 'u2.min_id');
             })
             ->get();
@@ -346,7 +346,7 @@ class ProjectController extends Controller
             ->get();*/
         //Client::all();
         $services = Service::select('services.*')->distinct()->get();
-        return view('admin.Projects.test1', compact('clients', 'services'));
+        return view('admin.Projects.newform', compact('clients', 'services'));
     }
 
 
@@ -523,16 +523,16 @@ class ProjectController extends Controller
                 'sub_title' => $locale == 'en' ? $project->en_sub_title : $project->nl_sub_title,
                 'duration' => $project->duration,
                 'link' => $project->link,
-                'main_image' =>$project->main_image,
+                'main_image' => $project->main_image,
                 'description' => $locale == 'en' ? $project->en_description : $project->nl_description,
                 // 'client'=>$project->client['full_name'],
 
             ];
             $data['details'] = $project->project_details->map(function ($detail) use ($locale) {
                 if ($locale == 'en') {
-                    return ['step'=>$detail->en_step];
+                    return ['step' => $detail->en_step];
                 } else {
-                    return ['step'=>$detail->nl_step];
+                    return ['step' => $detail->nl_step];
                 }
             });
             $data['services'] = $project->project_services->map(function ($service) use ($locale) {
@@ -541,7 +541,7 @@ class ProjectController extends Controller
 
             $data['images'] = $project->project_images->map(function ($image) use ($locale) {
                 return [
-                    'image_path'=>$image->image_path
+                    'image_path' => $image->image_path
                 ];
             });
 
@@ -571,9 +571,9 @@ class ProjectController extends Controller
                 $data['achievements']['more_details'] = $achievement->achievement_details->map(function ($detail) use ($locale) {
 
                     if ($locale == 'en') {
-                        return ['step'=>$detail->en_step];
+                        return ['step' => $detail->en_step];
                     } else {
-                        return ['step'=>$detail->nl_step];
+                        return ['step' => $detail->nl_step];
                     }
                 });
             } else {
@@ -593,9 +593,9 @@ class ProjectController extends Controller
                 $data['challenges']['description'] = $locale == 'en' ? $challenge->en_description : $challenge->nl_description;
                 $data['challenges']['more_details'] = $challenge->challenges_details->map(function ($detail) use ($locale) {
                     if ($locale == 'en') {
-                        return ['step'=>$detail->en_step];
+                        return ['step' => $detail->en_step];
                     } else {
-                        return ['step'=>$detail->nl_step];
+                        return ['step' => $detail->nl_step];
                     }
                 });
             } else {
@@ -612,9 +612,9 @@ class ProjectController extends Controller
                 $data['results']['description'] = $locale == 'en' ? $result->en_description : $result->nl_description;
                 $data['results']['more_details'] = $result->result_details->map(function ($detail) use ($locale) {
                     if ($locale == 'en') {
-                        return ['step'=>$detail->en_step];
+                        return ['step' => $detail->en_step];
                     } else {
-                        return ['step'=>$detail->nl_step];
+                        return ['step' => $detail->nl_step];
                     }
                 });
             } else {
@@ -677,7 +677,7 @@ class ProjectController extends Controller
         $selectedServices = $project->project_services->pluck('en_name')->toArray();
         $services = Service::all();
         if ($project) {
-            return view('admin.Projects.edit', compact('project', 'client', 'services', 'selectedServiceCategories', 'selectedServices', 'clientreview'));
+            return view('admin.Projects.new_edit_form', compact('project', 'client', 'services', 'selectedServiceCategories', 'selectedServices', 'clientreview'));
         } else {
 
             return redirect()->back();
@@ -952,7 +952,7 @@ class ProjectController extends Controller
                 }
 
                 $pi = $project->client_review->get();
-                // $i=$pi->image_src;
+                $i = $project->client_review['image_src'];
                 ClientReview::where('project_id', $project->id)->delete();
 
                 if ($request->hasFile('image_src')) {
@@ -977,7 +977,7 @@ class ProjectController extends Controller
                         'nl_sub_title' => $request->r_nl_sub_title,
                         'en_review' => $request->en_review,
                         'nl_review' => $request->nl_review,
-                        //     'image_src' => $i,
+                        'image_src' => $i,
                     ]);
                 }
 

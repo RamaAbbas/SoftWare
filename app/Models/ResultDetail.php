@@ -12,7 +12,7 @@ class ResultDetail extends Model
 
     protected $guarded = ['id'];
 
-    protected $table = "results_details";
+    protected $table = "project_results_details";
 
     public function result(): BelongsTo
     {

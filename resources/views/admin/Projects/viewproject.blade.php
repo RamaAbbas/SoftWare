@@ -38,105 +38,112 @@
                                             <div class="clearfix"></div>
                                         </div>
                                         <div class="x_content">
+
+
                                             <div class="bs-example" data-example-id="simple-jumbotron">
                                                 <div class="jumbotron">
-                                                    <h3 style="color: rgb(11, 212, 188)">Title</h3>
-                                                    <h4 style="color: black">{{ $data['title'] }}</h4>
-                                                    <h3 style="color: rgb(11, 212, 188)">Sub Title</h3>
-                                                    <h4 style="color: black">{{ $data['sub_title'] }}</h4>
-                                                    <h3 style="color: rgb(11, 212, 188)">Description</h3>
-                                                    <h4 style="color: black">{{ $data['description'] }}</h4>
-                                                    <h3 style="color: rgb(11, 212, 188)">Project More Details</h3>
-                                                    <ul>
-                                                        @foreach ($data['details'] as $item)
-                                                            <li style="color: black">
-                                                                <strong>{{ $item['step'] }}</strong>&emsp;
-                                                            </li>
-                                                        @endforeach
-
-                                                    </ul>
-                                                    <h3 style="color: rgb(11, 212, 188)">Project Main Image</h3>
-                                                    <li style="color: black" class="nav-item">
-                                                        <img src="{{ Storage::url( $data['main_image']) }}"
-                                                            data-bs-image="{{ Storage::url(  $data['main_image']) }}"
-                                                            style="height: 150px; width:150px;" alt="Project Image"
+                                                    <div class="center-horizontal">
+                                                        <img src="{{ Storage::url($data['main_image']) }}"
+                                                            data-bs-image="{{ Storage::url($data['main_image']) }}"
+                                                            style="height: 100%; width:500px;" alt="Project Image"
                                                             class="img-fluid project-image" data-bs-toggle="modal"
                                                             data-bs-target="#imageModal">
-                                                    </li>
 
-
-
-
-                                                    <h3 style="color: rgb(11, 212, 188)">Achievements</h3>
-                                                    <h1>{{ $data['achievements']['title'] }}</h1>
-                                                    <h3>{{ $data['achievements']['sub_title'] }}</h3>
-                                                    <ul>
-                                                        @foreach ($data['achievements']['more_details'] as $item)
-                                                            <li style="color: black">
-                                                                <strong>{{ $item['step'] }}</strong>&emsp;
-                                                            </li>
-                                                        @endforeach
-
-                                                    </ul>
-                                                    <br>
-                                                    <h3 style="color: rgb(11, 212, 188)">Challenges</h3>
-                                                    <h1>{{ $data['challenges']['title'] }}</h1>
-                                                    <h3>{{ $data['challenges']['sub_title'] }}</h3>
-                                                    <ul>
-                                                        @foreach ($data['achievements']['more_details'] as $item)
-                                                            <li style="color: black">
-                                                                <strong>{{ $item['step'] }}</strong>&emsp;
-                                                            </li>
-                                                        @endforeach
-
-                                                    </ul>
-                                                    <br>
-
-                                                    <h3 style="color: rgb(11, 212, 188)">Results</h3>
-                                                    <h1>{{ $data['results']['title'] }}</h1>
-                                                    <h3>{{ $data['results']['sub_title'] }}</h3>
-                                                    <ul>
-                                                        @foreach ($data['results']['more_details'] as $item)
-                                                            <li style="color: black">
-                                                                <strong>{{ $item['step'] }}</strong>&emsp;
-                                                            </li>
-                                                        @endforeach
-
-                                                    </ul>
-                                                    <br>
-                                                    <h3 style="color: rgb(11, 212, 188)">Project Images</h3>
-                                                    <h4 style="color: black"></h4>
-                                                    <ul class="navbar-right" style="display: flex; align-items: center;">
-                                                        @foreach ($data['images'] as $img)
-                                                            <li style="color: black" class="nav-item">
+                                                        <h3 style="color:black">More Project Images</h3>
+                                                        <h4 style="color: black"></h4>
+                                                        <ul class="navbar-right"
+                                                            style="display: flex; align-items: center;">
+                                                            @foreach ($data['images'] as $img)
                                                                 <img src="{{ Storage::url($img['image_path']) }}"
                                                                     data-bs-image="{{ Storage::url($img['image_path']) }}"
                                                                     style="height: 150px; width:150px;" alt="Project Image"
                                                                     class="img-fluid project-image" data-bs-toggle="modal"
                                                                     data-bs-target="#imageModal">
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                    <br>
-                                                    <h3 style="color: rgb(11, 212, 188)">Client Review</h3>
-                                                    <ul>
-                                                        <h3>TiTle</h3>
-                                                        <h4>{{ $data['client_review']['title'] }}</h4>
-                                                        <h3> Sub TiTle</h3>
-                                                        <h4>{{ $data['client_review']['sub_title'] }}</h4>
-                                                        <h3> Client Review</h3>
-                                                        <h4>{{ $data['client_review']['review'] }}</h4>
-                                                        <h3> Client Image</h3>
-                                                        <li style="color: black" class="nav-item">
-                                                            <img src="{{ Storage::url( $data['client_review']['client_image']) }}"
-                                                                data-bs-image="{{ Storage::url( $data['client_review']['client_image']) }}"
-                                                                style="height: 150px; width:150px;" alt="Project Image"
-                                                                class="img-fluid project-image" data-bs-toggle="modal"
-                                                                data-bs-target="#imageModal">
-                                                        </li>
+                                                            @endforeach
+                                                        </ul>
+                                                        <br>
+                                                    </div>
+
+                                                    <div class="center-horizontal">
+                                                        <h1 style="color: black">{{ $data['title'] }}</h1>
+
+                                                        <h3 style="color: black">{{ $data['sub_title'] }}</h3>
+
+                                                        <h4 style="color: black">{{ $data['description'] }}</h4>
+
+                                                        <ul>
+                                                            @foreach ($data['details'] as $item)
+                                                                <li style="color: black">
+                                                                    <strong>{{ $item['step'] }}</strong>&emsp;
+                                                                </li>
+                                                            @endforeach
+
+                                                        </ul>
+
+                                                    </div>
 
 
-                                                    </ul>
+                                                    <div class="center-horizontal">
+
+                                                        <h3 style="color: rgb(11, 212, 188)">Project Achievements</h3>
+                                                        <h1>{{ $data['achievements']['title'] }}</h1>
+                                                        <h3>{{ $data['achievements']['sub_title'] }}</h3>
+                                                        <ul>
+                                                            @foreach ($data['achievements']['more_details'] as $item)
+                                                                <li style="color: black">
+                                                                    <strong>{{ $item['step'] }}</strong>&emsp;
+                                                                </li>
+                                                            @endforeach
+
+                                                        </ul>
+                                                        <br>
+                                                        <h3 style="color: rgb(11, 212, 188)">Challenges</h3>
+                                                        <h1>{{ $data['challenges']['title'] }}</h1>
+                                                        <h3>{{ $data['challenges']['sub_title'] }}</h3>
+                                                        <ul>
+                                                            @foreach ($data['achievements']['more_details'] as $item)
+                                                                <li style="color: black">
+                                                                    <strong>{{ $item['step'] }}</strong>&emsp;
+                                                                </li>
+                                                            @endforeach
+
+                                                        </ul>
+                                                        <br>
+
+                                                        <h3 style="color: rgb(11, 212, 188)">Results</h3>
+                                                        <h1>{{ $data['results']['title'] }}</h1>
+                                                        <h3>{{ $data['results']['sub_title'] }}</h3>
+                                                        <ul>
+                                                            @foreach ($data['results']['more_details'] as $item)
+                                                                <li style="color: black">
+                                                                    <strong>{{ $item['step'] }}</strong>&emsp;
+                                                                </li>
+                                                            @endforeach
+
+                                                        </ul>
+                                                        <br>
+                                                    </div>
+                                                    <div class="center-horizontal">
+                                                        <h3 style="color: rgb(11, 212, 188)">Client Review</h3>
+                                                        <ul>
+
+                                                            <h2>{{ $data['client_review']['title'] }}</h4>
+
+                                                                <h3>{{ $data['client_review']['sub_title'] }}</h3>
+
+                                                                <h4>{{ $data['client_review']['review'] }}</h4>
+                                                                <h4 style="color: black"> Client Image</h4>
+
+                                                                <img src="{{ Storage::url($data['client_review']['client_image']) }}"
+                                                                    data-bs-image="{{ Storage::url($data['client_review']['client_image']) }}"
+                                                                    style="height: 350px; width:350px;" alt="Project Image"
+                                                                    class="img-fluid project-image" data-bs-toggle="modal"
+                                                                    data-bs-target="#imageModal">
+
+
+
+                                                        </ul>
+                                                    </div>
                                                     <br>
 
                                                 </div>
@@ -163,6 +170,15 @@
         </div>
     </div>
     <style>
+        .center-horizontal {
+            width: 70%;
+            /* or any width */
+            margin: 0 auto;
+            /* Automatically adjust left and right margins */
+            text-align: center;
+            /* Optional: Center text inside the div */
+        }
+
         .project-image {
             cursor: pointer;
             transition: transform 0.2s ease-in-out;

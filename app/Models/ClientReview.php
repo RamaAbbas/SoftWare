@@ -10,7 +10,7 @@ class ClientReview extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    protected $table = "client_review";
+    protected $table = "project_client_reviews";
 
     public function project()
     {

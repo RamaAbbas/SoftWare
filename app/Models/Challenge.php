@@ -13,7 +13,7 @@ class Challenge extends Model
 
     protected $guarded = ['id'];
 
-    protected $table = "challenges";
+    protected $table = "project_challenges";
 
     public function projects(): BelongsTo
     {
@@ -21,6 +21,6 @@ class Challenge extends Model
     }
     public function challenges_details(): HasMany
     {
-        return $this->hasMany(ChallengeDetail::class, 'achievement_id', 'id');
+        return $this->hasMany(ChallengeDetail::class, 'challenge_id', 'id');
     }
 }

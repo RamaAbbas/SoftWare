@@ -11,7 +11,7 @@ class Client extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    protected $table = "clients";
+    protected $table = "project_clients";
 
     public function project()
     {

@@ -50,7 +50,7 @@ class LoginController extends Controller
                 session(['api_token' => $token]);
 
 
-                return redirect()->route('showhome');
+                return redirect()->route('showall.projects');
             } else {
 
                 return redirect()->back();

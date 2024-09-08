@@ -13,7 +13,7 @@ class Achievement extends Model
 
     protected $guarded = ['id'];
 
-    protected $table = "achievements"; //achievements
+    protected $table = "project_achievements"; //achievements
 
     public function projects(): BelongsTo
     {
