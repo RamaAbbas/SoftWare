@@ -190,7 +190,8 @@
 
                                                 <br>
 
-                                                <button type="button" class="btn btn-danger" class="delete-detail">Delete
+                                                <button type="button" class="btn btn-danger"
+                                                    class="delete-detail">Delete
                                                     Detail </button>
                                             </div>
                                             <br>
@@ -201,7 +202,8 @@
                                     </div>
 
 
-                                    <button type="button" class="btn btn-secondary" id="add-more-details">Add More Details</button>
+                                    <button type="button" class="btn btn-secondary" id="add-more-details">Add More
+                                        Details</button>
                                 </div>
 
 
@@ -227,19 +229,25 @@
                                     <label for="image">
                                         <h3 style="color: black;">Project Services</h3>
                                     </label>
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-3 col-sm-3 ">Select Project Services</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <select class="select2_multiple form-control" name="service_ids[]"
-                                                multiple="multiple">
-                                                @foreach ($services as $service)
-                                                    <option value="{{ $service->id }}">{{ $service->en_name }}
-                                                    </option>
-                                                @endforeach
+
+                                </div>
+                                <div class="center-horizontal">
+                                    <div class="form-group">
+                                        <label for="project_services" class="control-label col-md-3 col-sm-3 ">Select Project Services:</label>
+                                        <div class="col-md-3 col-sm-9 " >
+                                            <select id="project_services" name="service_ids[]" multiple style="width:200%">
+                                                <option value="service1" data-en-name="Service1 En"
+                                                    data-nl-name="Service1 NL">
+                                                    Service 1</option>
+                                                <option value="service2" data-en-name="Service Two EN"
+                                                    data-nl-name="Service Two NL">Service 2</option>
+                                                <option value="service3" data-en-name="Service Three EN"
+                                                    data-nl-name="Service Three NL">Service 3</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
+                                <div id="hidden-inputs-container"></div>
 
 
                                 <div class="clearfix"></div>
@@ -525,6 +533,34 @@
 
 
     <script>
+        $(document).ready(function() {
+
+            function updateHiddenInputs() {
+
+                $('#hidden-inputs-container').empty();
+
+                $('#project_services option:selected').each(function() {
+                    var serviceValue = $(this).val();
+                    var enName = $(this).data('en-name');
+                    var nlName = $(this).data('nl-name');
+
+                    $('#hidden-inputs-container').append(
+                        '<input type="hidden" name="en_names[' + serviceValue + ']" value="' + enName +
+                        '">' +
+                        '<input type="hidden" name="nl_names[' + serviceValue + ']" value="' + nlName +
+                        '">'
+                    );
+                });
+            }
+
+
+            $('#project_services').on('change', function() {
+                updateHiddenInputs();
+            });
+
+
+            updateHiddenInputs();
+        });
         ////////////////////////Results
         let detailIndex = 1;
         document.getElementById('add-detail').addEventListener('click', function() {

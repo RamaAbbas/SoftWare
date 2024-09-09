@@ -162,19 +162,23 @@
                                     </div>
 
 
-                                    <!-- Add New Detail Button -->
+
                                     <button type="button" id="add-project-detail" class="btn btn-primary">Add Project
                                         Detail</button>
 
                                     <br>
                                 </div>
+                                <br>
+                                <br>
+                                <div class="clearfix"></div>
                                 <div class="center-horizontal">
                                     <div class="form-group">
-                                        <label for="main_image">Main Image</label>
+                                        <label for="main_image"><h4 style="color: black">Main Image </h4></label>
                                         <input type="file" name="main_image" class="form-control-file"
                                             id="main_image">
                                     </div>
                                     <div class="clearfix"></div>
+
 
                                     @if ($project->main_image)
                                         <div class="form-group">
@@ -184,52 +188,64 @@
                                         </div>
                                     @endif
                                 </div>
-
-                                <h4>Images</h4>
-                                <div class="existing-images">
-                                    @foreach ($project->project_images as $image)
-                                        <div class="image-container" id="image-{{ $image->id }}">
-                                            <img src="{{ Storage::url($image['image_path']) }}" alt="Project Image"
-                                                style="width: 150px; height: 150px;">
-                                            <button type="button" class="btn btn-danger remove-image"
-                                                data-id="{{ $image->id }}">Remove</button>
-                                        </div>
-                                    @endforeach
+                                <br>
+                                <br>
+                                <div class="clearfix"></div>
+                                <div class="clearfix"></div>
+                                <div class="center-horizontal">
+                                    <h4>Project Images</h4>
+                                    <div class="existing-images">
+                                        @foreach ($project->project_images as $image)
+                                            <div class="image-container" id="image-{{ $image->id }}">
+                                                <img src="{{ Storage::url($image['image_path']) }}" alt="Project Image"
+                                                    style="width: 150px; height: 150px;">
+                                                <button type="button" class="btn btn-danger remove-image"
+                                                    data-id="{{ $image->id }}">Remove</button>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <h4>Add New Images</h4>
+                                    <div class="new-images">
+                                        <input type="file" name="image_path[]" multiple>
+                                    </div>
                                 </div>
                                 <div class="clearfix"></div>
-                                <h4>Add New Images</h4>
-                                <div class="new-images">
-                                    <input type="file" name="image_path[]" multiple>
-                                </div>
-
-
-
-
-
+                                <div class="clearfix"></div>
+                                <br>
+                                <br>
                                 <div class="center-horizontal">
-                                    <label for="image">
-                                        <h3 style="color: black;">Project Services</h3>
-                                    </label>
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-3 col-sm-3 ">Select Project Services</label>
+                                    <div class="form-group">
+                                        <label for="project_services" class="control-label col-md-3 col-sm-3 ">Select
+                                            Project Services:</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <select class="select2_multiple form-control" name="service_ids[]"
-                                                multiple="multiple">
-                                                @foreach ($services as $service)
-                                                    <option value="{{ $service->id }}"
-                                                        @if (in_array($service->en_name, $selectedServices)) @selected(true) @endif>
-                                                        {{ $service->en_name }}
-                                                    </option>
-                                                @endforeach
+                                            <select id="project_services" name="services[]" multiple style="width:70%">
+
+                                                <option value="Service One EN"
+                                                    @if (in_array('Service One EN', $projectServices)) selected @endif>
+                                                    Service One
+                                                </option>
+                                                <option value="Service Two EN"
+                                                    @if (in_array('Service Two EN', $projectServices)) selected @endif>
+                                                    Service Two
+                                                </option>
+                                                <option value="Service Three EN"
+                                                    @if (in_array('Service Three EN', $projectServices)) selected @endif>
+                                                    Service Three
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
+                                <div id="hidden-inputs-container"></div>
 
+
+
+                                <br>
+                                <br>
                                 <div class="clearfix"></div>
-                                <br>
-                                <br>
+                                <div class="clearfix"></div>
 
                                 <h2 class="StepTitle" style="color: black;">Project Achievements </h2>
                                 <div class="center-horizontal">
@@ -308,7 +324,8 @@
 
 
 
-                        </div><!--<button type="button" id="add-more-details">Add More Details</button>-->
+
+                        </div>
                     </div>
 
 
@@ -377,17 +394,18 @@
                                     </div>
                                 @endforeach
                             </div>
+                            <div class="center-horizontal">
+                                <button type="button" class="btn btn-secondary " id="add-detail2">Add Detail</button>
+                            </div>
 
-                            <button type="button" class="btn btn-secondary" id="add-detail2">Add Detail</button>
-
-                        </div><!--<button type="button" id="add-more-details">Add More Details</button>-->
+                        </div>
                     </div>
 
 
 
-
+                    <h2 class="StepTitle" style="color: black;">Project Results </h2>
                     <div class="center-horizontal">
-                        <h2 class="StepTitle" style="color: black;">Project Results </h2>
+
                         <div class="form-group">
                             <label for="result_name">Result En Title</label>
                             <input type="text" name="results[0][en_title]" class="form-control" id="result_name"
@@ -505,6 +523,7 @@
 
                     </div>
 
+
                     <div class="ln_solid"></div>
                     <div class="form-group">
                         <div class="col-md-9 col-sm-9  offset-md-3">
@@ -537,6 +556,33 @@
 
 
     <script>
+        $(document).ready(function() {
+            function updateHiddenInputs() {
+                $('#hidden-inputs-container').empty();
+
+                $('#project_services option:selected').each(function() {
+                    var enName = $(this).val();
+                    var nlName = $(this).data('nl-name');
+
+
+                    $('#hidden-inputs-container').append(
+                        '<input type="hidden" name="en_names[' + enName + ']" value="' + enName + '">' +
+                        '<input type="hidden" name="nl_names[' + enName + ']" value="' + nlName + '">'
+                    );
+                });
+            }
+
+
+            updateHiddenInputs();
+
+
+            $('#project_services').on('change', function() {
+                updateHiddenInputs();
+            });
+        });
+
+
+
         let detailIndex5 = {{ $project->project_details->count() }};
         document.getElementById('add-project-detail').addEventListener('click', function() {
             let container = document.getElementById('project-details-container');

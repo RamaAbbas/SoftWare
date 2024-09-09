@@ -169,17 +169,33 @@ class ProjectController extends Controller
                     );
                 }
             }
-            if ($request->has('service_ids')) {
+            /* if ($request->has('service_ids')) {
                 foreach ($request->service_ids as $service_id) {
-                    $service = Service::findOrFail($service_id);
+                  //  $service = Service::findOrFail($service_id);
                     $project->project_services()->create(
                         [
-                            'en_name' => $service->en_name,
-                            'nl_name' => $service->nl_name
+                            'en_name' =>$service_id ,
+                           // 'nl_name' => $service->nl_name
 
                         ]
                     );
                 }
+            }*/
+            $selectedServices = $request->input('service_ids');
+            $enNames = $request->input('en_names');
+            $nlNames = $request->input('nl_names');
+
+            foreach ($selectedServices as $service) {
+                //  $enName = $enNames[$service];
+                //  $nlName = $enNames[$service];
+
+                $project->project_services()->create(
+                    [
+                        'en_name' => $enNames[$service],
+                        'nl_name' => $nlNames[$service]
+
+                    ]
+                );
             }
 
 
@@ -676,8 +692,10 @@ class ProjectController extends Controller
         $selectedServiceCategories = $project->project_services->pluck('id')->toArray();
         $selectedServices = $project->project_services->pluck('en_name')->toArray();
         $services = Service::all();
+
+        $projectServices = $project->project_services->pluck('en_name')->toArray();
         if ($project) {
-            return view('admin.Projects.new_edit_form', compact('project', 'client', 'services', 'selectedServiceCategories', 'selectedServices', 'clientreview'));
+            return view('admin.Projects.new_edit_form', compact('project', 'client', 'services', 'selectedServiceCategories', 'selectedServices', 'clientreview', 'projectServices'));
         } else {
 
             return redirect()->back();
@@ -919,6 +937,26 @@ class ProjectController extends Controller
                 foreach ($resultDetailsToDelete as $detail) {
                     $detail->delete();
                 }
+                ////////////////////
+                $selectedEnNames = $request->input('services');
+                $enNames = $request->input('en_names');
+                $nlNames = $request->input('nl_names');
+
+
+                $project->project_services()->delete();
+
+
+                foreach ($selectedEnNames as $enName) {
+
+                    $project->project_services()->create(
+                        [
+                            'en_name' => $enNames[$enName],
+                            'nl_name' => $nlNames[$enName]
+
+                        ]
+                    );
+                }
+
 
 
 
